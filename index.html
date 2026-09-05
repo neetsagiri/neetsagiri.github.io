@@ -328,6 +328,20 @@
             font-size: 0.85rem;
             color: #ffb703;
             margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Dòng nhắc nhở khách chuyển khoản xong gửi TikTok */
+        .qr-notice {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(254, 44, 85, 0.15);
+            border: 1px solid rgba(254, 44, 85, 0.35);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            color: #ffb8c6;
+            line-height: 1.4;
+            font-weight: 600;
         }
 
         /* FORM THÔNG TIN */
@@ -559,6 +573,11 @@
                 <img id="autoQrImg" class="qr-img-auto" src="" alt="Mã VietQR Tự Động">
             </div>
             <p class="qr-memo-preview" id="memoPreview">Lời nhắn chuyển khoản: SAGIRI CAY THUE</p>
+
+            <!-- Dòng thông báo nhắc nhở sau khi chuyển khoản -->
+            <div class="qr-notice">
+                ⚠️ Các bạn chuyển khoản xong nhớ bấm nút <strong>"GỬI YÊU CẦU QUA TIKTOK"</strong> ở dưới để mình nhận đơn nha! 💕
+            </div>
         </div>
 
         <button class="btn-submit" onclick="sendOrderToTikTok()">
@@ -590,7 +609,7 @@
     const clientNameInput = document.getElementById('clientName');
     const memoPreview = document.getElementById('memoPreview');
 
-    // Hàm chuyển chữ có dấu thành không dấu chuẩn để app ngân hàng không bị lỗi ký tự
+    // Hàm chuyển chữ có dấu thành không dấu để app ngân hàng không bị lỗi ký tự
     function removeVietnameseTones(str) {
         return str
             .normalize('NFD')
@@ -613,10 +632,9 @@
         const rawName = clientNameInput.value.trim();
         const cleanName = removeVietnameseTones(rawName);
 
-        // Lời nhắn là TÊN KHÁCH HÀNG TIKTOK, nếu chưa nhập thì để mặc định
+        // Lời nhắn là TÊN KHÁCH HÀNG TIKTOK
         let memo = cleanName ? cleanName : "SAGIRI CAY THUE";
         
-        // Cắt gọn nếu tên quá dài (tối đa 25 ký tự theo quy định VietQR)
         if (memo.length > 25) {
             memo = memo.substring(0, 25);
         }
@@ -631,15 +649,14 @@
         autoQrImg.src = qrUrl;
     }
 
-    // Tự cập nhật khi tick chọn map
+    // Cập nhật khi tick chọn map
     checkboxes.forEach(cb => {
         cb.addEventListener('change', updateQR);
     });
 
-    // Tự cập nhật mã QR ngay khi khách gõ tên vào ô Tên/ID TikTok
+    // Cập nhật mã QR ngay khi khách gõ tên TikTok
     clientNameInput.addEventListener('input', updateQR);
 
-    // Khởi tạo mã QR lúc ban đầu
     updateQR();
 
     // Modal phóng to ảnh
