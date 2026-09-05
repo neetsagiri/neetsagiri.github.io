@@ -30,3 +30,223 @@
     </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neet Sagiri - TikTok & Donate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f1015;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --tiktok-pink: #fe2c55;
+            --tiktok-cyan: #25f4ee;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a5b5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(254, 44, 85, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(37, 244, 238, 0.12) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        /* Avatar & Profile */
+        .avatar-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 16px;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: linear-gradient(var(--bg-color), var(--bg-color)) padding-box,
+                        linear-gradient(135deg, var(--tiktok-cyan), var(--tiktok-pink)) border-box;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .channel-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .bio {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* Link Button */
+        .btn-tiktok {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #161823, #212530);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.25s ease;
+            margin-bottom: 24px;
+        }
+
+        .btn-tiktok:hover {
+            transform: translateY(-2px);
+            border-color: var(--tiktok-pink);
+            box-shadow: 0 6px 20px rgba(254, 44, 85, 0.25);
+        }
+
+        .btn-tiktok i {
+            font-size: 1.2rem;
+            color: var(--tiktok-pink);
+        }
+
+        /* Donate Box */
+        .donate-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .donate-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .donate-title i {
+            color: #ffb703;
+        }
+
+        .donate-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .qr-wrapper {
+            background: white;
+            border-radius: 14px;
+            padding: 12px;
+            display: inline-block;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
+        }
+
+        .qr-img {
+            width: 190px;
+            height: 190px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .bank-details {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .bank-details strong {
+            color: var(--text-primary);
+        }
+
+        .footer {
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: #636b7e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Ảnh đại diện -->
+        <div class="avatar-wrap">
+            <img src="avatar.jpg" alt="Avatar" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=Neet+Sagiri&background=25f4ee&color=000'">
+        </div>
+
+        <!-- Tên & Giới thiệu -->
+        <h1 class="channel-name">@neetsagiri</h1>
+        <p class="bio">Chào mừng bạn đến với kênh TikTok của mình ✨<br>Bấm vào link bên dưới để xem video mới nhất nhé!</p>
+
+        <!-- Nút dẫn tới kênh TikTok (Thay username TikTok của bạn vào href) -->
+        <a href="https://www.tiktok.com/@neetsagiri" target="_blank" rel="noopener noreferrer" class="btn-tiktok">
+            <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
+        </a>
+
+        <!-- Khung Donate / Ủng hộ -->
+        <div class="donate-card">
+            <div class="donate-title">
+                <i class="fa-solid fa-mug-hot"></i> Ủng hộ / Donate
+            </div>
+            <p class="donate-desc">Quét mã QR để ủng hộ một ly cà phê tiếp thêm động lực tạo nội dung nha!</p>
+
+            <!-- Tải ảnh qr.jpg lên cùng thư mục trên GitHub hoặc dán link mã QR vào đây -->
+            <div class="qr-wrapper">
+                <img src="qr.jpg" alt="Mã QR Donate" class="qr-img" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://neetsagiri.github.io'">
+            </div>
+
+            <!-- Thông tin tài khoản ngân hàng / ví điện tử -->
+            <div class="bank-details">
+                <div>Ngân hàng: <strong>MB Bank / MoMo</strong></div>
+                <div>Số tài khoản: <strong>0123456789</strong></div>
+                <div>Chủ tài khoản: <strong>TÊN BẠN</strong></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2026 neetsagiri • Hosted with GitHub Pages
+        </div>
+    </div>
+
+</body>
+</html>
