@@ -154,18 +154,89 @@
 
         /* --- PHẦN 2: BẢNG GIÁ WUTHERING WAVES --- */
         .banner-wrap {
+            position: relative;
             width: 100%;
             border-radius: 14px;
             overflow: hidden;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            cursor: zoom-in;
         }
 
         .banner-wrap img {
             width: 100%;
             height: auto;
             display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .banner-wrap:hover img {
+            transform: scale(1.02);
+        }
+
+        .zoom-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Modal Phóng To Ảnh */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            cursor: zoom-out;
+            backdrop-filter: blur(6px);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            cursor: default;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #fe2c55;
         }
 
         .section-title {
@@ -292,8 +363,8 @@
         .btn-submit {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #fe2c55, #d90429);
-            color: white;
+            background: linear-gradient(135deg, #fe2c55, #25f4ee);
+            color: #ffffff;
             border: none;
             border-radius: 14px;
             font-size: 1.05rem;
@@ -306,11 +377,12 @@
             transition: 0.2s ease;
             box-shadow: 0 4px 16px rgba(254, 44, 85, 0.4);
             margin-top: 16px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 22px rgba(254, 44, 85, 0.6);
+            box-shadow: 0 6px 22px rgba(37, 244, 238, 0.5);
         }
 
         .extra-note {
@@ -349,8 +421,10 @@
 
     <!-- KHỐI 2: BẢNG GIÁ WUTHERING WAVES -->
     <div class="card">
-        <div class="banner-wrap">
-            <img src="banggia.jpg" alt="Bảng giá dịch vụ" onerror="this.src='https://placehold.co/1000x560/1a1c24/ffffff?text=Vui+long+upload+anh+banggia.jpg'">
+        <!-- Khung ảnh có thể bấm để phóng to -->
+        <div class="banner-wrap" onclick="openImageModal()">
+            <img id="bannerImg" src="banggia.jpg" alt="Bảng giá dịch vụ" onerror="this.src='https://placehold.co/1000x560/1a1c24/ffffff?text=Vui+long+upload+anh+banggia.jpg'">
+            <div class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Bấm để phóng to</div>
         </div>
 
         <!-- 1. JINZHOU -->
@@ -435,33 +509,55 @@
 
         <!-- FORM ĐIỀN THÔNG TIN -->
         <div class="form-group">
-            <label for="clientName">Tên / Nickname:</label>
-            <input type="text" id="clientName" placeholder="Tên hoặc Discord của bạn">
+            <label for="clientName">Tên / Nickname của bạn:</label>
+            <input type="text" id="clientName" placeholder="Tên hoặc ID TikTok của bạn">
         </div>
 
         <div class="form-group">
-            <label for="clientContact">Link FB / Zalo / SĐT liên hệ (*):</label>
-            <input type="text" id="clientContact" placeholder="Để mình liên hệ chốt đơn">
+            <label for="clientNote">Ghi chú thêm (Cứu content matrix, thuyền, tháp...):</label>
+            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Rương còn 30%, cần xong trong hôm nay..."></textarea>
         </div>
 
-        <div class="form-group">
-            <label for="clientNote">Ghi chú (Cứu content matrix, thuyền, tháp...):</label>
-            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Rương còn 30%, cần xong gấp..."></textarea>
-        </div>
-
-        <button class="btn-submit" onclick="sendOrder()">
-            <i class="fa-solid fa-paper-plane"></i> GỬI YÊU CẦU CÀY THUÊ
+        <!-- Nút gửi qua TikTok -->
+        <button class="btn-submit" onclick="sendOrderToTikTok()">
+            <i class="fa-brands fa-tiktok"></i> GỬI YÊU CẦU QUA TIKTOK
         </button>
 
         <p class="extra-note">✨ Ngoài ra Chía còn nhận cứu full content matrix, thuyền, tháp giá yêu thương nha 💕</p>
     </div>
 </div>
 
+<!-- Khung phóng to ảnh (Lightbox Modal) -->
+<div id="imageModal" class="modal" onclick="closeImageModal()">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="modalImg" onclick="event.stopPropagation()">
+</div>
+
 <script>
+    // Xử lý phóng to ảnh
+    function openImageModal() {
+        const modal = document.getElementById("imageModal");
+        const bannerImg = document.getElementById("bannerImg");
+        const modalImg = document.getElementById("modalImg");
+        modal.style.display = "flex";
+        modalImg.src = bannerImg.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+
+    // Bấm phím Escape trên bàn phím cũng đóng được ảnh
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeImageModal();
+        }
+    });
+
+    // Tự động tính tổng tiền khi tick chọn map
     const checkboxes = document.querySelectorAll('.map-cb');
     const totalDisplay = document.getElementById('totalDisplay');
 
-    // Tự động tính tổng tiền
     checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
             let total = 0;
@@ -474,10 +570,9 @@
         });
     });
 
-    // Tạo tin nhắn gửi về Zalo
-    function sendOrder() {
+    // Xử lý gửi đơn qua TikTok
+    function sendOrderToTikTok() {
         const name = document.getElementById('clientName').value.trim();
-        const contact = document.getElementById('clientContact').value.trim();
         const note = document.getElementById('clientNote').value.trim();
 
         const selectedMaps = [];
@@ -494,26 +589,22 @@
             return;
         }
 
-        if (!contact) {
-            alert('Vui lòng để lại SĐT hoặc link liên hệ để mình chốt đơn!');
-            return;
-        }
-
         const message = 
 `🌸 ĐƠN CÀY THUÊ WUTHERING WAVES 🌸
 - Khách hàng: ${name || 'Khách vãng lai'}
-- Liên hệ: ${contact}
-- Các map / dịch vụ chọn:
+- Dịch vụ / Map đã chọn:
   + ${selectedMaps.join('\n  + ')}
 ---------------------------
 👉 TỔNG TIỀN: ${total.toLocaleString('vi-VN')}đ
 - Ghi chú: ${note || 'Không có'}`;
 
-        // ĐỔI SỐ ZALO CỦA BẠN VÀO ĐÂY (thay số 0 đầu bằng 84)
-        const myZaloPhone = "0986912764"; 
-
-        const zaloUrl = `https://zalo.me/${myZaloPhone}?text=${encodeURIComponent(message)}`;
-        window.open(zaloUrl, '_blank');
+        navigator.clipboard.writeText(message).then(() => {
+            alert("✨ Đã tự động sao chép (copy) thông tin đơn hàng!\n\nTrang web sẽ chuyển sang TikTok @_sagiri0502 ngay bây giờ, bạn chỉ cần DÁN (Paste) vào tin nhắn gửi cho mình là xong nha 💕");
+            window.open('https://www.tiktok.com/@_sagiri0502', '_blank');
+        }).catch(() => {
+            prompt("Hãy sao chép nội dung đơn này và dán vào tin nhắn TikTok nha:", message);
+            window.open('https://www.tiktok.com/@_sagiri0502', '_blank');
+        });
     }
 </script>
 
