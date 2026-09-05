@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>_sagiri0502 - Dịch Vụ Cày Thuê Wuthering Waves</title>
+    <title>_sagiri0502</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -13,6 +13,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
+        /* Nền chuyển động động (Animated Gradient) */
         body {
             color: #ffffff;
             min-height: 100vh;
@@ -79,8 +80,9 @@
         .bio {
             font-size: 0.95rem;
             color: #e0e2ec;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             line-height: 1.5;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.4);
         }
 
         .btn-tiktok {
@@ -97,7 +99,9 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
+            margin-bottom: 24px;
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             transition: 0.25s ease;
         }
 
@@ -113,7 +117,43 @@
             font-size: 1.2rem;
         }
 
-        /* BẢNG GIÁ */
+        /* KHUNG DONATE TÀ TỮA */
+        .donate-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px 16px;
+        }
+
+        .donate-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #ffb703;
+        }
+
+        .donate-desc {
+            font-size: 0.88rem;
+            color: #cfd3e0;
+            margin-bottom: 16px;
+        }
+
+        .qr-box-donate {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px;
+            display: inline-block;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .qr-img-donate {
+            width: 190px;
+            height: 190px;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* BẢNG GIÁ WUTHERING WAVES */
         .banner-wrap {
             position: relative;
             width: 100%;
@@ -246,7 +286,7 @@
             font-weight: 700;
         }
 
-        /* KHUNG VIETQR TỰ ĐỘNG */
+        /* KHUNG VIETQR TỰ ĐỘNG THEO ĐƠN CÀY THUÊ */
         .qr-section {
             background: rgba(0, 0, 0, 0.3);
             border: 1px dashed rgba(37, 244, 238, 0.35);
@@ -269,7 +309,7 @@
             margin-bottom: 12px;
         }
 
-        .qr-box {
+        .qr-box-auto {
             background: #ffffff;
             border-radius: 14px;
             padding: 10px;
@@ -278,13 +318,13 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
         }
 
-        .qr-img {
+        .qr-img-auto {
             width: 220px;
             height: auto;
             display: block;
         }
 
-        /* FORM NHẬP */
+        /* FORM THÔNG TIN */
         .form-group {
             margin-bottom: 12px;
         }
@@ -385,7 +425,7 @@
 <body>
 
 <div class="container">
-    <!-- KHỐI 1: PROFILE & TIKTOK -->
+    <!-- KHỐI 1: PROFILE & DONATE LY TÀ TỮA -->
     <div class="card profile-section">
         <div class="avatar-wrap">
             <img src="avatar.jpg" alt="Avatar" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=_sagiri0502&background=fe2c55&color=fff'">
@@ -397,6 +437,15 @@
         <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-tiktok">
             <i class="fa-brands fa-tiktok"></i> Đến Kênh TikTok Của Tôi
         </a>
+
+        <!-- KHUNG DONATE -->
+        <div class="donate-box">
+            <div class="donate-title">Donate💕</div>
+            <p class="donate-desc">Quét mã QR để ủng hộ mình ly tà tữa💕</p>
+            <div class="qr-box-donate">
+                <img src="qr.jpg" alt="QR Donate" class="qr-img-donate" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://neetsagiri.github.io'">
+            </div>
+        </div>
     </div>
 
     <!-- KHỐI 2: BẢNG GIÁ WUTHERING WAVES -->
@@ -480,21 +529,23 @@
             <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Tháng" data-price="100000"><span class="map-name">Daily: 1 Tháng</span></div><span class="map-price">100k</span></label>
         </div>
 
+        <!-- TỔNG TIỀN -->
         <div class="total-box">
             <span>Tổng tiền:</span>
             <span class="total-amount" id="totalDisplay">0đ</span>
         </div>
 
-        <!-- KHUNG MÃ VIETQR TỰ ĐỘNG -->
+        <!-- KHUNG MÃ VIETQR BIDV TỰ ĐỘNG THEO ĐƠN -->
         <div class="qr-section">
-            <div class="qr-title"><i class="fa-solid fa-qrcode"></i> Quét Mã BIDV VietQR</div>
+            <div class="qr-title"><i class="fa-solid fa-qrcode"></i> Quét Mã BIDV VietQR Thanh Toán</div>
             <p class="qr-sub">Mã QR tự động cập nhật đúng số tiền và nội dung chuyển khoản</p>
-            <div class="qr-box">
-                <img id="autoQrImg" class="qr-img" src="" alt="Mã VietQR Tự Động">
+            <div class="qr-box-auto">
+                <img id="autoQrImg" class="qr-img-auto" src="" alt="Mã VietQR Tự Động">
             </div>
-            <p style="font-size: 0.8rem; color: #a0a5b5;">Mở app ngân hàng quét mã để thanh toán tự động</p>
+            <p style="font-size: 0.8rem; color: #a0a5b5;">Mở app ngân hàng quét mã để thanh toán đơn cày thuê</p>
         </div>
 
+        <!-- FORM THÔNG TIN -->
         <div class="form-group">
             <label for="clientName">Tên / Nickname của bạn:</label>
             <input type="text" id="clientName" placeholder="Tên hoặc ID TikTok của bạn">
@@ -502,7 +553,7 @@
 
         <div class="form-group">
             <label for="clientNote">Ghi chú thêm:</label>
-            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Đã chuyển khoản, cần chạy gấp..."></textarea>
+            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Đã chuyển khoản, cần xong gấp..."></textarea>
         </div>
 
         <button class="btn-submit" onclick="sendOrderToTikTok()">
@@ -513,7 +564,7 @@
     </div>
 </div>
 
-<!-- MODAL PHÓNG TO ẢNH -->
+<!-- MODAL PHÓNG TO ẢNH BẢNG GIÁ -->
 <div id="imageModal" class="modal" onclick="closeImageModal()">
     <span class="modal-close">&times;</span>
     <img class="modal-content" id="modalImg" onclick="event.stopPropagation()">
@@ -521,11 +572,11 @@
 
 <script>
     // ============================================================
-    // CẤU HÌNH TÀI KHOẢN BIDV CỦA BẠN:
+    // CẤU HÌNH TÀI KHOẢN BIDV ĐỂ TỰ ĐỘNG TÍNH TIỀN THEO MAP:
     // ============================================================
-    const BANK_ID = "BIDV";                // Mã ngân hàng BIDV
-    const ACCOUNT_NO = "8833220630";  // Thay bằng số tài khoản BIDV của bạn
-    const ACCOUNT_NAME = "BUI THANH NAM";      // Thay bằng Họ và tên của bạn (viết hoa không dấu)
+    const BANK_ID = "BIDV";
+    const ACCOUNT_NO = "STK_BIDV_CUA_BAN";  // Thay bằng STK BIDV của bạn
+    const ACCOUNT_NAME = "HO VA TEN";      // Thay bằng Họ và Tên viết hoa không dấu
     // ============================================================
 
     const checkboxes = document.querySelectorAll('.map-cb');
@@ -533,7 +584,7 @@
     const autoQrImg = document.getElementById('autoQrImg');
 
     function updateQR(total) {
-        const memo = encodeURIComponent("CAY THUE");
+        const memo = encodeURIComponent("SAGIRI CAY THUE");
         const accName = encodeURIComponent(ACCOUNT_NAME);
         const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${total}&addInfo=${memo}&accountName=${accName}`;
         autoQrImg.src = qrUrl;
