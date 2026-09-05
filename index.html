@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>_sagiri0502</title>
+    <title>_sagiri0502 - Dịch Vụ Cày Thuê Wuthering Waves</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -13,7 +13,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* Nền chuyển động động (Animated Gradient) */
         body {
             color: #ffffff;
             min-height: 100vh;
@@ -21,9 +20,9 @@
             justify-content: center;
             align-items: flex-start;
             padding: 30px 14px;
-            background: linear-gradient(-45deg, #0d0e15, #fe2c55, #12141d, #25f4ee);
+            background: linear-gradient(-45deg, #0d0e15, #851628, #12141d, #1c2738, #0d0e15);
             background-size: 400% 400%;
-            animation: gradientBG 12s ease infinite;
+            animation: gradientBG 15s ease infinite;
         }
 
         @keyframes gradientBG {
@@ -41,16 +40,16 @@
         }
 
         .card {
-            background: rgba(15, 16, 21, 0.75);
+            background: rgba(18, 20, 28, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             padding: 24px 18px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- PHẦN 1: PROFILE & DONATE --- */
+        /* PROFILE SECTION */
         .profile-section {
             text-align: center;
         }
@@ -80,9 +79,8 @@
         .bio {
             font-size: 0.95rem;
             color: #e0e2ec;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             line-height: 1.5;
-            text-shadow: 0 1px 6px rgba(0,0,0,0.4);
         }
 
         .btn-tiktok {
@@ -99,9 +97,7 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
-            margin-bottom: 24px;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             transition: 0.25s ease;
         }
 
@@ -117,42 +113,7 @@
             font-size: 1.2rem;
         }
 
-        .donate-box {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px 16px;
-        }
-
-        .donate-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #ffb703;
-        }
-
-        .donate-desc {
-            font-size: 0.88rem;
-            color: #cfd3e0;
-            margin-bottom: 16px;
-        }
-
-        .qr-box {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 12px;
-            display: inline-block;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-        }
-
-        .qr-img {
-            width: 190px;
-            height: 190px;
-            display: block;
-            object-fit: contain;
-        }
-
-        /* --- PHẦN 2: BẢNG GIÁ WUTHERING WAVES --- */
+        /* BẢNG GIÁ */
         .banner-wrap {
             position: relative;
             width: 100%;
@@ -179,64 +140,15 @@
             position: absolute;
             bottom: 8px;
             right: 8px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             color: #fff;
             font-size: 0.75rem;
-            padding: 4px 8px;
+            padding: 5px 9px;
             border-radius: 6px;
-            backdrop-filter: blur(4px);
             pointer-events: none;
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        /* Modal Phóng To Ảnh */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            cursor: zoom-out;
-            backdrop-filter: blur(6px);
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            max-width: 95vw;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            cursor: default;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            color: #fff;
-            font-size: 32px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10000;
-            transition: 0.2s;
-        }
-
-        .modal-close:hover {
-            color: #fe2c55;
         }
 
         .section-title {
@@ -334,6 +246,45 @@
             font-weight: 700;
         }
 
+        /* KHUNG VIETQR TỰ ĐỘNG */
+        .qr-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(37, 244, 238, 0.35);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .qr-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #25f4ee;
+            margin-bottom: 6px;
+        }
+
+        .qr-sub {
+            font-size: 0.85rem;
+            color: #cfd3e0;
+            margin-bottom: 12px;
+        }
+
+        .qr-box {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        .qr-img {
+            width: 220px;
+            height: auto;
+            display: block;
+        }
+
+        /* FORM NHẬP */
         .form-group {
             margin-bottom: 12px;
         }
@@ -391,12 +342,50 @@
             color: #ffb703;
             margin-top: 14px;
         }
+
+        /* MODAL PHÓNG TO ẢNH */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            cursor: zoom-out;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-content {
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            cursor: default;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fe2c55;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- KHỐI 1: PROFILE, TIKTOK & DONATE -->
+    <!-- KHỐI 1: PROFILE & TIKTOK -->
     <div class="card profile-section">
         <div class="avatar-wrap">
             <img src="avatar.jpg" alt="Avatar" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=_sagiri0502&background=fe2c55&color=fff'">
@@ -408,20 +397,10 @@
         <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-tiktok">
             <i class="fa-brands fa-tiktok"></i> Đến Kênh TikTok Của Tôi
         </a>
-
-        <div class="donate-box">
-            <div class="donate-title">Donate💕</div>
-            <p class="donate-desc">Quét mã QR để ủng hộ mình ly tà tữa💕</p>
-
-            <div class="qr-box">
-                <img src="qr.jpg" alt="QR Code" class="qr-img" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://neetsagiri.github.io'">
-            </div>
-        </div>
     </div>
 
     <!-- KHỐI 2: BẢNG GIÁ WUTHERING WAVES -->
     <div class="card">
-        <!-- Khung ảnh có thể bấm để phóng to -->
         <div class="banner-wrap" onclick="openImageModal()">
             <img id="bannerImg" src="banggia.jpg" alt="Bảng giá dịch vụ" onerror="this.src='https://placehold.co/1000x560/1a1c24/ffffff?text=Vui+long+upload+anh+banggia.jpg'">
             <div class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Bấm để phóng to</div>
@@ -501,24 +480,31 @@
             <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Tháng" data-price="100000"><span class="map-name">Daily: 1 Tháng</span></div><span class="map-price">100k</span></label>
         </div>
 
-        <!-- TỔNG TIỀN -->
         <div class="total-box">
             <span>Tổng tiền:</span>
             <span class="total-amount" id="totalDisplay">0đ</span>
         </div>
 
-        <!-- FORM ĐIỀN THÔNG TIN -->
+        <!-- KHUNG MÃ VIETQR TỰ ĐỘNG -->
+        <div class="qr-section">
+            <div class="qr-title"><i class="fa-solid fa-qrcode"></i> Quét Mã BIDV VietQR</div>
+            <p class="qr-sub">Mã QR tự động cập nhật đúng số tiền và nội dung chuyển khoản</p>
+            <div class="qr-box">
+                <img id="autoQrImg" class="qr-img" src="" alt="Mã VietQR Tự Động">
+            </div>
+            <p style="font-size: 0.8rem; color: #a0a5b5;">Mở app ngân hàng quét mã để thanh toán tự động</p>
+        </div>
+
         <div class="form-group">
             <label for="clientName">Tên / Nickname của bạn:</label>
             <input type="text" id="clientName" placeholder="Tên hoặc ID TikTok của bạn">
         </div>
 
         <div class="form-group">
-            <label for="clientNote">Ghi chú thêm (Cứu content matrix, thuyền, tháp...):</label>
-            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Rương còn 30%, cần xong trong hôm nay..."></textarea>
+            <label for="clientNote">Ghi chú thêm:</label>
+            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Đã chuyển khoản, cần chạy gấp..."></textarea>
         </div>
 
-        <!-- Nút gửi qua TikTok -->
         <button class="btn-submit" onclick="sendOrderToTikTok()">
             <i class="fa-brands fa-tiktok"></i> GỬI YÊU CẦU QUA TIKTOK
         </button>
@@ -527,14 +513,47 @@
     </div>
 </div>
 
-<!-- Khung phóng to ảnh (Lightbox Modal) -->
+<!-- MODAL PHÓNG TO ẢNH -->
 <div id="imageModal" class="modal" onclick="closeImageModal()">
     <span class="modal-close">&times;</span>
     <img class="modal-content" id="modalImg" onclick="event.stopPropagation()">
 </div>
 
 <script>
-    // Xử lý phóng to ảnh
+    // ============================================================
+    // CẤU HÌNH TÀI KHOẢN BIDV CỦA BẠN:
+    // ============================================================
+    const BANK_ID = "BIDV";                // Mã ngân hàng BIDV
+    const ACCOUNT_NO = "8833220630";  // Thay bằng số tài khoản BIDV của bạn
+    const ACCOUNT_NAME = "BUI THANH NAM";      // Thay bằng Họ và tên của bạn (viết hoa không dấu)
+    // ============================================================
+
+    const checkboxes = document.querySelectorAll('.map-cb');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const autoQrImg = document.getElementById('autoQrImg');
+
+    function updateQR(total) {
+        const memo = encodeURIComponent("CAY THUE");
+        const accName = encodeURIComponent(ACCOUNT_NAME);
+        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${total}&addInfo=${memo}&accountName=${accName}`;
+        autoQrImg.src = qrUrl;
+    }
+
+    updateQR(0);
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            let total = 0;
+            checkboxes.forEach(item => {
+                if (item.checked) {
+                    total += parseInt(item.getAttribute('data-price'));
+                }
+            });
+            totalDisplay.textContent = total.toLocaleString('vi-VN') + 'đ';
+            updateQR(total);
+        });
+    });
+
     function openImageModal() {
         const modal = document.getElementById("imageModal");
         const bannerImg = document.getElementById("bannerImg");
@@ -547,30 +566,10 @@
         document.getElementById("imageModal").style.display = "none";
     }
 
-    // Bấm phím Escape trên bàn phím cũng đóng được ảnh
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "Escape") {
-            closeImageModal();
-        }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") closeImageModal();
     });
 
-    // Tự động tính tổng tiền khi tick chọn map
-    const checkboxes = document.querySelectorAll('.map-cb');
-    const totalDisplay = document.getElementById('totalDisplay');
-
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
-            let total = 0;
-            checkboxes.forEach(item => {
-                if (item.checked) {
-                    total += parseInt(item.getAttribute('data-price'));
-                }
-            });
-            totalDisplay.textContent = total.toLocaleString('vi-VN') + 'đ';
-        });
-    });
-
-    // Xử lý gửi đơn qua TikTok
     function sendOrderToTikTok() {
         const name = document.getElementById('clientName').value.trim();
         const note = document.getElementById('clientNote').value.trim();
@@ -599,10 +598,10 @@
 - Ghi chú: ${note || 'Không có'}`;
 
         navigator.clipboard.writeText(message).then(() => {
-            alert("✨ Đã tự động sao chép (copy) thông tin đơn hàng!\n\nTrang web sẽ chuyển sang TikTok @_sagiri0502 ngay bây giờ, bạn chỉ cần DÁN (Paste) vào tin nhắn gửi cho mình là xong nha 💕");
+            alert("✨ Đã copy thông tin đơn hàng!\n\nWeb sẽ chuyển sang TikTok @_sagiri0502 ngay bây giờ, bạn chỉ cần Dán (Paste) vào tin nhắn cho mình nhé 💕");
             window.open('https://www.tiktok.com/@_sagiri0502', '_blank');
         }).catch(() => {
-            prompt("Hãy sao chép nội dung đơn này và dán vào tin nhắn TikTok nha:", message);
+            prompt("Hãy sao chép nội dung đơn này:", message);
             window.open('https://www.tiktok.com/@_sagiri0502', '_blank');
         });
     }
