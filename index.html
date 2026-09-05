@@ -19,8 +19,8 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 24px 16px;
+            align-items: flex-start;
+            padding: 30px 14px;
             background: linear-gradient(-45deg, #0d0e15, #fe2c55, #12141d, #25f4ee);
             background-size: 400% 400%;
             animation: gradientBG 12s ease infinite;
@@ -34,7 +34,24 @@
 
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 580px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(15, 16, 21, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 24px 18px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- PHẦN 1: PROFILE & DONATE --- */
+        .profile-section {
             text-align: center;
         }
 
@@ -100,25 +117,22 @@
             font-size: 1.2rem;
         }
 
-        .donate-card {
-            background: rgba(15, 16, 21, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 24px 16px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        .donate-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px 16px;
         }
 
         .donate-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
             margin-bottom: 6px;
             color: #ffb703;
         }
 
         .donate-desc {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: #cfd3e0;
             margin-bottom: 16px;
         }
@@ -137,36 +151,371 @@
             display: block;
             object-fit: contain;
         }
+
+        /* --- PHẦN 2: BẢNG GIÁ WUTHERING WAVES --- */
+        .banner-wrap {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .banner-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fe2c55;
+            margin: 18px 0 10px 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(254, 44, 85, 0.3);
+            padding-bottom: 4px;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 480px) {
+            .map-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .map-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .map-item:hover {
+            border-color: #fe2c55;
+            background: rgba(254, 44, 85, 0.08);
+        }
+
+        .map-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .map-item input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: #fe2c55;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .map-name {
+            font-size: 0.88rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .map-price {
+            font-weight: 700;
+            color: #25f4ee;
+            font-size: 0.88rem;
+            flex-shrink: 0;
+            margin-left: 6px;
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            margin: 20px 0;
+            border-left: 5px solid #ffb703;
+        }
+
+        .total-box span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .total-amount {
+            color: #ffb703;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.35);
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #25f4ee;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #fe2c55, #d90429);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 16px rgba(254, 44, 85, 0.4);
+            margin-top: 16px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(254, 44, 85, 0.6);
+        }
+
+        .extra-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #ffb703;
+            margin-top: 14px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Avatar: Tự nhận file avatar.jpg nếu có, hoặc tạo avatar chữ mặc định -->
+<div class="container">
+    <!-- KHỐI 1: PROFILE, TIKTOK & DONATE -->
+    <div class="card profile-section">
         <div class="avatar-wrap">
             <img src="avatar.jpg" alt="Avatar" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=_sagiri0502&background=fe2c55&color=fff'">
         </div>
 
-        <!-- Tên hiển thị -->
         <h1 class="channel-name">@_sagiri0502</h1>
-        <p class="bio"> kênh TikTok của mình 💕</p>
+        <p class="bio">kênh TikTok của mình 💕</p>
 
-        <!-- Nút liên kết kênh TikTok -->
         <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-tiktok">
             <i class="fa-brands fa-tiktok"></i> Đến Kênh TikTok Của Tôi
         </a>
 
-        <!-- Khung quét mã Donate -->
-        <div class="donate-card">
-            <div class="donate-title"> Donate💕 </div>
+        <div class="donate-box">
+            <div class="donate-title">Donate💕</div>
             <p class="donate-desc">Quét mã QR để ủng hộ mình ly tà tữa💕</p>
 
             <div class="qr-box">
-                <!-- Hiển thị file qr.jpg tải lên, nếu chưa có sẽ tự load mã QR tạm thời -->
                 <img src="qr.jpg" alt="QR Code" class="qr-img" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://neetsagiri.github.io'">
             </div>
         </div>
     </div>
+
+    <!-- KHỐI 2: BẢNG GIÁ WUTHERING WAVES -->
+    <div class="card">
+        <div class="banner-wrap">
+            <img src="banggia.jpg" alt="Bảng giá dịch vụ" onerror="this.src='https://placehold.co/1000x560/1a1c24/ffffff?text=Vui+long+upload+anh+banggia.jpg'">
+        </div>
+
+        <!-- 1. JINZHOU -->
+        <div class="section-title"><i class="fa-solid fa-compass"></i> JINZHOU</div>
+        <div class="map-grid">
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Gorges Of Spirits" data-price="50000"><span class="map-name">Gorges Of Spirits</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Jinzhou" data-price="40000"><span class="map-name">Jinzhou</span></div><span class="map-price">40k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Central Plains" data-price="70000"><span class="map-name">Central Plains</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Desorock Highlands" data-price="70000"><span class="map-name">Desorock Highlands</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Port City Of Guixu" data-price="70000"><span class="map-name">Port City Of Guixu</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Dim Forest" data-price="70000"><span class="map-name">Dim Forest</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Wumming Bay" data-price="50000"><span class="map-name">Wumming Bay</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Norfall Barrens" data-price="50000"><span class="map-name">Norfall Barrens</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Whining Aix's Mire" data-price="75000"><span class="map-name">Whining Aix's Mire</span></div><span class="map-price">75k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Tiger's Maw Mine" data-price="50000"><span class="map-name">Tiger's Maw Mine</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="MT. Firmament" data-price="80000"><span class="map-name">MT. Firmament</span></div><span class="map-price">80k</span></label>
+        </div>
+
+        <!-- 2. THE BLACK SHORES -->
+        <div class="section-title"><i class="fa-solid fa-water"></i> THE BLACK SHORES</div>
+        <div class="map-grid">
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Black Shores" data-price="60000"><span class="map-name">Black Shores</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Tethys Deep" data-price="60000"><span class="map-name">Tethys Deep</span></div><span class="map-price">60k</span></label>
+        </div>
+
+        <!-- 3. RINASCITA -->
+        <div class="section-title"><i class="fa-solid fa-feather"></i> RINASCITA</div>
+        <div class="map-grid">
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Ragunna City" data-price="15000"><span class="map-name">Ragunna City</span></div><span class="map-price">15k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Averado Vault" data-price="60000"><span class="map-name">Averado Vault</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Penitent's End" data-price="50000"><span class="map-name">Penitent's End</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Whisperwind Haven" data-price="50000"><span class="map-name">Whisperwind Haven</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Nimbus Sanctum" data-price="60000"><span class="map-name">Nimbus Sanctum</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Fagaceae Peninsula" data-price="50000"><span class="map-name">Fagaceae Peninsula</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Thessaleo Fells" data-price="50000"><span class="map-name">Thessaleo Fells</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Riccioli Islands" data-price="50000"><span class="map-name">Riccioli Islands</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Vault Underground" data-price="60000"><span class="map-name">Vault Underground</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Avinoleum" data-price="70000"><span class="map-name">Avinoleum</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Beohr Waters" data-price="60000"><span class="map-name">Beohr Waters</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Septimont" data-price="60000"><span class="map-name">Septimont</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Fabricatorium of Deep" data-price="40000"><span class="map-name">Fabricatorium of Deep</span></div><span class="map-price">40k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Sanguis Plateaus" data-price="50000"><span class="map-name">Sanguis Plateaus</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Hallowed Reach" data-price="50000"><span class="map-name">Hallowed Reach</span></div><span class="map-price">50k</span></label>
+        </div>
+
+        <!-- 4. ROYA FROSTLANDS -->
+        <div class="section-title"><i class="fa-regular fa-snowflake"></i> ROYA FROSTLANDS</div>
+        <div class="map-grid">
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Frostlands Transit Port" data-price="60000"><span class="map-name">Frostlands Transit Port</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Mount Gjallar" data-price="60000"><span class="map-name">Mount Gjallar</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Starblind Crashsite" data-price="60000"><span class="map-name">Starblind Crashsite</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Upphaf Forest Ruins" data-price="70000"><span class="map-name">Upphaf Forest Ruins</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Tidelost Forest" data-price="60000"><span class="map-name">Tidelost Forest</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Etching Plains" data-price="60000"><span class="map-name">Etching Plains</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Startorch Academy" data-price="15000"><span class="map-name">Startorch Academy</span></div><span class="map-price">15k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Starward Riseway" data-price="15000"><span class="map-name">Starward Riseway</span></div><span class="map-price">15k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Fangspire Chasm" data-price="60000"><span class="map-name">Fangspire Chasm</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Bjartr Woods" data-price="40000"><span class="map-name">Bjartr Woods</span></div><span class="map-price">40k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Stagnant Run" data-price="50000"><span class="map-name">Stagnant Run</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Rebirth Uplands" data-price="50000"><span class="map-name">Rebirth Uplands</span></div><span class="map-price">50k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Mawburrow Desert" data-price="20000"><span class="map-name">Mawburrow Desert</span></div><span class="map-price">20k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Giant's Gaze" data-price="40000"><span class="map-name">Giant's Gaze</span></div><span class="map-price">40k</span></label>
+        </div>
+
+        <!-- 5. MENGZHOU & DAILY -->
+        <div class="section-title"><i class="fa-solid fa-mountain-sun"></i> MENGZHOU & DAILY</div>
+        <div class="map-grid">
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Xuanfang Hold" data-price="60000"><span class="map-name">Xuanfang Hold</span></div><span class="map-price">60k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Western Fang Peaks" data-price="70000"><span class="map-name">Western Fang Peaks</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Southern Yuan Hills" data-price="70000"><span class="map-name">Southern Yuan Hills</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Eastern Xuan Peaks" data-price="70000"><span class="map-name">Eastern Xuan Peaks</span></div><span class="map-price">70k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Ngày" data-price="5000"><span class="map-name">Daily: 1 Ngày</span></div><span class="map-price">5k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Tuần" data-price="30000"><span class="map-name">Daily: 1 Tuần</span></div><span class="map-price">30k</span></label>
+            <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Tháng" data-price="100000"><span class="map-name">Daily: 1 Tháng</span></div><span class="map-price">100k</span></label>
+        </div>
+
+        <!-- TỔNG TIỀN -->
+        <div class="total-box">
+            <span>Tổng tiền:</span>
+            <span class="total-amount" id="totalDisplay">0đ</span>
+        </div>
+
+        <!-- FORM ĐIỀN THÔNG TIN -->
+        <div class="form-group">
+            <label for="clientName">Tên / Nickname:</label>
+            <input type="text" id="clientName" placeholder="Tên hoặc Discord của bạn">
+        </div>
+
+        <div class="form-group">
+            <label for="clientContact">Link FB / Zalo / SĐT liên hệ (*):</label>
+            <input type="text" id="clientContact" placeholder="Để mình liên hệ chốt đơn">
+        </div>
+
+        <div class="form-group">
+            <label for="clientNote">Ghi chú (Cứu content matrix, thuyền, tháp...):</label>
+            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Rương còn 30%, cần xong gấp..."></textarea>
+        </div>
+
+        <button class="btn-submit" onclick="sendOrder()">
+            <i class="fa-solid fa-paper-plane"></i> GỬI YÊU CẦU CÀY THUÊ
+        </button>
+
+        <p class="extra-note">✨ Ngoài ra Chía còn nhận cứu full content matrix, thuyền, tháp giá yêu thương nha 💕</p>
+    </div>
+</div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.map-cb');
+    const totalDisplay = document.getElementById('totalDisplay');
+
+    // Tự động tính tổng tiền
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            let total = 0;
+            checkboxes.forEach(item => {
+                if (item.checked) {
+                    total += parseInt(item.getAttribute('data-price'));
+                }
+            });
+            totalDisplay.textContent = total.toLocaleString('vi-VN') + 'đ';
+        });
+    });
+
+    // Tạo tin nhắn gửi về Zalo
+    function sendOrder() {
+        const name = document.getElementById('clientName').value.trim();
+        const contact = document.getElementById('clientContact').value.trim();
+        const note = document.getElementById('clientNote').value.trim();
+
+        const selectedMaps = [];
+        let total = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                selectedMaps.push(cb.getAttribute('data-name') + ' (' + (parseInt(cb.getAttribute('data-price'))/1000) + 'k)');
+                total += parseInt(cb.getAttribute('data-price'));
+            }
+        });
+
+        if (selectedMaps.length === 0) {
+            alert('Bạn hãy tích chọn ít nhất 1 dịch vụ cần cày nhé!');
+            return;
+        }
+
+        if (!contact) {
+            alert('Vui lòng để lại SĐT hoặc link liên hệ để mình chốt đơn!');
+            return;
+        }
+
+        const message = 
+`🌸 ĐƠN CÀY THUÊ WUTHERING WAVES 🌸
+- Khách hàng: ${name || 'Khách vãng lai'}
+- Liên hệ: ${contact}
+- Các map / dịch vụ chọn:
+  + ${selectedMaps.join('\n  + ')}
+---------------------------
+👉 TỔNG TIỀN: ${total.toLocaleString('vi-VN')}đ
+- Ghi chú: ${note || 'Không có'}`;
+
+        // ĐỔI SỐ ZALO CỦA BẠN VÀO ĐÂY (thay số 0 đầu bằng 84)
+        const myZaloPhone = "0986912764"; 
+
+        const zaloUrl = `https://zalo.me/${myZaloPhone}?text=${encodeURIComponent(message)}`;
+        window.open(zaloUrl, '_blank');
+    }
+</script>
 
 </body>
 </html>
