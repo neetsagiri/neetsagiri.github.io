@@ -324,6 +324,12 @@
             display: block;
         }
 
+        .qr-memo-preview {
+            font-size: 0.85rem;
+            color: #ffb703;
+            margin-top: 6px;
+        }
+
         /* FORM THÔNG TIN */
         .form-group {
             margin-bottom: 12px;
@@ -529,7 +535,17 @@
             <label class="map-item"><div class="map-info"><input type="checkbox" class="map-cb" data-name="Daily 1 Tháng" data-price="100000"><span class="map-name">Daily: 1 Tháng</span></div><span class="map-price">100k</span></label>
         </div>
 
-        <!-- TỔNG TIỀN -->
+        <!-- FORM THÔNG TIN KHÁCH -->
+        <div class="form-group" style="margin-top: 18px;">
+            <label for="clientName">Tên / ID TikTok của bạn (*):</label>
+            <input type="text" id="clientName" placeholder="Ví dụ: @_sagiri0502 hoặc sagiri" autocomplete="off">
+        </div>
+
+        <div class="form-group">
+            <label for="clientNote">Ghi chú thêm:</label>
+            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Cần hoàn thành gấp, rương còn 30%..."></textarea>
+        </div>
+
         <div class="total-box">
             <span>Tổng tiền:</span>
             <span class="total-amount" id="totalDisplay">0đ</span>
@@ -538,22 +554,11 @@
         <!-- KHUNG MÃ VIETQR BIDV TỰ ĐỘNG THEO ĐƠN -->
         <div class="qr-section">
             <div class="qr-title"><i class="fa-solid fa-qrcode"></i> Quét Mã BIDV VietQR Thanh Toán</div>
-            <p class="qr-sub">Mã QR tự động cập nhật đúng số tiền và nội dung chuyển khoản</p>
+            <p class="qr-sub">Mã QR tự động cập nhật số tiền & lời nhắn là tên TikTok của bạn</p>
             <div class="qr-box-auto">
                 <img id="autoQrImg" class="qr-img-auto" src="" alt="Mã VietQR Tự Động">
             </div>
-            <p style="font-size: 0.8rem; color: #a0a5b5;">Mở app ngân hàng quét mã để thanh toán đơn cày thuê</p>
-        </div>
-
-        <!-- FORM THÔNG TIN -->
-        <div class="form-group">
-            <label for="clientName">Tên / Nickname của bạn:</label>
-            <input type="text" id="clientName" placeholder="Tên hoặc ID TikTok của bạn">
-        </div>
-
-        <div class="form-group">
-            <label for="clientNote">Ghi chú thêm:</label>
-            <textarea id="clientNote" rows="2" placeholder="Ví dụ: Đã chuyển khoản, cần xong gấp..."></textarea>
+            <p class="qr-memo-preview" id="memoPreview">Lời nhắn chuyển khoản: SAGIRI CAY THUE</p>
         </div>
 
         <button class="btn-submit" onclick="sendOrderToTikTok()">
@@ -572,39 +577,72 @@
 
 <script>
     // ============================================================
-    // CẤU HÌNH TÀI KHOẢN BIDV ĐỂ TỰ ĐỘNG TÍNH TIỀN THEO MAP:
+    // CẤU HÌNH TÀI KHOẢN BIDV CỦA BẠN TẠI ĐÂY:
     // ============================================================
     const BANK_ID = "BIDV";
-    const ACCOUNT_NO = "8833220630";  // Thay bằng STK BIDV của bạn
-    const ACCOUNT_NAME = "BUI THANH NAM";      // Thay bằng Họ và Tên viết hoa không dấu
+    const ACCOUNT_NO = "8833220630";  // Thay STK BIDV của bạn
+    const ACCOUNT_NAME = "BUI THANH NAM";      // Thay Họ và Tên viết hoa không dấu
     // ============================================================
 
     const checkboxes = document.querySelectorAll('.map-cb');
     const totalDisplay = document.getElementById('totalDisplay');
     const autoQrImg = document.getElementById('autoQrImg');
+    const clientNameInput = document.getElementById('clientName');
+    const memoPreview = document.getElementById('memoPreview');
 
-    function updateQR(total) {
-        const memo = encodeURIComponent("SAGIRI CAY THUE");
-        const accName = encodeURIComponent(ACCOUNT_NAME);
-        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${total}&addInfo=${memo}&accountName=${accName}`;
+    // Hàm chuyển chữ có dấu thành không dấu chuẩn để app ngân hàng không bị lỗi ký tự
+    function removeVietnameseTones(str) {
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .replace(/[^a-zA-Z0-9 ]/g, '') // Bỏ ký tự đặc biệt như @, #...
+            .trim()
+            .toUpperCase();
+    }
+
+    // Hàm cập nhật mã QR theo số tiền và tên khách hàng
+    function updateQR() {
+        let total = 0;
+        checkboxes.forEach(item => {
+            if (item.checked) {
+                total += parseInt(item.getAttribute('data-price'));
+            }
+        });
+
+        const rawName = clientNameInput.value.trim();
+        const cleanName = removeVietnameseTones(rawName);
+
+        // Lời nhắn là TÊN KHÁCH HÀNG TIKTOK, nếu chưa nhập thì để mặc định
+        let memo = cleanName ? cleanName : "SAGIRI CAY THUE";
+        
+        // Cắt gọn nếu tên quá dài (tối đa 25 ký tự theo quy định VietQR)
+        if (memo.length > 25) {
+            memo = memo.substring(0, 25);
+        }
+
+        totalDisplay.textContent = total.toLocaleString('vi-VN') + 'đ';
+        memoPreview.textContent = `Lời nhắn chuyển khoản: ${memo}`;
+
+        const encodedMemo = encodeURIComponent(memo);
+        const encodedAccName = encodeURIComponent(ACCOUNT_NAME);
+        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${total}&addInfo=${encodedMemo}&accountName=${encodedAccName}`;
+        
         autoQrImg.src = qrUrl;
     }
 
-    updateQR(0);
-
+    // Tự cập nhật khi tick chọn map
     checkboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
-            let total = 0;
-            checkboxes.forEach(item => {
-                if (item.checked) {
-                    total += parseInt(item.getAttribute('data-price'));
-                }
-            });
-            totalDisplay.textContent = total.toLocaleString('vi-VN') + 'đ';
-            updateQR(total);
-        });
+        cb.addEventListener('change', updateQR);
     });
 
+    // Tự cập nhật mã QR ngay khi khách gõ tên vào ô Tên/ID TikTok
+    clientNameInput.addEventListener('input', updateQR);
+
+    // Khởi tạo mã QR lúc ban đầu
+    updateQR();
+
+    // Modal phóng to ảnh
     function openImageModal() {
         const modal = document.getElementById("imageModal");
         const bannerImg = document.getElementById("bannerImg");
@@ -621,8 +659,9 @@
         if (e.key === "Escape") closeImageModal();
     });
 
+    // Gửi đơn qua TikTok
     function sendOrderToTikTok() {
-        const name = document.getElementById('clientName').value.trim();
+        const name = clientNameInput.value.trim();
         const note = document.getElementById('clientNote').value.trim();
 
         const selectedMaps = [];
@@ -641,7 +680,8 @@
 
         const message = 
 `🌸 ĐƠN CÀY THUÊ WUTHERING WAVES 🌸
-- Khách hàng: ${name || 'Khách vãng lai'}
+- Khách hàng (TikTok): ${name || 'Chưa nhập'}
+- Lời nhắn CK: ${removeVietnameseTones(name) || 'SAGIRI CAY THUE'}
 - Dịch vụ / Map đã chọn:
   + ${selectedMaps.join('\n  + ')}
 ---------------------------
