@@ -160,6 +160,10 @@
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       transition: transform 0.25s ease;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
     }
 
     .game-card-wrapper:hover {
@@ -687,28 +691,28 @@
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
-      <!-- Khu vực 2 Game yêu thích: CÓ VIỀN PHÁT SÁNG CHUYỂN MÀU -->
+      <!-- Khu vực 2 Game yêu thích: Mở thông minh (Có game mở thẳng, chưa có mở cửa hàng) -->
       <div class="section-title">
         <i class="fa-solid fa-gamepad"></i> Game yêu thích
       </div>
       <div class="games-grid">
         <!-- Wuthering Waves -->
-        <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-card-wrapper">
+        <button type="button" onclick="launchGame('ww')" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
             <span class="game-name">Wuthering Waves</span>
             <span class="game-action">Mở game ▶</span>
           </div>
-        </a>
+        </button>
 
         <!-- Liên Quân Mobile -->
-        <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-card-wrapper">
+        <button type="button" onclick="launchGame('lq')" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
             <span class="game-name">Liên Quân Mobile</span>
             <span class="game-action">Mở game ▶</span>
           </div>
-        </a>
+        </button>
       </div>
 
       <!-- Khu vực Liên kết & Playlist -->
@@ -792,7 +796,6 @@
             <input type="text" id="donateMessage" class="donate-input" placeholder="Nhập lời nhắn..." value="Cho Sagiri coc tra sua" />
           </div>
 
-          <!-- NÚT DONE ĐỂ XUẤT QR & LỜI CẢM ƠN -->
           <button type="button" class="btn-done-submit" onclick="submitDonateDone()">
             <i class="fa-solid fa-check"></i> Xong / Done
           </button>
@@ -832,6 +835,52 @@
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     // ==========================================
+    // CƠ CHẾ MỞ GAME THÔNG MINH (DEEP LINKING):
+    // ==========================================
+    function launchGame(gameKey) {
+      const isAndroid = /android/i.test(navigator.userAgent);
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+      let appScheme = "";
+      let storeFallback = "";
+
+      if (gameKey === 'ww') {
+        if (isAndroid) {
+          appScheme = "intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.kurogame.wutheringwaves.global;end";
+          storeFallback = "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global";
+        } else if (isIOS) {
+          appScheme = "wutheringwaves://";
+          storeFallback = "https://apps.apple.com/app/wuthering-waves/id6475033368";
+        } else {
+          window.open("https://wutheringwaves.kurogames.com/", "_blank");
+          return;
+        }
+      } else if (gameKey === 'lq') {
+        if (isAndroid) {
+          appScheme = "intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.garena.game.kgvn;end";
+          storeFallback = "https://play.google.com/store/apps/details?id=com.garena.game.kgvn";
+        } else if (isIOS) {
+          appScheme = "kgvn://";
+          storeFallback = "https://apps.apple.com/app/garena-li%C3%AAn-qu%C3%A2n-mobile/id1150288114";
+        } else {
+          window.open("https://lienquan.garena.vn/", "_blank");
+          return;
+        }
+      }
+
+      // Thử kích hoạt ứng dụng trên máy
+      const startTime = Date.now();
+      window.location.href = appScheme;
+
+      // Nếu sau 1.2 giây ứng dụng không mở (chưa cài đặt), tự động chuyển sang trang tải
+      setTimeout(function() {
+        if (Date.now() - startTime < 1600) {
+          window.location.href = storeFallback;
+        }
+      }, 1200);
+    }
+
+    // ==========================================
     // CẤU HÌNH TÀI KHOẢN BIDV (NAPAS247):
     // ==========================================
     const myBankConfig = {
@@ -853,7 +902,6 @@
       document.getElementById("donateAmount").value = formatNumberWithDots(val.toString());
     }
 
-    // Khi người dùng bấm nút DONE: Tạo mã QR & Hiện lời cảm ơn
     function submitDonateDone() {
       const amountRaw = document.getElementById("donateAmount").value.replace(/\D/g, "");
       const messageRaw = document.getElementById("donateMessage").value.trim();
@@ -863,23 +911,19 @@
       const amount = amountRaw ? parseInt(amountRaw, 10) : "";
       const memo = messageRaw ? encodeURIComponent(messageRaw) : encodeURIComponent("Cho Sagiri coc tra sua");
 
-      // Tạo URL VietQR theo tài khoản BIDV
       const qrUrl = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
       qrImg.src = qrUrl;
 
-      // Cập nhật thông tin tóm tắt
       if (amount) {
         summary.innerHTML = `Số tiền: <strong>${formatNumberWithDots(amount.toString())} VNĐ</strong><br>Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
       } else {
         summary.innerHTML = `Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
       }
 
-      // Ẩn form nhập, hiện QR & Lời cảm ơn
       document.getElementById("donateInputScreen").style.display = "none";
       document.getElementById("qrResultScreen").style.display = "block";
     }
 
-    // Quay lại màn hình nhập nếu muốn sửa
     function backToEditDonate() {
       document.getElementById("qrResultScreen").style.display = "none";
       document.getElementById("donateInputScreen").style.display = "block";
