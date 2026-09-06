@@ -41,7 +41,7 @@
       width: 100%;
       max-width: 400px;
       border-radius: 30px;
-      padding: 3px; /* Độ dày của viền ngoài */
+      padding: 3px;
       overflow: hidden;
       display: flex;
       justify-content: center;
@@ -51,7 +51,7 @@
                   0 0 25px rgba(254, 44, 85, 0.2);
     }
 
-    /* Lớp gradient neon xoay tròn giống viền avatar */
+    /* Lớp gradient neon xoay tròn */
     .card-border-wrapper::before {
       content: "";
       position: absolute;
@@ -256,6 +256,18 @@
       box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
     }
 
+    /* Nút Discord tím Blurple */
+    .btn-discord {
+      background: #5865F2;
+      border: none;
+      color: #ffffff;
+    }
+
+    .btn-discord:hover {
+      background: #4752c4;
+      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.55);
+    }
+
     /* Nút YouTube Music */
     .btn-yt-music {
       background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(254, 44, 85, 0.2));
@@ -364,7 +376,7 @@
       transform: scale(1.08);
     }
 
-    /* Danh sách bài hát */
+    /* Danh sách bài hát cuộn đầy đủ */
     .playlist {
       display: flex;
       flex-direction: column;
@@ -548,8 +560,9 @@
           <i class="fa-solid fa-qrcode"></i> Donate Tà Tữa
         </button>
 
-        <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link">
-          <i class="fa-solid fa-play"></i> Video mới nhất
+        <!-- NÚT DISCORD THAY CHO VIDEO MỚI NHẤT -->
+        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord">
+          <i class="fa-brands fa-discord"></i> Discord: sagirichan_0502
         </a>
 
         <!-- Nút Bật/Đóng Trình phát Playlist -->
@@ -592,8 +605,8 @@
   <!-- Popup Donate QR -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 class="modal-title">Quét mã QR cho Sagiri tà tữa💕</h3>
-      <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri💕</p>
+      <h3 class="modal-title">Quét mã QR để cho Sagiri mua tà tữa💕</h3>
+      <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri Chan💕</p>
       <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
       <br />
       <button type="button" class="close-btn" onclick="closeQRModal()">Đóng lại</button>
