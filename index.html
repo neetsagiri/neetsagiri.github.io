@@ -404,7 +404,7 @@
     body.music-active .btn-yt-music { box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), inset 0 0 10px rgba(37, 244, 238, 0.3); }
 
     /* ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER
+       THANH MINI BOTTOM BAR MUSIC PLAYER (LOCAL MP3)
        ============================================================ */
     .mini-player-bar {
       position: fixed;
@@ -597,15 +597,6 @@
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .music-thumb {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      flex-shrink: 0;
-      background: #111;
-    }
     .music-info { flex: 1; overflow: hidden; }
     .music-title {
       font-size: 0.86rem;
@@ -731,7 +722,6 @@
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
     .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
-    #ytm-wrapper { position: fixed; bottom: -300px; right: -300px; width: 200px; height: 200px; opacity: 0.01; pointer-events: none; z-index: -999; }
   </style>
 </head>
 <body>
@@ -799,13 +789,6 @@
 
         <!-- Bảng danh sách bài hát -->
         <div id="musicPanel" class="music-player-panel">
-          <div class="music-now-playing">
-            <img id="currentThumb" class="music-thumb" src="" alt="Thumbnail" />
-            <div class="music-info">
-              <div class="music-title" id="currentTrackTitle">Chọn bài hát bên dưới</div>
-              <div class="music-status" id="trackStatus">Sẵn sàng phát</div>
-            </div>
-          </div>
           <div class="playlist" id="playlistContainer"></div>
         </div>
       </div>
@@ -817,7 +800,7 @@
   </div>
 
   <!-- ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER CỐ ĐỊNH ĐÁY MÀN HÌNH
+       THANH MINI BOTTOM BAR MUSIC PLAYER (LOCAL MP3)
        ============================================================ -->
   <div class="mini-player-bar" id="miniPlayerBar">
     <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
@@ -846,7 +829,7 @@
         </div>
       </div>
 
-      <!-- Cụm nút điều khiển (Dùng SVG trực tiếp đảm bảo luôn hiện đúng Play/Pause) -->
+      <!-- Cụm nút điều khiển -->
       <div class="mini-controls">
         <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -971,12 +954,6 @@
     </div>
   </div>
 
-  <!-- PLAYER YOUTUBE -->
-  <div id="ytm-wrapper">
-    <div id="ytm-streamer"></div>
-  </div>
-
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     const gamesData = {
       ww: {
@@ -1096,41 +1073,48 @@
       document.getElementById('qrModal').classList.remove('active');
     }
 
-    // PLAYLIST YOUTUBE
+    // ==========================================
+    // DANH SÁCH PLAYLIST LOCAL MP3
+    // ==========================================
     const playlist = [
-      { title: "✨ Saving Light", id: "nl_vdjf-jM0" },
-      { title: "🎵 An Unfinished Song (EP 1.3)", id: "53qYNTdtnpk" },
-      { title: "🎭 All Silent Souls Can Sing (Ver 2.0 Trailer)", id: "SdUgFGx1kOY" },
-      { title: "💃 Dancing Through Fantasies", id: "0hC73MsFBv8" },
-      { title: "⚔️ Wuthering Waves OST Track 5", id: "cW9sz5RJvnc" },
-      { title: "🌸 Wuthering Waves OST Track 6", id: "Yr1RlcoqXTg" }
+      { title: "✨ Styx Helix", src: "music/music1.mp3" },
+      { title: "🎵 An Unfinished Song", src: "music/music2.mp3" },
+      { title: "🎭 All Silent Souls Can Sing", src: "music/music3.mp3" },
+      { title: "💃 Dancing Through Fantasies", src: "music/music4.mp3" },
+      { title: "⚔️ With Glory I Shall Fall", src: "music/music5.mp3" },
+      { title: "🌸 Against the Tide", src: "music/music6.mp3" }
     ];
 
-    let player = null;
     let currentTrackIndex = 0;
     let isPlaying = false;
     let isMuted = false;
-    let hasAutoStarted = false;
-    let progressInterval = null;
+    const audio = new Audio();
+    audio.preload = "auto";
 
-    function updateProgressUI() {
-      if (!player || typeof player.getCurrentTime !== 'function') return;
-      const current = player.getCurrentTime();
-      const total = player.getDuration();
-      if (total > 0) {
-        const percent = (current / total) * 100;
-        document.getElementById('miniProgressBarFill').style.width = percent + '%';
-      }
+    function updateTrackInfo() {
+      const track = playlist[currentTrackIndex];
+      document.getElementById('miniSongTitle').innerText = track.title;
+      audio.src = track.src;
+      renderPlaylist();
     }
 
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('miniProgressBarFill').style.width = percent + '%';
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      nextTrack();
+    });
+
     function seekTrack(event) {
-      if (!player || typeof player.seekTo !== 'function') return;
       const bg = document.getElementById('miniProgressBarBg');
       const rect = bg.getBoundingClientRect();
       const percent = (event.clientX - rect.left) / rect.width;
-      const total = player.getDuration();
-      if (total > 0) {
-        player.seekTo(percent * total, true);
+      if (audio.duration) {
+        audio.currentTime = percent * audio.duration;
       }
     }
 
@@ -1142,69 +1126,52 @@
       }
     }
 
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('ytm-streamer', {
-        height: '200',
-        width: '200',
-        videoId: playlist[currentTrackIndex].id,
-        playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1, 'fs': 0, 'rel': 0 },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
+    function togglePlayPause() {
+      const miniPlayIconSvg = document.getElementById('miniPlayIconSvg');
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        miniPlayIconSvg.innerHTML = '<path d="M8 5v14l11-7z"/>'; // Play icon
+      } else {
+        audio.play().then(() => {
+          isPlaying = true;
+          miniPlayIconSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // Pause icon
+        }).catch(err => console.log("Autoplay blocked:", err));
+      }
+      syncVisualEffects();
+    }
+
+    function selectTrack(index) {
+      currentTrackIndex = index;
+      updateTrackInfo();
+      audio.play().then(() => {
+        isPlaying = true;
+        document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        syncVisualEffects();
       });
     }
 
-    function onPlayerReady() {
-      updateTrackInfo();
-      renderPlaylist();
+    function nextTrack() {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      selectTrack(currentTrackIndex);
     }
 
-    function updateTrackInfo() {
-      const track = playlist[currentTrackIndex];
-      document.getElementById('currentTrackTitle').innerText = track.title;
-      document.getElementById('miniSongTitle').innerText = track.title;
-      document.getElementById('currentThumb').src = `https://img.youtube.com/vi/${track.id}/hqdefault.jpg`;
-      document.getElementById('miniVinylAvatar').src = `https://img.youtube.com/vi/${track.id}/hqdefault.jpg`;
-    }
-
-    function onPlayerStateChange(event) {
-      const miniPlayIconSvg = document.getElementById('miniPlayIconSvg');
-      const trackStatus = document.getElementById('trackStatus');
-
-      if (event.data === YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        // Biểu tượng Pause (hai vạch)
-        miniPlayIconSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-        trackStatus.innerText = "Đang phát nhạc...";
-        syncVisualEffects();
-        renderPlaylist();
-        clearInterval(progressInterval);
-        progressInterval = setInterval(updateProgressUI, 500);
-      } else if (event.data === YT.PlayerState.PAUSED) {
-        isPlaying = false;
-        // Biểu tượng Play (tam giác)
-        miniPlayIconSvg.innerHTML = '<path d="M8 5v14l11-7z"/>';
-        trackStatus.innerText = "Đã tạm dừng";
-        syncVisualEffects();
-        clearInterval(progressInterval);
-      } else if (event.data === YT.PlayerState.ENDED) {
-        isPlaying = false;
-        syncVisualEffects();
-        clearInterval(progressInterval);
-        nextTrack();
-      }
+    function prevTrack() {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      selectTrack(currentTrackIndex);
     }
 
     function triggerPlayOnFirstInteraction() {
-      if (!hasAutoStarted && player && typeof player.playVideo === 'function') {
-        player.playVideo();
-        hasAutoStarted = true;
+      if (!isPlaying && audio.paused) {
+        audio.play().then(() => {
+          isPlaying = true;
+          document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+          syncVisualEffects();
+        }).catch(() => {});
       }
     }
-
-    window.addEventListener('click', triggerPlayOnFirstInteraction, { passive: true });
-    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { passive: true });
+    window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
+    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
 
     const muteBtn = document.getElementById('floatingMuteBtn');
     const muteIcon = document.getElementById('floatingMuteIcon');
@@ -1215,7 +1182,6 @@
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => { muteBtn.classList.add('idle'); }, 3000);
     }
-
     ['mousemove', 'touchstart', 'scroll', 'click'].forEach(evt => {
       window.addEventListener(evt, resetIdleTimer, { passive: true });
     });
@@ -1224,30 +1190,18 @@
     function toggleGlobalMute(event) {
       if (event) event.stopPropagation();
       resetIdleTimer();
-      if (!player) return;
-
-      if (!hasAutoStarted) {
-        player.playVideo();
-        hasAutoStarted = true;
-      }
 
       if (isMuted) {
-        player.unMute();
+        audio.muted = false;
         isMuted = false;
         muteIcon.className = "fa-solid fa-volume-high";
       } else {
-        player.mute();
+        audio.muted = true;
         isMuted = true;
         muteIcon.className = "fa-solid fa-volume-xmark";
       }
       syncVisualEffects();
     }
-
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden && isPlaying && player && typeof player.playVideo === 'function') {
-        player.playVideo();
-      }
-    });
 
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
@@ -1268,35 +1222,6 @@
       chevron.className = panel.classList.contains('active') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    function togglePlayPause() {
-      if (!player || typeof player.playVideo !== 'function') return;
-      if (isPlaying) {
-        player.pauseVideo();
-      } else {
-        player.playVideo();
-      }
-    }
-
-    function selectTrack(index) {
-      currentTrackIndex = index;
-      updateTrackInfo();
-      renderPlaylist();
-      if (player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById(playlist[currentTrackIndex].id);
-        player.playVideo();
-      }
-    }
-
-    function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      selectTrack(currentTrackIndex);
-    }
-
-    function prevTrack() {
-      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-      selectTrack(currentTrackIndex);
-    }
-
     function toggleMiniPlayerCollapse() {
       const bar = document.getElementById('miniPlayerBar');
       const chevron = document.getElementById('collapseChevron');
@@ -1304,8 +1229,8 @@
       chevron.className = bar.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    renderPlaylist();
     updateTrackInfo();
+    renderPlaylist();
 
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
