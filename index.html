@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
+  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     * {
@@ -393,4 +395,841 @@
       background: rgba(37, 244, 238, 0.22);
       color: #ffffff;
       border-color: #85faf6;
-      box-shadow: 0 0 20px rgba(37, 244, 238, 0.7), inset 0 0 12px rgba(37,
+      box-shadow: 0 0 20px rgba(37, 244, 238, 0.7), inset 0 0 12px rgba(37, 244, 238, 0.35);
+    }
+
+    body.music-active .btn-tiktok { box-shadow: 0 0 18px rgba(254, 44, 85, 0.6), inset 0 0 10px rgba(254, 44, 85, 0.3); }
+    body.music-active .btn-donate { box-shadow: 0 0 18px rgba(255, 153, 0, 0.6), inset 0 0 10px rgba(255, 153, 0, 0.3); }
+    body.music-active .btn-discord { box-shadow: 0 0 18px rgba(88, 101, 242, 0.6), inset 0 0 10px rgba(88, 101, 242, 0.3); }
+    body.music-active .btn-yt-music { box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), inset 0 0 10px rgba(37, 244, 238, 0.3); }
+
+    /* ============================================================
+       THANH MINI BOTTOM BAR MUSIC PLAYER
+       ============================================================ */
+    .mini-player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(14, 14, 18, 0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1.5px solid rgba(37, 244, 238, 0.3);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(254, 44, 85, 0.15);
+      z-index: 9990;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.3s ease;
+    }
+
+    .mini-player-bar.collapsed {
+      transform: translateY(calc(100% - 32px));
+    }
+
+    .mini-collapse-toggle {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 18, 24, 0.9);
+      border: 1px solid rgba(37, 244, 238, 0.4);
+      color: #25f4ee;
+      width: 36px;
+      height: 20px;
+      border-radius: 12px 12px 0 0;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .mini-progress-bg {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .mini-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #25f4ee, #fe2c55);
+      transition: width 0.1s linear;
+    }
+
+    .mini-player-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .mini-vinyl-wrapper {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #111;
+      border: 2px solid rgba(37, 244, 238, 0.5);
+      box-shadow: 0 0 10px rgba(37, 244, 238, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    body.music-active .mini-vinyl-wrapper {
+      animation: spin 3s linear infinite;
+    }
+    .mini-vinyl-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .mini-song-info {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      text-align: left;
+    }
+    .mini-song-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 0 6px rgba(37, 244, 238, 0.4);
+    }
+    .mini-artist {
+      font-size: 0.7rem;
+      color: #a0a0a0;
+    }
+
+    .mini-equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+      margin-left: 6px;
+    }
+    .mini-equalizer span {
+      width: 2.5px;
+      background: #fe2c55;
+      height: 3px;
+      border-radius: 2px;
+    }
+    body.music-active .mini-equalizer span:nth-child(1) { animation: eqMini 0.5s ease-in-out infinite alternate; }
+    body.music-active .mini-equalizer span:nth-child(2) { animation: eqMini 0.3s ease-in-out infinite alternate; }
+    body.music-active .mini-equalizer span:nth-child(3) { animation: eqMini 0.4s ease-in-out infinite alternate; }
+    @keyframes eqMini {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .mini-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .mini-btn:hover {
+      background: rgba(37, 244, 238, 0.3);
+      border-color: #25f4ee;
+    }
+    .mini-btn-play {
+      background: linear-gradient(135deg, #fe2c55, #25f4ee);
+      border: none;
+      width: 38px;
+      height: 38px;
+      font-size: 0.95rem;
+      box-shadow: 0 0 12px rgba(254, 44, 85, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .music-player-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 16px;
+      background: rgba(14, 14, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      text-align: left;
+      animation: fadeIn 0.25s ease-out;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+    .music-player-panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .playlist::-webkit-scrollbar { width: 5px; }
+    .playlist::-webkit-scrollbar-thumb { background: rgba(254, 44, 85, 0.4); border-radius: 4px; }
+
+    .track-item {
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #ddd;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .track-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .track-item.playing {
+      background: rgba(254, 44, 85, 0.18);
+      color: #ff3366;
+      border: 1px solid rgba(254, 44, 85, 0.35);
+      font-weight: 600;
+    }
+
+    /* MODAL OVERLAY CHUNG */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.84);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-border-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      border-radius: 28px;
+      padding: 3px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(37, 244, 238, 0.3), 0 0 25px rgba(254, 44, 85, 0.3);
+    }
+    .modal-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(#25f4ee, #fe2c55, #25f4ee);
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+    .modal-content {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(rgba(14, 14, 18, 0.85), rgba(14, 14, 18, 0.90)), url('card-bg.jpg') center/cover no-repeat;
+      background-color: rgba(18, 18, 22, 0.92);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 24px 20px;
+      text-align: center;
+      color: #ffffff;
+      z-index: 1;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: #ffffff; }
+    .game-modal-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .game-modal-icon { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.25); }
+    .game-info-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 14px; text-align: left; margin-bottom: 14px; }
+    .game-info-row { margin-bottom: 12px; }
+    .game-info-row:last-child { margin-bottom: 0; }
+    .info-label { font-size: 0.72rem; color: #a0a0a0; text-transform: uppercase; margin-bottom: 4px; }
+    .info-value-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .info-val { font-size: 0.95rem; font-weight: 700; color: #25f4ee; }
+    .btn-copy-mini { padding: 5px 12px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .btn-view-account-photo { width: 100%; padding: 10px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 12px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .account-photo-img { width: 100%; max-height: 55vh; object-fit: contain; border-radius: 14px; background: #0d0d12; border: 1px solid rgba(255, 255, 255, 0.15); margin: 8px 0 14px; }
+    .donate-form { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .donate-input-group { text-align: left; }
+    .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
+    .donate-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.9rem; outline: none; }
+    .quick-amount-buttons { display: flex; gap: 6px; margin-top: 6px; }
+    .amount-tag { flex: 1; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; }
+    .btn-done-submit { width: 100%; margin-top: 8px; padding: 11px 0; background: linear-gradient(135deg, #fe2c55, #25f4ee); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
+    #qrResultScreen { display: none; }
+    .thankyou-box { background: rgba(254, 44, 85, 0.12); border: 1px solid rgba(254, 44, 85, 0.35); padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; }
+    .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
+    .thankyou-sub { color: #bbb; font-size: 0.76rem; margin-top: 3px; }
+    .qr-container { position: relative; display: inline-block; margin-bottom: 10px; }
+    .qr-img { width: 210px; height: 210px; border-radius: 14px; object-fit: contain; background: #ffffff; padding: 6px; border: 2px solid rgba(255, 255, 255, 0.2); }
+    .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 12px; }
+    .qr-info-summary strong { color: #25f4ee; }
+    .btn-modal-action { width: 100%; padding: 10px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
+    .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
+    .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
+
+    .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
+  </style>
+</head>
+<body>
+
+  <!-- NÚT BẬT/TẮT TIẾNG GÓC TRÊN BÊN PHẢI -->
+  <button type="button" class="floating-mute-btn" id="floatingMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh">
+    <i class="fa-solid fa-volume-high" id="floatingMuteIcon"></i>
+  </button>
+
+  <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
+  <div class="card-border-wrapper">
+    <div class="card">
+      <div class="avatar-wrapper">
+        <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
+      </div>
+
+      <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
+      <p class="handle">@_sagiri0502</p>
+      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
+
+      <!-- KHU VỰC 2 GAME -->
+      <div class="section-title">
+        <i class="fa-solid fa-gamepad"></i> Game yêu thích
+      </div>
+      <div class="games-grid">
+        <button type="button" onclick="openGameModal('ww')" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
+            <span class="game-name">Wuthering Waves</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
+          </div>
+        </button>
+
+        <button type="button" onclick="openGameModal('lq')" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
+            <span class="game-name">Liên Quân Mobile</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Khu vực Liên kết & Playlist -->
+      <div class="section-title" style="margin-top: 16px;">
+        <i class="fa-solid fa-link"></i> Liên kết
+      </div>
+      <div class="links">
+        <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
+          <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
+        </a>
+
+        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+        </button>
+
+        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
+          <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
+        </a>
+
+        <!-- Nút Bật/Đóng Trình phát Playlist -->
+        <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
+          <i class="fa-solid fa-circle-play"></i> Danh sách bài hát yêu thích 💕
+          <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+        </button>
+
+        <!-- Bảng danh sách bài hát -->
+        <div id="musicPanel" class="music-player-panel">
+          <div class="playlist" id="playlistContainer"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        © @_sagiri0502 • All rights reserved
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       THANH MINI BOTTOM BAR MUSIC PLAYER
+       ============================================================ -->
+  <div class="mini-player-bar" id="miniPlayerBar">
+    <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
+      <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
+    </button>
+
+    <!-- Thanh tiến trình bài hát -->
+    <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+      <div class="mini-progress-fill" id="miniProgressBarFill"></div>
+    </div>
+
+    <div class="mini-player-content">
+      <!-- Đĩa Vinyl xoay mini -->
+      <div class="mini-vinyl-wrapper">
+        <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Vinyl" />
+      </div>
+
+      <!-- Tên bài hát & Sóng âm Equalizer -->
+      <div class="mini-song-info">
+        <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="mini-artist">Sagiri Playlist</span>
+          <div class="mini-equalizer">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cụm nút điều khiển -->
+      <div class="mini-controls">
+        <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
+          <svg id="miniPlayIconSvg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME -->
+  <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <div class="game-modal-header">
+          <img id="gameModalImg" class="game-modal-icon" src="" alt="Game Icon" />
+          <div style="text-align: left;">
+            <h3 id="gameModalTitle" class="modal-title" style="margin-bottom: 2px;">Game Name</h3>
+            <p style="font-size: 0.78rem; color: #aaa;">Thông tin kết bạn trong game</p>
+          </div>
+        </div>
+
+        <div class="game-info-card">
+          <div class="game-info-row">
+            <div class="info-label">Tên Ingame</div>
+            <div class="info-value-box">
+              <span id="gameIngameText" class="info-val"></span>
+              <button type="button" class="btn-copy-mini" onclick="copyIngameName(this)">Copy Tên</button>
+            </div>
+          </div>
+
+          <div class="game-info-row">
+            <div class="info-label">UID</div>
+            <div class="info-value-box">
+              <span id="gameUidText" class="info-val"></span>
+              <button type="button" class="btn-copy-mini" onclick="copyGameUid(this)">Copy UID</button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-view-account-photo" onclick="openAccountPhotoModal()">
+          <i class="fa-regular fa-image"></i> Xem ảnh tài khoản
+        </button>
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeGameModal()">Đóng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 1.1: HIỂN THỊ ẢNH TÀI KHOẢN GAME -->
+  <div id="accountPhotoModal" class="modal-overlay" onclick="closeAccountPhotoModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <h3 id="accountPhotoTitle" class="modal-title" style="margin-bottom: 2px;">Ảnh tài khoản</h3>
+        <p style="font-size: 0.78rem; color: #aaa;">Ảnh chụp hồ sơ ingame</p>
+
+        <img id="accountPhotoDisplay" class="account-photo-img" src="" alt="Ảnh tài khoản" />
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeAccountPhotoModal()">Quay lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 2: DONATE TRÀ SỮA -->
+  <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <div id="donateInputScreen">
+          <h3 class="modal-title">Gửi Tà Tữa cho Sagiri 💕</h3>
+          <p class="modal-desc">Nhập số tiền và lời nhắn ngọt ngào dành tặng Sagiri Chan</p>
+
+          <div class="donate-form">
+            <div class="donate-input-group">
+              <label class="donate-input-label"><i class="fa-solid fa-coins"></i> Số tiền ủng hộ (VNĐ):</label>
+              <input type="text" id="donateAmount" class="donate-input" placeholder="Nhập số tiền (ví dụ: 10.000)" oninput="handleAmountInput(this)" />
+              <div class="quick-amount-buttons">
+                <button type="button" class="amount-tag" onclick="setQuickAmount(10000)">10.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(20000)">20.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(50000)">50.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(100000)">100.000 đ</button>
+              </div>
+            </div>
+
+            <div class="donate-input-group">
+              <label class="donate-input-label"><i class="fa-solid fa-message"></i> Lời nhắn gửi Sagiri:</label>
+              <input type="text" id="donateMessage" class="donate-input" placeholder="Nhập lời nhắn..." value="Cho Sagiri coc tra sua" />
+            </div>
+
+            <button type="button" class="btn-done-submit" onclick="submitDonateDone()">
+              <i class="fa-solid fa-check"></i> Xong / Done
+            </button>
+          </div>
+
+          <button type="button" class="btn-modal-action close-btn" onclick="closeQRModal()">Đóng lại</button>
+        </div>
+
+        <div id="qrResultScreen">
+          <div class="thankyou-box">
+            <div class="thankyou-text">Cảm ơn bạn rất nhiều! 💕</div>
+            <div class="thankyou-sub">Đã tiếp thêm năng lượng và yêu thương cho Sagiri Chan!</div>
+          </div>
+
+          <div class="qr-container">
+            <img class="qr-img" id="dynamicQR" src="donate.jpg" alt="Mã QR VietQR BIDV" />
+          </div>
+
+          <div class="qr-info-summary" id="qrSummaryText">
+            Quét bằng MoMo hoặc mọi ứng dụng Ngân hàng
+          </div>
+
+          <button type="button" class="btn-modal-action btn-edit-back" onclick="backToEditDonate()">
+            <i class="fa-solid fa-pen-to-square"></i> Đổi số tiền / Lời nhắn khác
+          </button>
+
+          <button type="button" class="btn-modal-action close-btn" onclick="closeQRModal()">Đóng lại</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gamesData = {
+      ww: {
+        name: "Wuthering Waves",
+        icon: "ww.png",
+        fallbackIcon: "https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png",
+        ingame: "Sagiri",
+        uid: "900264432",
+        photo: "ww-account.jpg"
+      },
+      lq: {
+        name: "Liên Quân Mobile",
+        icon: "lq.png",
+        fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
+        ingame: "ThahNamです",
+        uid: "5319141104092273",
+        photo: "lq-account.jpg"
+      }
+    };
+
+    let activeGameKey = "ww";
+
+    function openGameModal(key) {
+      activeGameKey = key;
+      const game = gamesData[key];
+      const modalImg = document.getElementById("gameModalImg");
+      document.getElementById("gameModalTitle").innerText = game.name;
+      modalImg.src = game.icon;
+      modalImg.onerror = () => { modalImg.src = game.fallbackIcon; };
+      document.getElementById("gameIngameText").innerText = game.ingame;
+      document.getElementById("gameUidText").innerText = game.uid;
+      document.getElementById("gameModal").classList.add("active");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("active");
+    }
+
+    function openAccountPhotoModal() {
+      const game = gamesData[activeGameKey];
+      document.getElementById("accountPhotoTitle").innerText = "Tài khoản " + game.name;
+      const photoImg = document.getElementById("accountPhotoDisplay");
+      photoImg.src = game.photo;
+      photoImg.onerror = () => {
+        photoImg.src = "https://placehold.co/600x350/18181c/25f4ee?text=Vui+long+them+anh+" + game.photo;
+      };
+      document.getElementById("accountPhotoModal").classList.add("active");
+    }
+
+    function closeAccountPhotoModal() {
+      document.getElementById("accountPhotoModal").classList.remove("active");
+    }
+
+    function copyToClipboard(text, btnElement, successText) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      const orig = btnElement.innerText;
+      btnElement.innerText = successText;
+      setTimeout(() => { btnElement.innerText = orig; }, 2000);
+    }
+
+    function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, btn, "Đã chép!"); }
+    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, btn, "Đã chép!"); }
+
+    const myBankConfig = { bankId: "BIDV", accountNo: "8833220630", accountName: "BUI THANH NAM" };
+
+    function formatNumberWithDots(val) {
+      return val.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function handleAmountInput(input) {
+      input.value = formatNumberWithDots(input.value.replace(/\D/g, ""));
+    }
+
+    function setQuickAmount(val) {
+      document.getElementById("donateAmount").value = formatNumberWithDots(val.toString());
+    }
+
+    function submitDonateDone() {
+      const amountRaw = document.getElementById("donateAmount").value.replace(/\D/g, "");
+      const messageRaw = document.getElementById("donateMessage").value.trim();
+      const qrImg = document.getElementById("dynamicQR");
+      const summary = document.getElementById("qrSummaryText");
+
+      const amount = amountRaw ? parseInt(amountRaw, 10) : "";
+      const memo = messageRaw ? encodeURIComponent(messageRaw) : encodeURIComponent("Cho Sagiri coc tra sua");
+      qrImg.src = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
+
+      if (amount) {
+        summary.innerHTML = `Số tiền: <strong>${formatNumberWithDots(amount.toString())} VNĐ</strong><br>Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+      } else {
+        summary.innerHTML = `Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+      }
+      document.getElementById("donateInputScreen").style.display = "none";
+      document.getElementById("qrResultScreen").style.display = "block";
+    }
+
+    function backToEditDonate() {
+      document.getElementById("qrResultScreen").style.display = "none";
+      document.getElementById("donateInputScreen").style.display = "block";
+    }
+
+    function openQRModal() {
+      document.getElementById('qrModal').classList.add('active');
+      backToEditDonate();
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('active');
+    }
+
+    // ==========================================
+    // DANH SÁCH PLAYLIST (CHẠY TRỰC TIẾP FILE GỐC)
+    // ==========================================
+    const playlist = [
+      { title: "✨ Styx Helix", src: "music1.mp3" },
+      { title: "🎵 An Unfinished Song", src: "music2.mp3" },
+      { title: "🎭 All Silent Souls Can Sing", src: "music3.mp3" },
+      { title: "💃 Dancing Through Fantasies", src: "music4.mp3" },
+      { title: "⚔️ With Glory I Shall Fall", src: "music5.mp3" },
+      { title: "🌸 Against the Tide", src: "music6.mp3" }
+    ];
+
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+    let isMuted = false;
+    const audio = new Audio();
+    audio.preload = "auto";
+
+    function updateTrackInfo() {
+      const track = playlist[currentTrackIndex];
+      document.getElementById('miniSongTitle').innerText = track.title;
+      audio.src = track.src;
+      renderPlaylist();
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('miniProgressBarFill').style.width = percent + '%';
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      nextTrack();
+    });
+
+    function seekTrack(event) {
+      const bg = document.getElementById('miniProgressBarBg');
+      const rect = bg.getBoundingClientRect();
+      const percent = (event.clientX - rect.left) / rect.width;
+      if (audio.duration) {
+        audio.currentTime = percent * audio.duration;
+      }
+    }
+
+    function syncVisualEffects() {
+      if (isPlaying && !isMuted) {
+        document.body.classList.add('music-active');
+      } else {
+        document.body.classList.remove('music-active');
+      }
+    }
+
+    function togglePlayPause() {
+      const miniPlayIconSvg = document.getElementById('miniPlayIconSvg');
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        miniPlayIconSvg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      } else {
+        audio.play().then(() => {
+          isPlaying = true;
+          miniPlayIconSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        }).catch(err => console.log("Autoplay blocked:", err));
+      }
+      syncVisualEffects();
+    }
+
+    function selectTrack(index) {
+      currentTrackIndex = index;
+      updateTrackInfo();
+      audio.play().then(() => {
+        isPlaying = true;
+        document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        syncVisualEffects();
+      }).catch(err => console.log("Play error:", err));
+    }
+
+    function nextTrack() {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      selectTrack(currentTrackIndex);
+    }
+
+    function prevTrack() {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      selectTrack(currentTrackIndex);
+    }
+
+    function triggerPlayOnFirstInteraction() {
+      if (!isPlaying && audio.paused) {
+        audio.play().then(() => {
+          isPlaying = true;
+          document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+          syncVisualEffects();
+        }).catch(() => {});
+      }
+    }
+    window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
+    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
+
+    const muteBtn = document.getElementById('floatingMuteBtn');
+    const muteIcon = document.getElementById('floatingMuteIcon');
+    let idleTimer = null;
+
+    function resetIdleTimer() {
+      muteBtn.classList.remove('idle');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => { muteBtn.classList.add('idle'); }, 3000);
+    }
+    ['mousemove', 'touchstart', 'scroll', 'click'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+    resetIdleTimer();
+
+    function toggleGlobalMute(event) {
+      if (event) event.stopPropagation();
+      resetIdleTimer();
+
+      if (isMuted) {
+        audio.muted = false;
+        isMuted = false;
+        muteIcon.className = "fa-solid fa-volume-high";
+      } else {
+        audio.muted = true;
+        isMuted = true;
+        muteIcon.className = "fa-solid fa-volume-xmark";
+      }
+      syncVisualEffects();
+    }
+
+    function renderPlaylist() {
+      const container = document.getElementById('playlistContainer');
+      container.innerHTML = "";
+      playlist.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
+        item.innerHTML = `<span>${index + 1}. ${track.title}</span><i class="fa-solid fa-play" style="font-size: 0.72rem;"></i>`;
+        item.onclick = () => selectTrack(index);
+        container.appendChild(item);
+      });
+    }
+
+    function toggleMusicPanel() {
+      const panel = document.getElementById('musicPanel');
+      const chevron = document.getElementById('music-chevron');
+      panel.classList.toggle('active');
+      chevron.className = panel.classList.contains('active') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    }
+
+    function toggleMiniPlayerCollapse() {
+      const bar = document.getElementById('miniPlayerBar');
+      const chevron = document.getElementById('collapseChevron');
+      bar.classList.toggle('collapsed');
+      chevron.className = bar.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    }
+
+    updateTrackInfo();
+    renderPlaylist();
+
+    function copyDiscordUsername(event) {
+      const username = "sagirichan_0502";
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(username);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = username;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      const textSpan = document.getElementById("discordBtnText");
+      const originalText = textSpan.innerText;
+      textSpan.innerText = "Đã copy: " + username + "!";
+      setTimeout(() => { textSpan.innerText = originalText; }, 2000);
+    }
+  </script>
+</body>
+</html>
