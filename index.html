@@ -27,7 +27,7 @@
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
       overflow-x: hidden;
-      transition: filter 0.3s ease;
+      transition: filter 0.5s ease;
     }
 
     @keyframes tiktokGradient {
@@ -36,18 +36,10 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* KHI PHÁT NHẠC: CHỈ MÀU SẮC ĐỔI TỐC ĐỘ VÀ ĐỘ SÁNG NHẤP NHÁY */
+    /* KHI PHÁT NHẠC: NỀN CHUYỂN MÀU MƯỢT MÀ, KHÔNG GIỰT LÓE CHÓI MẮT */
     body.music-active {
-      animation: tiktokGradient 2s ease infinite, beatColorFlash 0.65s ease-in-out infinite alternate;
-    }
-
-    @keyframes beatColorFlash {
-      0% {
-        filter: brightness(1) saturate(1.2);
-      }
-      100% {
-        filter: brightness(1.35) saturate(2);
-      }
+      animation: tiktokGradient 5s ease infinite;
+      filter: saturate(1.25);
     }
 
     /* NÚT TẮT/BẬT TIẾNG GÓC TRÊN BÊN PHẢI */
@@ -98,7 +90,7 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
                   0 0 25px rgba(37, 244, 238, 0.2),
                   0 0 25px rgba(254, 44, 85, 0.2);
-      transition: box-shadow 0.3s ease;
+      transition: box-shadow 0.4s ease;
     }
 
     .card-border-wrapper::before {
@@ -111,14 +103,15 @@
       z-index: 0;
     }
 
+    /* KHI CÓ NHẠC: TĂNG TỐC VỪA PHẢI, ÊM MẮT */
     body.music-active .card-border-wrapper {
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85),
-                  0 0 35px rgba(37, 244, 238, 0.6),
-                  0 0 35px rgba(254, 44, 85, 0.6);
+                  0 0 30px rgba(37, 244, 238, 0.45),
+                  0 0 30px rgba(254, 44, 85, 0.45);
     }
 
     body.music-active .card-border-wrapper::before {
-      animation: spin 1.2s linear infinite;
+      animation: spin 2.8s linear infinite;
     }
 
     /* Khung nội dung profile bên trong */
@@ -151,13 +144,13 @@
       border-radius: 50%;
       background: linear-gradient(45deg, #25f4ee, #fe2c55);
       z-index: 0;
-      animation: spin 3s linear infinite;
+      animation: spin 3.5s linear infinite;
       filter: blur(2px);
     }
 
     body.music-active .avatar-wrapper::before {
-      animation: spin 1s linear infinite;
-      filter: blur(4px);
+      animation: spin 2s linear infinite;
+      filter: blur(3px);
     }
 
     @keyframes spin {
@@ -248,7 +241,7 @@
     }
 
     body.music-active .game-card-wrapper::before {
-      animation: spin 1.2s linear infinite;
+      animation: spin 2.4s linear infinite;
     }
 
     .game-btn {
@@ -295,9 +288,7 @@
       margin-top: 3px;
     }
 
-    /* ============================================================
-       PHONG CÁCH NÚT NEON KÍNH TRONG SUỐT (NEON GLASSMORPHISM)
-       ============================================================ */
+    /* PHONG CÁCH NÚT NEON KÍNH TRONG SUỐT */
     .links {
       display: flex;
       flex-direction: column;
@@ -325,103 +316,86 @@
       transform: translateY(-2px);
     }
 
-    /* 1. NÚT TIKTOK NEON TRONG SUỐT */
+    /* 1. NÚT TIKTOK */
     .btn-tiktok {
       background: rgba(254, 44, 85, 0.12);
       color: #ff3366;
       border: 1.5px solid #fe2c55;
-      box-shadow: 0 0 14px rgba(254, 44, 85, 0.4), inset 0 0 10px rgba(254, 44, 85, 0.25);
-      text-shadow: 0 0 8px rgba(254, 44, 85, 0.6);
+      box-shadow: 0 0 12px rgba(254, 44, 85, 0.35), inset 0 0 8px rgba(254, 44, 85, 0.2);
+      text-shadow: 0 0 6px rgba(254, 44, 85, 0.5);
     }
 
     .btn-tiktok:hover {
-      background: rgba(254, 44, 85, 0.25);
+      background: rgba(254, 44, 85, 0.22);
       color: #ffffff;
       border-color: #ff6b8b;
-      box-shadow: 0 0 24px rgba(254, 44, 85, 0.85), 0 0 40px rgba(254, 44, 85, 0.5), inset 0 0 14px rgba(254, 44, 85, 0.5);
-      text-shadow: 0 0 10px #fe2c55;
+      box-shadow: 0 0 20px rgba(254, 44, 85, 0.7), inset 0 0 12px rgba(254, 44, 85, 0.35);
+      text-shadow: 0 0 8px #fe2c55;
     }
 
-    /* 2. NÚT DONATE TRÀ SỮA NEON TRONG SUỐT */
+    /* 2. NÚT DONATE TRÀ SỮA */
     .btn-donate {
       background: rgba(255, 136, 0, 0.12);
       color: #ffaa33;
       border: 1.5px solid #ff9900;
-      box-shadow: 0 0 14px rgba(255, 153, 0, 0.4), inset 0 0 10px rgba(255, 153, 0, 0.25);
-      text-shadow: 0 0 8px rgba(255, 153, 0, 0.6);
+      box-shadow: 0 0 12px rgba(255, 153, 0, 0.35), inset 0 0 8px rgba(255, 153, 0, 0.2);
+      text-shadow: 0 0 6px rgba(255, 153, 0, 0.5);
     }
 
     .btn-donate:hover {
-      background: rgba(255, 136, 0, 0.25);
+      background: rgba(255, 136, 0, 0.22);
       color: #ffffff;
       border-color: #ffbe66;
-      box-shadow: 0 0 24px rgba(255, 153, 0, 0.85), 0 0 40px rgba(255, 153, 0, 0.5), inset 0 0 14px rgba(255, 153, 0, 0.5);
-      text-shadow: 0 0 10px #ff9900;
+      box-shadow: 0 0 20px rgba(255, 153, 0, 0.7), inset 0 0 12px rgba(255, 153, 0, 0.35);
+      text-shadow: 0 0 8px #ff9900;
     }
 
-    /* 3. NÚT DISCORD NEON TRONG SUỐT */
+    /* 3. NÚT DISCORD */
     .btn-discord {
       background: rgba(88, 101, 242, 0.14);
       color: #7289da;
       border: 1.5px solid #5865F2;
-      box-shadow: 0 0 14px rgba(88, 101, 242, 0.4), inset 0 0 10px rgba(88, 101, 242, 0.25);
-      text-shadow: 0 0 8px rgba(88, 101, 242, 0.6);
+      box-shadow: 0 0 12px rgba(88, 101, 242, 0.35), inset 0 0 8px rgba(88, 101, 242, 0.2);
+      text-shadow: 0 0 6px rgba(88, 101, 242, 0.5);
     }
 
     .btn-discord:hover {
-      background: rgba(88, 101, 242, 0.28);
+      background: rgba(88, 101, 242, 0.25);
       color: #ffffff;
       border-color: #949efc;
-      box-shadow: 0 0 24px rgba(88, 101, 242, 0.85), 0 0 40px rgba(88, 101, 242, 0.5), inset 0 0 14px rgba(88, 101, 242, 0.5);
-      text-shadow: 0 0 10px #5865F2;
+      box-shadow: 0 0 20px rgba(88, 101, 242, 0.7), inset 0 0 12px rgba(88, 101, 242, 0.35);
+      text-shadow: 0 0 8px #5865F2;
     }
 
-    /* 4. NÚT DANH SÁCH BÀI HÁT NEON TRONG SUỐT (CYAN & HỒNG) */
+    /* 4. NÚT DANH SÁCH BÀI HÁT */
     .btn-yt-music {
       background: rgba(37, 244, 238, 0.12);
       color: #25f4ee;
       border: 1.5px solid #25f4ee;
-      box-shadow: 0 0 14px rgba(37, 244, 238, 0.4), inset 0 0 10px rgba(37, 244, 238, 0.25);
-      text-shadow: 0 0 8px rgba(37, 244, 238, 0.6);
+      box-shadow: 0 0 12px rgba(37, 244, 238, 0.35), inset 0 0 8px rgba(37, 244, 238, 0.2);
+      text-shadow: 0 0 6px rgba(37, 244, 238, 0.5);
     }
 
     .btn-yt-music:hover {
-      background: rgba(37, 244, 238, 0.25);
+      background: rgba(37, 244, 238, 0.22);
       color: #ffffff;
       border-color: #85faf6;
-      box-shadow: 0 0 24px rgba(37, 244, 238, 0.85), 0 0 40px rgba(37, 244, 238, 0.5), inset 0 0 14px rgba(37, 244, 238, 0.5);
-      text-shadow: 0 0 10px #25f4ee;
+      box-shadow: 0 0 20px rgba(37, 244, 238, 0.7), inset 0 0 12px rgba(37, 244, 238, 0.35);
+      text-shadow: 0 0 8px #25f4ee;
     }
 
-    /* KHI PHÁT NHẠC: TĂNG CƯỜNG ĐỘ CHỚP SÁNG NEON */
+    /* KHI PHÁT NHẠC: SÁNG ÊM DỊU, KHÔNG CHỚP NHÁY GẮT */
     body.music-active .btn-tiktok {
-      animation: neonPulseRed 0.65s ease-in-out infinite alternate;
+      box-shadow: 0 0 18px rgba(254, 44, 85, 0.6), inset 0 0 10px rgba(254, 44, 85, 0.3);
     }
     body.music-active .btn-donate {
-      animation: neonPulseOrange 0.65s ease-in-out infinite alternate;
+      box-shadow: 0 0 18px rgba(255, 153, 0, 0.6), inset 0 0 10px rgba(255, 153, 0, 0.3);
     }
     body.music-active .btn-discord {
-      animation: neonPulsePurple 0.65s ease-in-out infinite alternate;
+      box-shadow: 0 0 18px rgba(88, 101, 242, 0.6), inset 0 0 10px rgba(88, 101, 242, 0.3);
     }
     body.music-active .btn-yt-music {
-      animation: neonPulseCyan 0.65s ease-in-out infinite alternate;
-    }
-
-    @keyframes neonPulseRed {
-      0% { box-shadow: 0 0 12px rgba(254, 44, 85, 0.4), inset 0 0 8px rgba(254, 44, 85, 0.2); }
-      100% { box-shadow: 0 0 26px rgba(254, 44, 85, 0.9), 0 0 45px rgba(254, 44, 85, 0.6), inset 0 0 16px rgba(254, 44, 85, 0.4); }
-    }
-    @keyframes neonPulseOrange {
-      0% { box-shadow: 0 0 12px rgba(255, 153, 0, 0.4), inset 0 0 8px rgba(255, 153, 0, 0.2); }
-      100% { box-shadow: 0 0 26px rgba(255, 153, 0, 0.9), 0 0 45px rgba(255, 153, 0, 0.6), inset 0 0 16px rgba(255, 153, 0, 0.4); }
-    }
-    @keyframes neonPulsePurple {
-      0% { box-shadow: 0 0 12px rgba(88, 101, 242, 0.4), inset 0 0 8px rgba(88, 101, 242, 0.2); }
-      100% { box-shadow: 0 0 26px rgba(88, 101, 242, 0.9), 0 0 45px rgba(88, 101, 242, 0.6), inset 0 0 16px rgba(88, 101, 242, 0.4); }
-    }
-    @keyframes neonPulseCyan {
-      0% { box-shadow: 0 0 12px rgba(37, 244, 238, 0.4), inset 0 0 8px rgba(37, 244, 238, 0.2); }
-      100% { box-shadow: 0 0 26px rgba(37, 244, 238, 0.9), 0 0 45px rgba(37, 244, 238, 0.6), inset 0 0 16px rgba(37, 244, 238, 0.4); }
+      box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), inset 0 0 10px rgba(37, 244, 238, 0.3);
     }
 
     /* Bảng phát nhạc */
@@ -623,7 +597,7 @@
     }
 
     body.music-active .modal-border-wrapper::before {
-      animation: spin 1.2s linear infinite;
+      animation: spin 2.4s linear infinite;
     }
 
     .modal-content {
@@ -754,7 +728,7 @@
     .btn-view-account-photo:hover {
       background: rgba(37, 244, 238, 0.25);
       color: #fff;
-      box-shadow: 0 0 22px rgba(37, 244, 238, 0.8), inset 0 0 12px rgba(37, 244, 238, 0.4);
+      box-shadow: 0 0 20px rgba(37, 244, 238, 0.7), inset 0 0 12px rgba(37, 244, 238, 0.35);
     }
 
     /* POPUP XEM ẢNH TÀI KHOẢN */
