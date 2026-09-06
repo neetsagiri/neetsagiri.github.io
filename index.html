@@ -1074,7 +1074,7 @@
     }
 
     // ==========================================
-    // DANH SÁCH PLAYLIST LOCAL MP3
+    // DANH SÁCH PLAYLIST LOCAL MP3 HOÀN CHỈNH
     // ==========================================
     const playlist = [
       { title: "✨ Styx Helix", src: "music/music1.mp3" },
@@ -1148,7 +1148,7 @@
         isPlaying = true;
         document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
         syncVisualEffects();
-      });
+      }).catch(err => console.log("Play error:", err));
     }
 
     function nextTrack() {
