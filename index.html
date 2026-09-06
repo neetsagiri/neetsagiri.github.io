@@ -22,7 +22,7 @@
       justify-content: center;
       align-items: center;
       padding: 24px 16px;
-      /* Nền gradient TikTok chuyển màu */
+      /* Gradient TikTok neon */
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -52,7 +52,7 @@
       position: relative;
     }
 
-    /* Hiệu ứng viền phát sáng Avatar */
+    /* Hiệu ứng viền Avatar */
     .avatar-wrapper {
       position: relative;
       width: 112px;
@@ -107,7 +107,6 @@
       margin-bottom: 18px;
     }
 
-    /* Tiêu đề từng nhóm */
     .section-title {
       font-size: 0.78rem;
       text-transform: uppercase;
@@ -120,7 +119,7 @@
       gap: 6px;
     }
 
-    /* Lưới hiển thị 2 game yêu thích */
+    /* Lưới 2 Game yêu thích */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -182,7 +181,7 @@
       margin-top: 3px;
     }
 
-    /* Nút liên kết */
+    /* Danh sách liên kết */
     .links {
       display: flex;
       flex-direction: column;
@@ -204,6 +203,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.25s ease;
       cursor: pointer;
+      width: 100%;
     }
 
     .btn-link:hover {
@@ -221,6 +221,93 @@
     .btn-tiktok:hover {
       background: #e02449;
       box-shadow: 0 4px 18px rgba(254, 44, 85, 0.5);
+    }
+
+    /* Nút Donate gradient cam hồng */
+    .btn-donate {
+      background: linear-gradient(135deg, #ff9900, #ff5e62);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-donate:hover {
+      box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
+    }
+
+    /* Cửa sổ Popup mã QR */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #18181c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 26px 22px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .modal-desc {
+      font-size: 0.82rem;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    .qr-img {
+      width: 210px;
+      height: 210px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #ffffff;
+      padding: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .close-btn {
+      margin-top: 16px;
+      padding: 9px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .footer {
@@ -241,19 +328,19 @@
     <p class="handle">@_sagiri0502</p>
     <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri!<br>🎨 Chia sẻ video & nội dung sáng tạo mỗi ngày.</p>
 
-    <!-- Khu vực Game yêu thích -->
+    <!-- Khu vực 2 Game yêu thích -->
     <div class="section-title">
       <i class="fa-solid fa-gamepad"></i> Game yêu thích
     </div>
     <div class="games-grid">
-      <!-- Mở Wuthering Waves -->
+      <!-- Wuthering Waves -->
       <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
         <i class="fa-solid fa-bolt game-icon"></i>
         <span class="game-name">Wuthering Waves</span>
         <span class="game-action">Mở game ▶</span>
       </a>
 
-      <!-- Mở Liên Quân Mobile -->
+      <!-- Liên Quân Mobile -->
       <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
         <i class="fa-solid fa-shield-halved game-icon"></i>
         <span class="game-name">Liên Quân Mobile</span>
@@ -269,6 +356,12 @@
       <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
         <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
       </a>
+
+      <!-- Nút mở Popup QR Donate -->
+      <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+        <i class="fa-solid fa-qrcode"></i> Ủng hộ / Donate QR
+      </button>
+
       <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link">
         <i class="fa-solid fa-play"></i> Video mới nhất
       </a>
@@ -282,5 +375,28 @@
     </div>
   </div>
 
+  <!-- Popup hiển thị mã QR -->
+  <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 class="modal-title">Quét mã QR để ủng hộ ☕</h3>
+      <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri!</p>
+      
+      <!-- Ảnh mã QR donate -->
+      <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
+      
+      <br />
+      <button type="button" class="close-btn" onclick="closeQRModal()">Đóng lại</button>
+    </div>
+  </div>
+
+  <script>
+    function openQRModal() {
+      document.getElementById('qrModal').classList.add('active');
+    }
+
+    function closeQRModal(e) {
+      document.getElementById('qrModal').classList.remove('active');
+    }
+  </script>
 </body>
 </html>
