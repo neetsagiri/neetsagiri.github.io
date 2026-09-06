@@ -106,7 +106,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Khung nội dung profile bên trong */
     .card {
       position: relative;
       width: 100%;
@@ -278,7 +277,7 @@
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
     /* ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER (HIỆU ỨNG VIỀN NEON SAGIRI)
+       THANH MINI BOTTOM BAR MUSIC PLAYER (SỬA LỖI TRÀN KHUNG & CĂN CHUẨN)
        ============================================================ */
     .mini-player-border-wrapper {
       position: fixed;
@@ -289,7 +288,7 @@
       max-width: 420px;
       border-radius: 34px;
       padding: 2.5px;
-      overflow: visible;
+      overflow: hidden; /* Sửa lỗi tràn viền neon */
       z-index: 9990;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85),
                   0 0 25px rgba(37, 244, 238, 0.3),
@@ -339,21 +338,21 @@
 
     .mini-collapse-toggle {
       position: absolute;
-      top: -22px;
-      right: 28px;
+      top: -18px;
+      right: 32px;
       background: rgba(18, 18, 24, 0.95);
       border: 1.5px solid #25f4ee;
       color: #25f4ee;
-      width: 34px;
-      height: 22px;
-      border-radius: 12px 12px 0 0;
+      width: 32px;
+      height: 20px;
+      border-radius: 10px 10px 0 0;
       font-size: 0.75rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 -4px 12px rgba(37, 244, 238, 0.4);
-      z-index: 2;
+      box-shadow: 0 -3px 10px rgba(37, 244, 238, 0.4);
+      z-index: 10;
     }
 
     .mini-progress-bg {
@@ -378,7 +377,7 @@
       gap: 12px;
     }
 
-    /* Ảnh đại diện bài hát dạng đĩa tròn viền Neon Cyan/Pink */
+    /* Ảnh đại diện đĩa tròn xoay viền neon */
     .mini-vinyl-wrapper {
       position: relative;
       width: 46px;
@@ -678,7 +677,7 @@
   </div>
 
   <!-- ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER (VIỀN NEON SAGIRI)
+       THANH MINI BOTTOM BAR MUSIC PLAYER (ĐÃ KHẮC PHỤC LỖI TRÀN)
        ============================================================ -->
   <div class="mini-player-border-wrapper" id="miniPlayerBarWrapper">
     <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
