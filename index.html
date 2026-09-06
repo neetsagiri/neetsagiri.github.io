@@ -501,8 +501,8 @@
     }
 
     .qr-img {
-      width: 200px;
-      height: 200px;
+      width: 210px;
+      height: 210px;
       border-radius: 14px;
       object-fit: contain;
       background: #ffffff;
@@ -537,7 +537,7 @@
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.16);
       color: #ffffff;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       outline: none;
       transition: border-color 0.2s ease;
     }
@@ -554,7 +554,7 @@
 
     .amount-tag {
       flex: 1;
-      padding: 5px 0;
+      padding: 6px 0;
       font-size: 0.72rem;
       font-weight: 600;
       color: #ddd;
@@ -661,7 +661,7 @@
 
         <!-- Nút Bật/Đóng Trình phát Playlist -->
         <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
-          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát yêu thích 💕
+          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát
           <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
         </button>
 
@@ -696,7 +696,7 @@
     </div>
   </div>
 
-  <!-- Popup Donate QR Tự Động (Nhập số tiền & Lời nhắn) -->
+  <!-- Popup Donate QR Tự Động (Nhập số tiền có dấu . phân cách & Lời nhắn) -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 class="modal-title">Quét mã QR để cho Sagiri Tà Tữa💕</h3>
@@ -709,12 +709,13 @@
       <div class="donate-form">
         <div class="donate-input-group">
           <label class="donate-input-label"><i class="fa-solid fa-coins"></i> Số tiền (VNĐ):</label>
-          <input type="number" id="donateAmount" class="donate-input" placeholder="Nhập số tiền (ví dụ: 20000)" oninput="updateDynamicQR()" />
+          <!-- Nhập định dạng text có tự format 10.000 đ -->
+          <input type="text" id="donateAmount" class="donate-input" placeholder="Nhập số tiền (ví dụ: 10.000)" oninput="handleAmountInput(this)" />
           <div class="quick-amount-buttons">
-            <button type="button" class="amount-tag" onclick="setQuickAmount(10000)">10k</button>
-            <button type="button" class="amount-tag" onclick="setQuickAmount(20000)">20k</button>
-            <button type="button" class="amount-tag" onclick="setQuickAmount(50000)">50k</button>
-            <button type="button" class="amount-tag" onclick="setQuickAmount(100000)">100k</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(10000)">10.000 đ</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(20000)">20.000 đ</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(50000)">50.000 đ</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(100000)">100.000 đ</button>
           </div>
         </div>
 
@@ -734,38 +735,41 @@
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     // ==========================================
-    // CẤU HÌNH TÀI KHOẢN THANH TOÁN QR ĐỘNG:
+    // CẤU HÌNH TÀI KHOẢN MOMO CỦA BẠN:
     // ==========================================
-    // Mã ngân hàng theo chuẩn VietQR (ví dụ: 970422 cho MBBank, 970436 cho Vietcombank, momo cho Ví MoMo,...)
-    // Hoặc nếu dùng MoMo: mã ngân hàng là 'momo', số tài khoản là số điện thoại MoMo.
     const myBankConfig = {
-      bankId: "970422",          // Mã ngân hàng nhận tiền (hoặc 'momo' nếu dùng ví MoMo)
-      accountNo: "0345678901",    // Điền số tài khoản ngân hàng hoặc số MoMo của bạn vào đây
-      accountName: "SAGIRI CHAN"  // Tên chủ tài khoản viết hoa không dấu
+      bankId: "momo",             // Nhận tiền trực tiếp qua Ví MoMo
+      accountNo: "0986912764",    // Số MoMo của bạn
+      accountName: "SAGIRI CHAN"  // Tên hiển thị
     };
 
+    // Tự động phân cách hàng nghìn khi người dùng gõ phím
+    function formatNumberWithDots(val) {
+      return val.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function handleAmountInput(input) {
+      const rawValue = input.value.replace(/\D/g, "");
+      input.value = formatNumberWithDots(rawValue);
+      updateDynamicQR();
+    }
+
+    function setQuickAmount(val) {
+      document.getElementById("donateAmount").value = formatNumberWithDots(val.toString());
+      updateDynamicQR();
+    }
+
     function updateDynamicQR() {
-      const amountInput = document.getElementById("donateAmount").value.trim();
+      const amountInput = document.getElementById("donateAmount").value.replace(/\D/g, "");
       const messageInput = document.getElementById("donateMessage").value.trim();
       const qrImg = document.getElementById("dynamicQR");
-
-      // Nếu chưa điền số tài khoản cụ thể, mặc định hiển thị ảnh donate.jpg có sẵn
-      if (myBankConfig.accountNo === "0345678901") {
-        qrImg.src = "donate.jpg";
-        return;
-      }
 
       const amount = amountInput ? parseInt(amountInput, 10) : "";
       const memo = messageInput ? encodeURIComponent(messageInput) : encodeURIComponent("Cho Sagiri coc tra sua");
 
-      // Tạo link API VietQR tự động cập nhật
+      // Tạo link API VietQR / MoMo tự động cập nhật ngay lập tức theo số tiền và lời nhắn
       const qrUrl = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
       qrImg.src = qrUrl;
-    }
-
-    function setQuickAmount(val) {
-      document.getElementById("donateAmount").value = val;
-      updateDynamicQR();
     }
 
     // 6 BÀI HÁT THEO ĐÚNG LINK CỦA BẠN:
