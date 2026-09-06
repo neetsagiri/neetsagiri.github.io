@@ -35,6 +35,40 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* NÚT TẮT/BẬT TIẾNG GÓC TRÊN BÊN PHẢI (TỰ MỜ KHI KHÔNG DÙNG) */
+    .floating-mute-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(18, 18, 24, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(37, 244, 238, 0.3);
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.2s ease, background 0.2s ease;
+    }
+
+    .floating-mute-btn:hover {
+      transform: scale(1.08);
+      opacity: 1 !important;
+      background: rgba(28, 28, 38, 0.9);
+    }
+
+    .floating-mute-btn.idle {
+      opacity: 0.35;
+    }
+
     /* KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD */
     .card-border-wrapper {
       position: relative;
@@ -453,7 +487,7 @@
       font-weight: 600;
     }
 
-    /* MODAL OVERLAY CHUNG */
+    /* CÁC MODAL OVERLAY */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -498,7 +532,7 @@
       margin-bottom: 14px;
     }
 
-    /* KHUNG POPUP GAME INFO */
+    /* KHUNG POPUP THÔNG TIN GAME */
     .game-modal-header {
       display: flex;
       align-items: center;
@@ -758,6 +792,11 @@
 </head>
 <body>
 
+  <!-- NÚT BẬT/TẮT TIẾNG GÓC TRÊN BÊN PHẢI (TỰ MỜ KHI KHÔNG DÙNG) -->
+  <button type="button" class="floating-mute-btn" id="floatingMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh">
+    <i class="fa-solid fa-volume-high" id="floatingMuteIcon"></i>
+  </button>
+
   <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
   <div class="card-border-wrapper">
     <div class="card">
@@ -940,7 +979,7 @@
     </div>
   </div>
 
-  <!-- PLAYER YOUTUBE TỐI ƯU CHẠY NỀN -->
+  <!-- PLAYER YOUTUBE -->
   <div id="ytm-wrapper">
     <div id="ytm-streamer"></div>
   </div>
@@ -1088,6 +1127,8 @@
     let player = null;
     let currentTrackIndex = 0;
     let isPlaying = false;
+    let isMuted = false;
+    let hasAutoStarted = false;
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('ytm-streamer', {
@@ -1110,7 +1151,7 @@
 
     function onPlayerReady() {
       document.getElementById('currentTrackTitle').innerText = playlist[currentTrackIndex].title;
-      document.getElementById('trackStatus').innerText = "Sẵn sàng phát";
+      document.getElementById('trackStatus').innerText = "Chạm bất kỳ đâu để phát nhạc";
       renderPlaylist();
     }
 
@@ -1133,7 +1174,63 @@
       }
     }
 
-    // Tự động duy trì phát nhạc khi đổi tab hoặc thao tác trên trang
+    // ==========================================
+    // TÍNH NĂNG CHẠM BẤT KỲ ĐÂU ĐỂ PHÁT NHẠC
+    // ==========================================
+    function triggerPlayOnFirstInteraction() {
+      if (!hasAutoStarted && player && typeof player.playVideo === 'function') {
+        player.playVideo();
+        hasAutoStarted = true;
+      }
+    }
+
+    window.addEventListener('click', triggerPlayOnFirstInteraction, { passive: true });
+    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { passive: true });
+
+    // ==========================================
+    // NÚT TẮT TIẾNG & HIỆU ỨNG TỰ MỜ KHI IDLE
+    // ==========================================
+    const muteBtn = document.getElementById('floatingMuteBtn');
+    const muteIcon = document.getElementById('floatingMuteIcon');
+    let idleTimer = null;
+
+    function resetIdleTimer() {
+      muteBtn.classList.remove('idle');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        muteBtn.classList.add('idle');
+      }, 3000);
+    }
+
+    // Lắng nghe thao tác người dùng để duy trì hoặc làm mờ nút
+    ['mousemove', 'touchstart', 'scroll', 'click'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+    resetIdleTimer();
+
+    function toggleGlobalMute(event) {
+      if (event) event.stopPropagation();
+      resetIdleTimer();
+
+      if (!player) return;
+
+      if (!hasAutoStarted) {
+        player.playVideo();
+        hasAutoStarted = true;
+      }
+
+      if (isMuted) {
+        player.unMute();
+        isMuted = false;
+        muteIcon.className = "fa-solid fa-volume-high";
+      } else {
+        player.mute();
+        isMuted = true;
+        muteIcon.className = "fa-solid fa-volume-xmark";
+      }
+    }
+
+    // Tự động duy trì phát nhạc khi chuyển tab
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && isPlaying && player && typeof player.playVideo === 'function') {
         player.playVideo();
