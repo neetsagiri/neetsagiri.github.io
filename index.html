@@ -27,12 +27,27 @@
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
       overflow-x: hidden;
+      transition: filter 0.3s ease;
     }
 
     @keyframes tiktokGradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+
+    /* HIỆU ỨNG NHẢY THEO ĐỘ CHÁY KHI ĐANG PHÁT NHẠC (BEAT SYNC) */
+    body.music-active {
+      animation: tiktokGradient 2s ease infinite, beatPulse 0.65s ease-in-out infinite alternate;
+    }
+
+    @keyframes beatPulse {
+      0% {
+        filter: brightness(1) saturate(1.1);
+      }
+      100% {
+        filter: brightness(1.35) saturate(1.8);
+      }
     }
 
     /* NÚT TẮT/BẬT TIẾNG GÓC TRÊN BÊN PHẢI */
@@ -83,6 +98,7 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
                   0 0 25px rgba(37, 244, 238, 0.2),
                   0 0 25px rgba(254, 44, 85, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .card-border-wrapper::before {
@@ -90,9 +106,30 @@
       position: absolute;
       width: 150%;
       height: 150%;
-      background: conic-gradient(#25f4ee, #fe2c55, #25f4ee);
+      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
       animation: spin 5s linear infinite;
       z-index: 0;
+    }
+
+    /* KHI NHẠC CHÁY: Tăng tốc xoay & dội bass nhấp nhô */
+    body.music-active .card-border-wrapper {
+      animation: cardBounce 0.65s ease-in-out infinite alternate;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9),
+                  0 0 40px rgba(37, 244, 238, 0.5),
+                  0 0 40px rgba(254, 44, 85, 0.5);
+    }
+
+    body.music-active .card-border-wrapper::before {
+      animation: spin 1.4s linear infinite;
+    }
+
+    @keyframes cardBounce {
+      0% {
+        transform: scale(0.99);
+      }
+      100% {
+        transform: scale(1.02);
+      }
     }
 
     /* Khung nội dung profile bên trong */
@@ -116,6 +153,7 @@
       width: 112px;
       height: 112px;
       margin: 0 auto 18px;
+      transition: transform 0.2s ease;
     }
 
     .avatar-wrapper::before {
@@ -127,6 +165,15 @@
       z-index: 0;
       animation: spin 3s linear infinite;
       filter: blur(2px);
+    }
+
+    body.music-active .avatar-wrapper::before {
+      animation: spin 1s linear infinite;
+      filter: blur(4px);
+    }
+
+    body.music-active .avatar-wrapper {
+      transform: scale(1.05);
     }
 
     @keyframes spin {
@@ -214,6 +261,10 @@
       background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
       animation: spin 4s linear infinite;
       z-index: 0;
+    }
+
+    body.music-active .game-card-wrapper::before {
+      animation: spin 1.2s linear infinite;
     }
 
     .game-btn {
@@ -430,7 +481,6 @@
       transform: scale(1.08);
     }
 
-    /* Danh sách bài hát có thể cuộn */
     .playlist {
       display: flex;
       flex-direction: column;
@@ -484,9 +534,7 @@
       font-weight: 600;
     }
 
-    /* ============================================================
-       MODAL POPUP NÂNG CẤP: CÓ VIỀN XOAY NEON VÀ NỀN BACKGROUND
-       ============================================================ */
+    /* MODAL OVERLAY CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -504,7 +552,6 @@
       display: flex;
     }
 
-    /* KHUNG BỌC VIỀN XOAY CỦA POPUP (GIỐNG VIỀN AVATAR VÀ CARD) */
     .modal-border-wrapper {
       position: relative;
       width: 100%;
@@ -536,7 +583,6 @@
       z-index: 0;
     }
 
-    /* NỘI DUNG POPUP CÓ HỖ TRỢ NỀN BACKGROUND ẢNH VÀ KÍNH MỜ */
     .modal-content {
       position: relative;
       width: 100%;
@@ -566,7 +612,6 @@
       margin-bottom: 14px;
     }
 
-    /* KHUNG POPUP THÔNG TIN GAME */
     .game-modal-header {
       display: flex;
       align-items: center;
@@ -643,7 +688,6 @@
       color: #fff;
     }
 
-    /* POPUP DONATE */
     .donate-form {
       display: flex;
       flex-direction: column;
@@ -813,7 +857,6 @@
       color: #666666;
     }
 
-    /* VỊ TRÍ IFRAME HỢP LỆ TRÁNH BỊ YOUTUBE CHẶN PHÁT NGẦM */
     #ytm-wrapper {
       position: fixed;
       bottom: -300px;
@@ -922,7 +965,7 @@
     </div>
   </div>
 
-  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME (CÓ VIỀN XOAY PHÁT SÁNG & BACKGROUND) -->
+  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME -->
   <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -957,7 +1000,7 @@
     </div>
   </div>
 
-  <!-- POPUP 2: DONATE TRÀ SỮA (CÓ VIỀN XOAY PHÁT SÁNG & BACKGROUND) -->
+  <!-- POPUP 2: DONATE TRÀ SỮA -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1025,9 +1068,7 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // ==========================================
     // CẤU HÌNH THÔNG TIN GAME & UID:
-    // ==========================================
     const gamesData = {
       ww: {
         name: "Wuthering Waves",
@@ -1095,9 +1136,7 @@
       copyToClipboard(text, btn, "Đã chép!");
     }
 
-    // ==========================================
     // CẤU HÌNH TÀI KHOẢN BIDV (NAPAS247):
-    // ==========================================
     const myBankConfig = {
       bankId: "BIDV",
       accountNo: "8833220630",
@@ -1203,12 +1242,17 @@
         playIcon.className = "fa-solid fa-pause";
         trackStatus.innerText = "Đang phát nhạc...";
         document.getElementById('currentTrackTitle').innerText = playlist[currentTrackIndex].title;
+        // KÍCH HOẠT HIỆU ỨNG NHẢY THEO ĐỘ CHÁY CỦA NHẠC
+        document.body.classList.add('music-active');
         renderPlaylist();
       } else if (event.data === YT.PlayerState.PAUSED) {
         isPlaying = false;
         playIcon.className = "fa-solid fa-play";
         trackStatus.innerText = "Đã tạm dừng";
+        // TẮT HIỆU ỨNG KHI DỪNG NHẠC
+        document.body.classList.remove('music-active');
       } else if (event.data === YT.PlayerState.ENDED) {
+        document.body.classList.remove('music-active');
         nextTrack();
       }
     }
