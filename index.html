@@ -52,7 +52,7 @@
       position: relative;
     }
 
-    /* Hiệu ứng viền xoay quanh avatar */
+    /* Hiệu ứng viền Avatar */
     .avatar-wrapper {
       position: relative;
       width: 112px;
@@ -119,7 +119,7 @@
       gap: 6px;
     }
 
-    /* Lưới 2 Game yêu thích */
+    /* Lưới 2 Game */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -156,7 +156,6 @@
       box-shadow: 0 0 15px rgba(254, 44, 85, 0.5);
     }
 
-    /* Hình ảnh biểu tượng app game */
     .game-icon-img {
       width: 48px;
       height: 48px;
@@ -232,7 +231,119 @@
       box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
     }
 
-    /* Modal hiển thị mã QR */
+    /* Nút phát nhạc */
+    .btn-music-toggle {
+      background: rgba(37, 244, 238, 0.12);
+      border: 1px solid rgba(37, 244, 238, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-music-toggle:hover {
+      background: rgba(37, 244, 238, 0.22);
+      box-shadow: 0 0 15px rgba(37, 244, 238, 0.4);
+    }
+
+    /* Khung danh sách bài hát xổ xuống */
+    .music-player-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 16px;
+      background: rgba(10, 10, 15, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      text-align: left;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .music-player-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .music-now-playing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .music-info {
+      overflow: hidden;
+      padding-right: 10px;
+    }
+
+    .music-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #25f4ee;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-status {
+      font-size: 0.72rem;
+      color: #888;
+    }
+
+    .music-control-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(45deg, #25f4ee, #fe2c55);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s;
+    }
+
+    .music-control-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .track-item {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #ddd;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+
+    .track-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .track-item.playing {
+      background: rgba(37, 244, 238, 0.15);
+      color: #25f4ee;
+      border: 1px solid rgba(37, 244, 238, 0.3);
+    }
+
+    /* Modal Donate */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -260,12 +371,6 @@
       text-align: center;
       position: relative;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-      animation: popIn 0.25s ease-out;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
 
     .modal-title {
@@ -301,7 +406,6 @@
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: 0.2s;
     }
 
     .close-btn:hover {
@@ -319,7 +423,6 @@
 
   <div class="card">
     <div class="avatar-wrapper">
-      <!-- Ảnh đại diện: lấy file avatar.jpg cùng repo, fallback nếu thiếu -->
       <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
     </div>
 
@@ -332,14 +435,14 @@
       <i class="fa-solid fa-gamepad"></i> Game yêu thích
     </div>
     <div class="games-grid">
-      <!-- Wuthering Waves: tìm file ww.png trong repo, fallback sang logo web nếu chưa có -->
+      <!-- Wuthering Waves -->
       <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
         <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
         <span class="game-name">Wuthering Waves</span>
         <span class="game-action">Mở game ▶</span>
       </a>
 
-      <!-- Liên Quân Mobile: tìm file lq.png trong repo, fallback sang logo web nếu chưa có -->
+      <!-- Liên Quân Mobile -->
       <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
         <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
         <span class="game-name">Liên Quân Mobile</span>
@@ -347,7 +450,7 @@
       </a>
     </div>
 
-    <!-- Khu vực Liên kết -->
+    <!-- Khu vực Liên kết & Âm nhạc -->
     <div class="section-title" style="margin-top: 16px;">
       <i class="fa-solid fa-link"></i> Liên kết
     </div>
@@ -356,7 +459,6 @@
         <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
       </a>
 
-      <!-- Nút mở Popup QR Donate -->
       <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
         <i class="fa-solid fa-qrcode"></i> Ủng hộ / Donate QR
       </button>
@@ -364,9 +466,40 @@
       <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link">
         <i class="fa-solid fa-play"></i> Video mới nhất
       </a>
-      <a href="#" class="btn-link">
-        <i class="fa-brands fa-facebook-messenger"></i> Nhắn tin riêng
-      </a>
+
+      <!-- Nút Bật/Đóng Trình phát nhạc -->
+      <button type="button" class="btn-link btn-music-toggle" onclick="toggleMusicPanel()">
+        <i class="fa-solid fa-headphones"></i> Nhạc yêu thích <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+      </button>
+
+      <!-- Khung phát nhạc có thể bật ra / đóng lại -->
+      <div id="musicPanel" class="music-player-panel">
+        <div class="music-now-playing">
+          <div class="music-info">
+            <div class="music-title" id="currentTrackTitle">Chọn bài hát để phát</div>
+            <div class="music-status" id="trackStatus">Đã tạm dừng</div>
+          </div>
+          <button type="button" class="music-control-btn" id="playPauseBtn" onclick="togglePlayPause()">
+            <i class="fa-solid fa-play" id="playIcon"></i>
+          </button>
+        </div>
+
+        <!-- Danh sách bài hát (Bấm để chọn bài) -->
+        <div class="playlist">
+          <div class="track-item playing" onclick="selectTrack(0, this)">
+            <span>🌸 Lofi Chill Anime (Nhẹ nhàng)</span>
+            <i class="fa-solid fa-music"></i>
+          </div>
+          <div class="track-item" onclick="selectTrack(1, this)">
+            <span>⚔️ Wuthering Waves OST (Chiến đấu)</span>
+            <i class="fa-solid fa-music"></i>
+          </div>
+          <div class="track-item" onclick="selectTrack(2, this)">
+            <span>🎧 Piano Healing Relax</span>
+            <i class="fa-solid fa-music"></i>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="footer">
@@ -374,26 +507,100 @@
     </div>
   </div>
 
-  <!-- Popup hiển thị mã QR -->
+  <!-- Popup Donate QR -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 class="modal-title">Quét mã QR để ủng hộ ☕</h3>
       <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri!</p>
-      
-      <!-- Ảnh mã QR: tìm file donate.jpg trong repo, fallback sang mã tạo tự động -->
       <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
-      
       <br />
       <button type="button" class="close-btn" onclick="closeQRModal()">Đóng lại</button>
     </div>
   </div>
 
+  <!-- Trình phát âm thanh ẩn -->
+  <audio id="audioPlayer" preload="none"></audio>
+
   <script>
+    // Danh sách bài hát: bạn có thể thay đường dẫn mp3 bất kỳ vào đây
+    const tracks = [
+      {
+        title: "🌸 Lofi Chill Anime",
+        src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+      },
+      {
+        title: "⚔️ Wuthering Waves Vibe",
+        src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=epic-cinematic-trailer-111171.mp3"
+      },
+      {
+        title: "🎧 Piano Healing Relax",
+        src: "https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f77cb7.mp3?filename=piano-moment-9835.mp3"
+      }
+    ];
+
+    let currentTrackIndex = 0;
+    const audio = document.getElementById('audioPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const currentTrackTitle = document.getElementById('currentTrackTitle');
+    const trackStatus = document.getElementById('trackStatus');
+
+    // Mặc định nạp bài đầu tiên
+    audio.src = tracks[currentTrackIndex].src;
+    currentTrackTitle.innerText = tracks[currentTrackIndex].title;
+
+    // Đóng/Mở thanh phát nhạc
+    function toggleMusicPanel() {
+      const panel = document.getElementById('musicPanel');
+      const chevron = document.getElementById('music-chevron');
+      panel.classList.toggle('active');
+      if (panel.classList.contains('active')) {
+        chevron.className = "fa-solid fa-chevron-up";
+      } else {
+        chevron.className = "fa-solid fa-chevron-down";
+      }
+    }
+
+    // Nút Bật / Dừng (Start & Stop)
+    function togglePlayPause() {
+      if (audio.paused) {
+        audio.play();
+        playIcon.className = "fa-solid fa-pause";
+        trackStatus.innerText = "Đang phát...";
+      } else {
+        audio.pause();
+        playIcon.className = "fa-solid fa-play";
+        trackStatus.innerText = "Đã tạm dừng";
+      }
+    }
+
+    // Chọn bài trong danh sách
+    function selectTrack(index, element) {
+      currentTrackIndex = index;
+      audio.src = tracks[index].src;
+      currentTrackTitle.innerText = tracks[index].title;
+      
+      // Đổi highlight
+      document.querySelectorAll('.track-item').forEach(el => el.classList.remove('playing'));
+      element.classList.add('playing');
+
+      // Tự động phát khi chọn
+      audio.play();
+      playIcon.className = "fa-solid fa-pause";
+      trackStatus.innerText = "Đang phát...";
+    }
+
+    // Tự chuyển sang trạng thái dừng khi bài nhạc kết thúc
+    audio.onended = function() {
+      playIcon.className = "fa-solid fa-play";
+      trackStatus.innerText = "Đã kết thúc";
+    };
+
+    // Modal Donate
     function openQRModal() {
       document.getElementById('qrModal').classList.add('active');
     }
-
-    function closeQRModal(e) {
+    function closeQRModal() {
       document.getElementById('qrModal').classList.remove('active');
     }
   </script>
