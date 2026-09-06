@@ -23,7 +23,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 24px 16px 50px 16px;
+      padding: 40px 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -91,7 +91,7 @@
                   0 0 25px rgba(37, 244, 238, 0.2),
                   0 0 25px rgba(254, 44, 85, 0.2);
       transition: box-shadow 0.4s ease;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .card-border-wrapper::before {
@@ -279,44 +279,48 @@
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
     /* ============================================================
-       THANH MUSIC DI CHUYỂN THEO TRANG (KHÔNG CÒN CỐ ĐỊNH FIXED)
+       THANH MUSIC TRÔI NỔI (POSITION: RELATIVE, KHÔNG CỐ ĐỊNH)
        ============================================================ */
     .mini-player-container {
       position: relative;
       width: 100%;
       max-width: 400px;
-      z-index: 9990;
-      margin-top: 10px;
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      z-index: 10;
+      margin-top: 12px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Khi ẩn hoàn toàn, trượt gọn lên trên kèm mờ dần */
-    .mini-player-container.collapsed {
-      transform: translateY(-10px);
-      opacity: 0.2;
+    /* Khi ẩn: Thu gọn chiều cao và ẩn nội dung bên trong */
+    .mini-player-container.collapsed .mini-player-border-wrapper {
+      max-height: 0;
+      padding: 0;
+      opacity: 0;
+      border: none;
+      box-shadow: none;
+      margin-top: 0;
     }
 
-    /* Nút mũi tên ẩn/hiện mờ tinh tế nằm ngay mép trên của khung nhạc */
+    /* Nút mũi tên ẩn/hiện mờ tinh tế nằm ngay mép trên */
     .mini-collapse-toggle {
       position: absolute;
-      top: -22px;
+      top: -20px;
       right: 28px;
       background: rgba(18, 18, 24, 0.7);
       backdrop-filter: blur(6px);
       border: 1px solid rgba(37, 244, 238, 0.3);
       border-bottom: none;
-      color: rgba(37, 244, 238, 0.6);
+      color: rgba(37, 244, 238, 0.7);
       width: 36px;
-      height: 22px;
-      border-radius: 12px 12px 0 0;
-      font-size: 0.75rem;
+      height: 20px;
+      border-radius: 10px 10px 0 0;
+      font-size: 0.7rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
-      z-index: 10;
-      opacity: 0.5;
+      box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.4);
+      z-index: 20;
+      opacity: 0.6;
       transition: opacity 0.3s ease, background 0.2s, color 0.2s;
     }
 
@@ -333,10 +337,12 @@
       border-radius: 34px;
       padding: 2.5px;
       overflow: hidden;
+      max-height: 120px;
+      opacity: 1;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85),
                   0 0 25px rgba(37, 244, 238, 0.3),
                   0 0 25px rgba(254, 44, 85, 0.3);
-      transition: box-shadow 0.4s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .mini-player-border-wrapper::before {
@@ -697,7 +703,7 @@
   </div>
 
   <!-- ============================================================
-       THANH MUSIC DI CHUYỂN THEO TRANG (KHÔNG CỐ ĐỊNH)
+       THANH MUSIC TRÔI NỔI (DI CHUYỂN THEO NỘI DUNG LƯỚT)
        ============================================================ -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <!-- Nút mũi tên ẩn/hiện mờ tinh tế -->
@@ -865,7 +871,7 @@
         name: "Liên Quân Mobile",
         icon: "lq.png",
         fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
