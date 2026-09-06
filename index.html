@@ -89,23 +89,23 @@
     }
 
     /* ============================================================
-       AVATAR: VIỀN NEON XOAY NHƯNG ẨN/KHUYẾT ĐỈNH CHỖ LINH THÚ
+       AVATAR: VIỀN NEON CYAN - HỒNG CŨ + ẨN KHÚC ĐỈNH LINH THÚ
        ============================================================ */
     .cinnamoroll-avatar-box {
       position: relative;
-      width: 122px;
-      height: 122px;
+      width: 120px;
+      height: 120px;
       margin: 32px auto 20px auto;
     }
 
-    /* Viền neon xoay quanh avatar với mặt nạ mask che khuất đỉnh */
+    /* Vòng xoay Neon Cyan & Hồng nguyên bản */
     .neon-ring-wrapper {
       position: absolute;
       inset: -4px;
       border-radius: 50%;
       overflow: hidden;
       z-index: 1;
-      /* Cắt rỗng khúc đỉnh từ 315 độ đến 45 độ (nơi Cinnamoroll nằm) */
+      /* Khuyết góc đỉnh nơi Cinnamoroll nằm */
       -webkit-mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
       mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
     }
@@ -114,7 +114,8 @@
       content: "";
       position: absolute;
       inset: -50%;
-      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      /* Gradient Cyan - Hồng đặc trưng ban đầu */
+      background: conic-gradient(#25f4ee, #fe2c55, #25f4ee);
       animation: spin 3.5s linear infinite;
     }
 
@@ -122,7 +123,7 @@
       animation: spin 2s linear infinite;
     }
 
-    /* Khung avatar tròn bên trong */
+    /* Vỏ khung tròn avatar bên trong */
     .avatar-inner {
       position: relative;
       width: 100%;
@@ -130,7 +131,7 @@
       border-radius: 50%;
       z-index: 2;
       background: #141414;
-      padding: 3.5px;
+      padding: 3px;
     }
 
     .avatar-inner .avatar {
@@ -142,7 +143,7 @@
       background: #1a1a24;
     }
 
-    /* Bé Cinnamoroll nằm nổi đè lên trên đỉnh */
+    /* Bé Cinnamoroll chuyển động nhún nhảy nằm trên đỉnh */
     .cinnamoroll-character {
       position: absolute;
       top: -34px;
@@ -323,7 +324,7 @@
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
-    /* Nút mũi tên gài dính sát vào mép dưới cùng của khung card profile */
+    /* NÚT MŨI TÊN DÍNH LIỀN VÀO VIỀN ĐÁY CARD */
     .mini-collapse-toggle {
       position: absolute;
       bottom: 0;
@@ -351,7 +352,7 @@
     }
 
     /* ============================================================
-       THANH MUSIC TRÔI NỔI NẰM NGAY DƯỚI PROFILE CARD
+       THANH MUSIC NẰM DƯỚI PROFILE CARD (TRÔI THEO TRANG)
        ============================================================ */
     .mini-player-container {
       position: relative;
@@ -363,7 +364,6 @@
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     }
 
-    /* Khi ẩn: Trượt khít lên trên và ẩn đi */
     .mini-player-container.collapsed {
       transform: translateY(-110px);
       opacity: 0;
@@ -660,22 +660,22 @@
   <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
   <div class="card-border-wrapper">
     <div class="card">
-      <!-- Nút mũi tên gài dính trực tiếp sát mép dưới của card profile -->
+      <!-- Nút mũi tên gài dính liền vào mép dưới cùng của card profile -->
       <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
         <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
       </button>
 
-      <!-- KHUNG AVATAR: VIỀN NEON XOAY TỰ ĐỘNG KHUYẾT ĐỈNH CHO LINH THÚ -->
+      <!-- KHUNG AVATAR: VIỀN NEON CYAN - HỒNG CŨ CẮT KHUYẾT CHO LINH THÚ -->
       <div class="cinnamoroll-avatar-box">
-        <!-- Viền xoay neon bị khuyết góc đỉnh -->
+        <!-- Viền xoay Neon Cyan/Hồng bị khuyết đỉnh -->
         <div class="neon-ring-wrapper"></div>
 
-        <!-- Ảnh Avatar tròn bên trong -->
+        <!-- Ảnh avatar tròn bên trong -->
         <div class="avatar-inner">
           <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
         </div>
 
-        <!-- Linh thú Cinnamoroll chuyển động nhún nhảy nằm gọn trên đỉnh khuyết -->
+        <!-- Linh thú Cinnamoroll chuyển động nhún nhảy nằm trên đỉnh -->
         <div class="cinnamoroll-character">
           <svg viewBox="0 0 160 95" class="cinna-svg">
             <path class="cinna-ear cinna-ear-left" d="M 45 42 C 10 38, -5 55, 3 66 C 12 77, 36 68, 50 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
