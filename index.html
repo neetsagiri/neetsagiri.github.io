@@ -167,7 +167,7 @@
     }
 
     /* ============================================================
-       PHẦN TÊN SAGIRI CHAN: HIỆU ỨNG CHUYỂN MÀU CHỮ LIÊN TỤC
+       PHẦN TÊN SAGIRI CHAN: CHỈ 2 MÀU GIỐNG VIỀN AVATAR (#25f4ee & #fe2c55)
        ============================================================ */
     .name {
       font-size: 1.75rem;
@@ -178,31 +178,31 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      background: linear-gradient(90deg, #25f4ee, #ffffff, #fe2c55, #ff9900, #25f4ee);
-      background-size: 300% auto;
+      background: linear-gradient(90deg, #25f4ee, #fe2c55, #25f4ee);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: nameColorFlow 5s linear infinite;
-      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.45)) drop-shadow(0 0 16px rgba(254, 44, 85, 0.45));
+      animation: nameNeonFlow 4s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.5)) drop-shadow(0 0 18px rgba(254, 44, 85, 0.5));
       transition: filter 0.3s ease;
     }
 
-    @keyframes nameColorFlow {
+    @keyframes nameNeonFlow {
       0% { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
+      100% { background-position: 200% 50%; }
     }
 
-    /* Icon trái tim đứng yên tĩnh, giữ màu hồng phát sáng nhẹ */
+    /* Icon trái tim đứng yên tĩnh, dùng cùng màu hồng viền avatar */
     .heart-icon {
       -webkit-text-fill-color: initial;
       display: inline-block;
       filter: drop-shadow(0 0 6px rgba(254, 44, 85, 0.8));
     }
 
-    /* Khi phát nhạc: Chữ chuyển màu nhanh hơn và rực rỡ hơn */
+    /* Khi phát nhạc: Chuyển màu nhanh hơn và độ rực tăng nhẹ */
     body.music-active .name {
-      animation: nameColorFlow 2.5s linear infinite;
-      filter: drop-shadow(0 0 14px rgba(37, 244, 238, 0.8)) drop-shadow(0 0 22px rgba(254, 44, 85, 0.8));
+      animation: nameNeonFlow 2s linear infinite;
+      filter: drop-shadow(0 0 14px rgba(37, 244, 238, 0.85)) drop-shadow(0 0 24px rgba(254, 44, 85, 0.85));
     }
 
     .handle {
@@ -967,7 +967,7 @@
         <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
       </div>
 
-      <!-- TÊN SAGIRI CHAN VỚI HIỆU ỨNG CHUYỂN MÀU CHỮ VÀ TIM TĨNH -->
+      <!-- TÊN SAGIRI CHAN VỚI HIỆU ỨNG CHUYỂN 2 MÀU NEON VÀ TIM TĨNH -->
       <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
