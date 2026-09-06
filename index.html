@@ -160,10 +160,6 @@
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       transition: transform 0.25s ease;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
     }
 
     .game-card-wrapper:hover {
@@ -691,28 +687,28 @@
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
-      <!-- Khu vực 2 Game yêu thích: Mở thông minh (Có game mở thẳng, chưa có mở cửa hàng) -->
+      <!-- KHU VỰC 2 GAME YÊU THÍCH: GỌI THẲNG ỨNG DỤNG ANDROID -->
       <div class="section-title">
         <i class="fa-solid fa-gamepad"></i> Game yêu thích
       </div>
       <div class="games-grid">
-        <!-- Wuthering Waves -->
-        <button type="button" onclick="launchGame('ww')" class="game-card-wrapper">
+        <!-- Wuthering Waves: Mở ứng dụng gốc qua Intent thuần túy không fallback CH Play -->
+        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.kurogame.wutheringwaves.global;end" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
             <span class="game-name">Wuthering Waves</span>
             <span class="game-action">Mở game ▶</span>
           </div>
-        </button>
+        </a>
 
-        <!-- Liên Quân Mobile -->
-        <button type="button" onclick="launchGame('lq')" class="game-card-wrapper">
+        <!-- Liên Quân Mobile: Mở ứng dụng gốc qua Intent thuần túy không fallback CH Play -->
+        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.garena.game.kgvn;end" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
             <span class="game-name">Liên Quân Mobile</span>
             <span class="game-action">Mở game ▶</span>
           </div>
-        </button>
+        </a>
       </div>
 
       <!-- Khu vực Liên kết & Playlist -->
@@ -834,52 +830,6 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // ==========================================
-    // CƠ CHẾ MỞ GAME THÔNG MINH (DEEP LINKING):
-    // ==========================================
-    function launchGame(gameKey) {
-      const isAndroid = /android/i.test(navigator.userAgent);
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-      let appScheme = "";
-      let storeFallback = "";
-
-      if (gameKey === 'ww') {
-        if (isAndroid) {
-          appScheme = "intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.kurogame.wutheringwaves.global;end";
-          storeFallback = "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global";
-        } else if (isIOS) {
-          appScheme = "wutheringwaves://";
-          storeFallback = "https://apps.apple.com/app/wuthering-waves/id6475033368";
-        } else {
-          window.open("https://wutheringwaves.kurogames.com/", "_blank");
-          return;
-        }
-      } else if (gameKey === 'lq') {
-        if (isAndroid) {
-          appScheme = "intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.garena.game.kgvn;end";
-          storeFallback = "https://play.google.com/store/apps/details?id=com.garena.game.kgvn";
-        } else if (isIOS) {
-          appScheme = "kgvn://";
-          storeFallback = "https://apps.apple.com/app/garena-li%C3%AAn-qu%C3%A2n-mobile/id1150288114";
-        } else {
-          window.open("https://lienquan.garena.vn/", "_blank");
-          return;
-        }
-      }
-
-      // Thử kích hoạt ứng dụng trên máy
-      const startTime = Date.now();
-      window.location.href = appScheme;
-
-      // Nếu sau 1.2 giây ứng dụng không mở (chưa cài đặt), tự động chuyển sang trang tải
-      setTimeout(function() {
-        if (Date.now() - startTime < 1600) {
-          window.location.href = storeFallback;
-        }
-      }, 1200);
-    }
-
     // ==========================================
     // CẤU HÌNH TÀI KHOẢN BIDV (NAPAS247):
     // ==========================================
