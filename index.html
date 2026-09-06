@@ -160,6 +160,10 @@
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       transition: transform 0.25s ease;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
     }
 
     .game-card-wrapper:hover {
@@ -449,7 +453,7 @@
       font-weight: 600;
     }
 
-    /* Modal Donate Nâng Cấp: Luồng Done -> Hiện QR & Cảm ơn */
+    /* CÁC MODAL OVERLAY (DÙNG CHUNG CHO DONATE VÀ THÔNG TIN GAME) */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -494,6 +498,82 @@
       margin-bottom: 14px;
     }
 
+    /* STYLE KHUNG POPUP THÔNG TIN GAME */
+    .game-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .game-modal-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .game-info-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .game-info-row {
+      margin-bottom: 12px;
+    }
+
+    .game-info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      font-size: 0.72rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+
+    .info-value-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .info-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #25f4ee;
+    }
+
+    .btn-copy-mini {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      background: rgba(254, 44, 85, 0.2);
+      border: 1px solid rgba(254, 44, 85, 0.4);
+      color: #fe2c55;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-copy-mini:hover {
+      background: #fe2c55;
+      color: #fff;
+    }
+
+    /* STYLE POPUP DONATE */
     .donate-form {
       display: flex;
       flex-direction: column;
@@ -554,7 +634,6 @@
       color: #fff;
     }
 
-    /* Nút Hoàn tất (Done) */
     .btn-done-submit {
       width: 100%;
       margin-top: 8px;
@@ -574,7 +653,6 @@
       transform: translateY(-2px);
     }
 
-    /* Màn hình QR sau khi bấm Done */
     #qrResultScreen {
       display: none;
       animation: fadeIn 0.25s ease-out;
@@ -687,28 +765,28 @@
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
-      <!-- KHU VỰC 2 GAME: GỌI THẲNG ACTIVITY KHỞI ĐỘNG CỦA ANDROID -->
+      <!-- KHU VỰC 2 GAME: BẤM VÀO SẼ HIỆN POPUP UID & INGAME -->
       <div class="section-title">
         <i class="fa-solid fa-gamepad"></i> Game yêu thích
       </div>
       <div class="games-grid">
-        <!-- Wuthering Waves: Khởi chạy trực tiếp MainActivity của game -->
-        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.kurogame.wutheringwaves.global/com.kurogame.wutheringwaves.MainActivity;end" class="game-card-wrapper">
+        <!-- Wuthering Waves -->
+        <button type="button" onclick="openGameModal('ww')" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
             <span class="game-name">Wuthering Waves</span>
-            <span class="game-action">Mở game ▶</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
           </div>
-        </a>
+        </button>
 
-        <!-- Liên Quân Mobile: Khởi chạy trực tiếp GameAppActivity của game -->
-        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.garena.game.kgvn/com.garena.game.kgvn.GameAppActivity;end" class="game-card-wrapper">
+        <!-- Liên Quân Mobile -->
+        <button type="button" onclick="openGameModal('lq')" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
             <span class="game-name">Liên Quân Mobile</span>
-            <span class="game-action">Mở game ▶</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
           </div>
-        </a>
+        </button>
       </div>
 
       <!-- Khu vực Liên kết & Playlist -->
@@ -763,6 +841,39 @@
       <div class="footer">
         © @_sagiri0502 • All rights reserved
       </div>
+    </div>
+  </div>
+
+  <!-- POPUP HIỂN THỊ UID & TÊN INGAME -->
+  <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="game-modal-header">
+        <img id="gameModalImg" class="game-modal-icon" src="" alt="Game Icon" />
+        <div style="text-align: left;">
+          <h3 id="gameModalTitle" class="modal-title" style="margin-bottom: 2px;">Game Name</h3>
+          <p style="font-size: 0.78rem; color: #aaa;">Thông tin kết bạn trong game</p>
+        </div>
+      </div>
+
+      <div class="game-info-card">
+        <div class="game-info-row">
+          <div class="info-label">Tên Ingame</div>
+          <div class="info-value-box">
+            <span id="gameIngameText" class="info-val"></span>
+            <button type="button" class="btn-copy-mini" onclick="copyIngameName(this)">Copy Tên</button>
+          </div>
+        </div>
+
+        <div class="game-info-row">
+          <div class="info-label">UID</div>
+          <div class="info-value-box">
+            <span id="gameUidText" class="info-val"></span>
+            <button type="button" class="btn-copy-mini" onclick="copyGameUid(this)">Copy UID</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-modal-action close-btn" onclick="closeGameModal()">Đóng lại</button>
     </div>
   </div>
 
@@ -830,6 +941,76 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
+    // ==========================================
+    // CẤU HÌNH THÔNG TIN GAME & UID:
+    // ==========================================
+    const gamesData = {
+      ww: {
+        name: "Wuthering Waves",
+        icon: "ww.png",
+        fallbackIcon: "https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png",
+        ingame: "Sagiri",
+        uid: "900264432"
+      },
+      lq: {
+        name: "Liên Quân Mobile",
+        icon: "lq.png",
+        fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
+        ingame: "ThahNamです",
+        uid: "5319141104092273"
+      }
+    };
+
+    let activeGameKey = "ww";
+
+    function openGameModal(key) {
+      activeGameKey = key;
+      const game = gamesData[key];
+      const modalImg = document.getElementById("gameModalImg");
+
+      document.getElementById("gameModalTitle").innerText = game.name;
+      modalImg.src = game.icon;
+      modalImg.onerror = () => { modalImg.src = game.fallbackIcon; };
+
+      document.getElementById("gameIngameText").innerText = game.ingame;
+      document.getElementById("gameUidText").innerText = game.uid;
+
+      document.getElementById("gameModal").classList.add("active");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("active");
+    }
+
+    function copyToClipboard(text, btnElement, successText) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+
+      const orig = btnElement.innerText;
+      btnElement.innerText = successText;
+      setTimeout(() => {
+        btnElement.innerText = orig;
+      }, 2000);
+    }
+
+    function copyIngameName(btn) {
+      const text = gamesData[activeGameKey].ingame;
+      copyToClipboard(text, btn, "Đã chép!");
+    }
+
+    function copyGameUid(btn) {
+      const text = gamesData[activeGameKey].uid;
+      copyToClipboard(text, btn, "Đã chép!");
+    }
+
     // ==========================================
     // CẤU HÌNH TÀI KHOẢN BIDV (NAPAS247):
     // ==========================================
