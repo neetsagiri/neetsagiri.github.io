@@ -36,7 +36,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* KHI PHÁT NHẠC (VÀ CÓ ÂM THANH): ĐỔI MÀU NHANH & ĐỘ SÁNG NHẤP NHÁY */
+    /* KHI PHÁT NHẠC: CHỈ MÀU SẮC ĐỔI TỐC ĐỘ VÀ ĐỘ SÁNG NHẤP NHÁY */
     body.music-active {
       animation: tiktokGradient 2s ease infinite, beatColorFlash 0.65s ease-in-out infinite alternate;
     }
@@ -111,7 +111,6 @@
       z-index: 0;
     }
 
-    /* KHI CÓ NHẠC VÀ BẬT TIẾNG: VIỀN XOAY TĂNG TỐC VÀ TỎA SÁNG RỰC RỠ */
     body.music-active .card-border-wrapper {
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85),
                   0 0 35px rgba(37, 244, 238, 0.6),
@@ -519,7 +518,9 @@
       font-weight: 600;
     }
 
-    /* MODAL OVERLAY CHUNG */
+    /* ============================================================
+       MODAL POPUP NÂNG CẤP: VIỀN XOAY NEON VÀ NỀN BACKGROUND
+       ============================================================ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -675,6 +676,42 @@
     .btn-copy-mini:hover {
       background: #fe2c55;
       color: #fff;
+    }
+
+    /* NÚT XEM ẢNH TÀI KHOẢN */
+    .btn-view-account-photo {
+      width: 100%;
+      padding: 10px 0;
+      background: linear-gradient(135deg, rgba(37, 244, 238, 0.2), rgba(254, 44, 85, 0.2));
+      border: 1px solid rgba(37, 244, 238, 0.4);
+      border-radius: 12px;
+      color: #25f4ee;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-view-account-photo:hover {
+      background: linear-gradient(135deg, rgba(37, 244, 238, 0.35), rgba(254, 44, 85, 0.35));
+      color: #fff;
+      box-shadow: 0 0 15px rgba(37, 244, 238, 0.4);
+    }
+
+    /* POPUP XEM ẢNH TÀI KHOẢN */
+    .account-photo-img {
+      width: 100%;
+      max-height: 55vh;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #0d0d12;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin: 8px 0 14px;
     }
 
     .donate-form {
@@ -954,7 +991,7 @@
     </div>
   </div>
 
-  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME -->
+  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME (CÓ NÚT XEM ẢNH TÀI KHOẢN) -->
   <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -984,7 +1021,26 @@
           </div>
         </div>
 
+        <!-- NÚT XEM ẢNH TÀI KHOẢN -->
+        <button type="button" class="btn-view-account-photo" onclick="openAccountPhotoModal()">
+          <i class="fa-regular fa-image"></i> Xem ảnh tài khoản
+        </button>
+
         <button type="button" class="btn-modal-action close-btn" onclick="closeGameModal()">Đóng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 1.1: HIỂN THỊ ẢNH TÀI KHOẢN GAME -->
+  <div id="accountPhotoModal" class="modal-overlay" onclick="closeAccountPhotoModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <h3 id="accountPhotoTitle" class="modal-title" style="margin-bottom: 2px;">Ảnh tài khoản</h3>
+        <p style="font-size: 0.78rem; color: #aaa;">Ảnh chụp hồ sơ ingame</p>
+
+        <img id="accountPhotoDisplay" class="account-photo-img" src="" alt="Ảnh tài khoản" />
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeAccountPhotoModal()">Quay lại</button>
       </div>
     </div>
   </div>
@@ -1057,21 +1113,23 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // CẤU HÌNH THÔNG TIN GAME & UID:
+    // CẤU HÌNH THÔNG TIN GAME, UID & ẢNH TÀI KHOẢN:
     const gamesData = {
       ww: {
         name: "Wuthering Waves",
         icon: "ww.png",
         fallbackIcon: "https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png",
         ingame: "Sagiri",
-        uid: "900264432"
+        uid: "900264432",
+        photo: "ww-account.jpg" // Đặt ảnh tài khoản Wuthering Waves tại đây
       },
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
         fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
         ingame: "ThahNamです",
-        uid: "5319141104092273"
+        uid: "5319141104092273",
+        photo: "lq-account.jpg" // Đặt ảnh tài khoản Liên Quân tại đây
       }
     };
 
@@ -1094,6 +1152,23 @@
 
     function closeGameModal() {
       document.getElementById("gameModal").classList.remove("active");
+    }
+
+    // MỞ POPUP XEM ẢNH TÀI KHOẢN
+    function openAccountPhotoModal() {
+      const game = gamesData[activeGameKey];
+      document.getElementById("accountPhotoTitle").innerText = "Tài khoản " + game.name;
+      const photoImg = document.getElementById("accountPhotoDisplay");
+      photoImg.src = game.photo;
+      photoImg.onerror = () => {
+        photoImg.src = "https://placehold.co/600x350/18181c/25f4ee?text=Vui+long+them+anh+" + game.photo;
+      };
+
+      document.getElementById("accountPhotoModal").classList.add("active");
+    }
+
+    function closeAccountPhotoModal() {
+      document.getElementById("accountPhotoModal").classList.remove("active");
     }
 
     function copyToClipboard(text, btnElement, successText) {
@@ -1197,7 +1272,6 @@
     let isMuted = false;
     let hasAutoStarted = false;
 
-    // HÀM ĐỒNG BỘ HIỆU ỨNG MÀU SẮC (CHỈ CHÁY KHI ĐANG PHÁT VÀ KHÔNG TẮT TIẾNG)
     function syncVisualEffects() {
       if (isPlaying && !isMuted) {
         document.body.classList.add('music-active');
@@ -1303,7 +1377,6 @@
         muteIcon.className = "fa-solid fa-volume-xmark";
       }
 
-      // CẬP NHẬT LẠI MÀU SẮC NGAY KHI BẤM NÚT ÂM THANH
       syncVisualEffects();
     }
 
