@@ -22,7 +22,7 @@
       justify-content: center;
       align-items: center;
       padding: 24px 16px;
-      /* Gradient chuyển màu neon phong cách TikTok */
+      /* Nền gradient TikTok chuyển màu */
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -43,7 +43,7 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 28px;
-      padding: 38px 24px;
+      padding: 34px 22px;
       text-align: center;
       color: #ffffff;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
@@ -52,12 +52,12 @@
       position: relative;
     }
 
-    /* Hiệu ứng viền xoay phát sáng quanh Avatar */
+    /* Hiệu ứng viền phát sáng Avatar */
     .avatar-wrapper {
       position: relative;
-      width: 116px;
-      height: 116px;
-      margin: 0 auto 20px;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 18px;
     }
 
     .avatar-wrapper::before {
@@ -96,22 +96,97 @@
     .handle {
       font-size: 0.95rem;
       color: #a0a0a0;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       font-weight: 500;
     }
 
     .bio {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: #dedede;
-      line-height: 1.55;
-      margin-bottom: 28px;
+      line-height: 1.5;
+      margin-bottom: 18px;
     }
 
-    /* Danh sách liên kết */
+    /* Tiêu đề từng nhóm */
+    .section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888888;
+      margin: 18px 0 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Lưới hiển thị 2 game yêu thích */
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .game-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 8px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .game-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .game-btn.wuthering:hover {
+      box-shadow: 0 0 15px rgba(37, 244, 238, 0.5);
+    }
+
+    .game-btn.lienquan:hover {
+      box-shadow: 0 0 15px rgba(254, 44, 85, 0.5);
+    }
+
+    .game-icon {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .game-btn.wuthering .game-icon {
+      color: #25f4ee;
+    }
+
+    .game-btn.lienquan .game-icon {
+      color: #fe2c55;
+    }
+
+    .game-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .game-action {
+      font-size: 0.68rem;
+      color: #a5a5a5;
+      margin-top: 3px;
+    }
+
+    /* Nút liên kết */
     .links {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .btn-link {
@@ -119,11 +194,11 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 14px;
+      padding: 13px;
       border-radius: 14px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       color: #ffffff;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -149,8 +224,8 @@
     }
 
     .footer {
-      margin-top: 26px;
-      font-size: 0.8rem;
+      margin-top: 24px;
+      font-size: 0.78rem;
       color: #666666;
     }
   </style>
@@ -166,6 +241,30 @@
     <p class="handle">@_sagiri0502</p>
     <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri!<br>🎨 Chia sẻ video & nội dung sáng tạo mỗi ngày.</p>
 
+    <!-- Khu vực Game yêu thích -->
+    <div class="section-title">
+      <i class="fa-solid fa-gamepad"></i> Game yêu thích
+    </div>
+    <div class="games-grid">
+      <!-- Mở Wuthering Waves -->
+      <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
+        <i class="fa-solid fa-bolt game-icon"></i>
+        <span class="game-name">Wuthering Waves</span>
+        <span class="game-action">Mở game ▶</span>
+      </a>
+
+      <!-- Mở Liên Quân Mobile -->
+      <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
+        <i class="fa-solid fa-shield-halved game-icon"></i>
+        <span class="game-name">Liên Quân Mobile</span>
+        <span class="game-action">Mở game ▶</span>
+      </a>
+    </div>
+
+    <!-- Khu vực Liên kết -->
+    <div class="section-title" style="margin-top: 16px;">
+      <i class="fa-solid fa-link"></i> Liên kết
+    </div>
     <div class="links">
       <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
         <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
@@ -180,102 +279,6 @@
 
     <div class="footer">
       © @_sagiri0502 • All rights reserved
-    </div>
-  </div>
-
-</body>
-</html>
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .stat-item p {
-      font-size: 0.75rem;
-      color: #909090;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 3px;
-    }
-
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .btn-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 13px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.25s ease;
-    }
-
-    .btn-link:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: -2px 0 10px rgba(37, 244, 238, 0.35), 2px 0 10px rgba(254, 44, 85, 0.35);
-    }
-
-    .btn-tiktok {
-      background: #fe2c55;
-      border: none;
-    }
-
-    .btn-tiktok:hover {
-      background: #e02449;
-      box-shadow: 0 4px 15px rgba(254, 44, 85, 0.45);
-    }
-  </style>
-</head>
-<body>
-
-  <div class="card">
-    <div class="avatar-wrapper">
-      <!-- Thay link ảnh đại diện của bạn vào src bên dưới -->
-      <img class="avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502" alt="Avatar Sagiri" />
-    </div>
-
-    <h1 class="name">Sagiri 🌸</h1>
-    <p class="handle">@_sagiri0502</p>
-    <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri!<br>🎨 Chia sẻ video & nội dung sáng tạo mỗi ngày.</p>
-
-    <!-- Bạn có thể chỉnh lại các con số thống kê theo thực tế kênh của bạn -->
-    <div class="stats">
-      <div class="stat-item">
-        <h4>--</h4>
-        <p>Đang theo</p>
-      </div>
-      <div class="stat-item">
-        <h4>--</h4>
-        <p>Follower</p>
-      </div>
-      <div class="stat-item">
-        <h4>--</h4>
-        <p>Lượt thích</p>
-      </div>
-    </div>
-
-    <div class="links">
-      <!-- Nút mở trực tiếp kênh TikTok của bạn -->
-      <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" class="btn-link btn-tiktok">
-        <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
-      </a>
-      <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" class="btn-link">
-        <i class="fa-solid fa-play"></i> Video mới nhất
-      </a>
-      <a href="#" class="btn-link">
-        <i class="fa-brands fa-facebook-messenger"></i> Nhắn tin riêng
-      </a>
     </div>
   </div>
 
