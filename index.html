@@ -82,39 +82,95 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 28px;
-      padding: 34px 22px 42px 22px; /* Tăng khoảng trống đáy card để chứa nút */
+      padding: 34px 22px 42px 22px;
       text-align: center;
       color: #ffffff;
       z-index: 1;
     }
 
-    .avatar-wrapper {
+    /* CONTAINER KHUNG AVATAR CINNAMOROLL */
+    .cinnamoroll-avatar-box {
       position: relative;
-      width: 112px;
-      height: 112px;
-      margin: 0 auto 18px;
+      width: 120px;
+      height: 120px;
+      margin: 32px auto 20px auto;
     }
 
-    .avatar-wrapper::before {
-      content: "";
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #25f4ee, #fe2c55);
-      z-index: 0;
-      animation: spin 3.5s linear infinite;
-      filter: blur(2px);
-    }
-
-    .avatar {
+    /* VIỀN TRÒN XANH PASTEL SÁNG */
+    .cinnamoroll-circle-ring {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #141414;
+      padding: 4.5px;
+      background: #cbf2fe;
+      border: 2px solid #28b7fa;
+      box-shadow: 0 0 16px rgba(40, 183, 250, 0.45), inset 0 0 8px rgba(255, 255, 255, 0.8);
       z-index: 1;
-      background-color: #222;
+    }
+
+    .cinnamoroll-circle-ring .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #ffffff;
+      background: #1a1a24;
+    }
+
+    /* BÉ CINNAMOROLL NẰM TRÊN ĐỈNH KHUNG */
+    .cinnamoroll-character {
+      position: absolute;
+      top: -34px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      z-index: 3;
+      pointer-events: none;
+      animation: cinnaFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+    }
+
+    .cinna-svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .cinna-ear-left {
+      transform-origin: 50px 48px;
+      animation: earWaveLeft 3s ease-in-out infinite;
+    }
+
+    .cinna-ear-right {
+      transform-origin: 110px 48px;
+      animation: earWaveRight 3s ease-in-out infinite;
+    }
+
+    @keyframes cinnaFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
+    }
+
+    @keyframes earWaveLeft {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-8deg); }
+    }
+
+    @keyframes earWaveRight {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    body.music-active .cinnamoroll-character {
+      animation: cinnaFloat 1.4s ease-in-out infinite;
+    }
+    body.music-active .cinna-ear-left {
+      animation: earWaveLeft 1.4s ease-in-out infinite;
+    }
+    body.music-active .cinna-ear-right {
+      animation: earWaveRight 1.4s ease-in-out infinite;
     }
 
     .name {
@@ -244,7 +300,7 @@
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
-    /* Nút mũi tên gài dính sát vào mép dưới cùng của khung card profile */
+    /* Nút mũi tên gài dính liền vào mép dưới cùng của card profile */
     .mini-collapse-toggle {
       position: absolute;
       bottom: 0;
@@ -586,8 +642,26 @@
         <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
       </button>
 
-      <div class="avatar-wrapper">
-        <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
+      <!-- KHUNG AVATAR CINNAMOROLL CHUYỂN ĐỘNG -->
+      <div class="cinnamoroll-avatar-box">
+        <div class="cinnamoroll-circle-ring">
+          <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
+        </div>
+
+        <div class="cinnamoroll-character">
+          <svg viewBox="0 0 160 95" class="cinna-svg">
+            <path class="cinna-ear cinna-ear-left" d="M 45 42 C 10 38, -5 55, 3 66 C 12 77, 36 68, 50 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+            <path class="cinna-ear cinna-ear-right" d="M 115 42 C 150 38, 165 55, 157 66 C 148 77, 124 68, 110 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+            <ellipse cx="80" cy="50" rx="35" ry="26" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
+            <ellipse cx="68" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
+            <ellipse cx="92" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
+            <ellipse cx="61" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
+            <ellipse cx="99" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
+            <path d="M 75 54 Q 80 58 85 54" fill="none" stroke="#28b7fa" stroke-width="2.8" stroke-linecap="round"/>
+            <ellipse cx="69" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+            <ellipse cx="91" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+          </svg>
+        </div>
       </div>
 
       <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
