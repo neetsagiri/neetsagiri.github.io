@@ -319,6 +319,7 @@
 
   <div class="card">
     <div class="avatar-wrapper">
+      <!-- Ảnh đại diện: lấy file avatar.jpg cùng repo, fallback nếu thiếu -->
       <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
     </div>
 
@@ -331,16 +332,16 @@
       <i class="fa-solid fa-gamepad"></i> Game yêu thích
     </div>
     <div class="games-grid">
-      <!-- Wuthering Waves -->
+      <!-- Wuthering Waves: tìm file ww.png trong repo, fallback sang logo web nếu chưa có -->
       <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
-        <img class="game-icon-img" src="https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Wuthering_Waves_cover.jpg/220px-Wuthering_Waves_cover.jpg'" alt="Wuthering Waves" />
+        <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
         <span class="game-name">Wuthering Waves</span>
         <span class="game-action">Mở game ▶</span>
       </a>
 
-      <!-- Liên Quân Mobile -->
+      <!-- Liên Quân Mobile: tìm file lq.png trong repo, fallback sang logo web nếu chưa có -->
       <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
-        <img class="game-icon-img" src="https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png" onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz-8Z2sLqZpXb3wR7qYhK6pU8v_m0oN6yQwA&s'" alt="Liên Quân Mobile" />
+        <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
         <span class="game-name">Liên Quân Mobile</span>
         <span class="game-action">Mở game ▶</span>
       </a>
@@ -379,6 +380,7 @@
       <h3 class="modal-title">Quét mã QR để ủng hộ ☕</h3>
       <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri!</p>
       
+      <!-- Ảnh mã QR: tìm file donate.jpg trong repo, fallback sang mã tạo tự động -->
       <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
       
       <br />
