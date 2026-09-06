@@ -51,7 +51,6 @@
                   0 0 25px rgba(254, 44, 85, 0.2);
     }
 
-    /* Lớp gradient neon xoay tròn */
     .card-border-wrapper::before {
       content: "";
       position: absolute;
@@ -144,41 +143,62 @@
       gap: 6px;
     }
 
-    /* Lưới 2 Game yêu thích */
+    /* LƯỚI 2 GAME */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 6px;
     }
 
+    /* Khung bọc viền xoay chuyển màu cho từng ô game */
+    .game-card-wrapper {
+      position: relative;
+      border-radius: 18px;
+      padding: 2px;
+      overflow: hidden;
+      display: flex;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: transform 0.25s ease;
+    }
+
+    .game-card-wrapper:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Hiệu ứng viền chuyển màu xoay tròn phát sáng */
+    .game-card-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+
     .game-btn {
+      position: relative;
+      z-index: 1;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 12px 8px;
+      padding: 14px 8px;
       border-radius: 16px;
-      text-decoration: none;
+      background: rgba(18, 18, 22, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.25s ease;
-      cursor: pointer;
+      transition: background 0.2s ease;
     }
 
-    .game-btn:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .game-btn.wuthering:hover {
-      box-shadow: 0 0 15px rgba(37, 244, 238, 0.5);
-    }
-
-    .game-btn.lienquan:hover {
-      box-shadow: 0 0 15px rgba(254, 44, 85, 0.5);
+    .game-card-wrapper:hover .game-btn {
+      background: rgba(28, 28, 35, 0.85);
     }
 
     .game-icon-img {
@@ -187,13 +207,13 @@
       border-radius: 13px;
       object-fit: cover;
       margin-bottom: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       background: #111;
     }
 
     .game-name {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -246,6 +266,7 @@
       box-shadow: 0 4px 18px rgba(254, 44, 85, 0.5);
     }
 
+    /* Nút Donate Trà Sữa cam hồng */
     .btn-donate {
       background: linear-gradient(135deg, #ff9900, #ff5e62);
       border: none;
@@ -268,7 +289,7 @@
       box-shadow: 0 4px 18px rgba(88, 101, 242, 0.55);
     }
 
-    /* Nút YouTube Music */
+    /* Nút Playlist Wuthering Waves */
     .btn-yt-music {
       background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(254, 44, 85, 0.2));
       border: 1px solid rgba(255, 0, 85, 0.4);
@@ -376,7 +397,7 @@
       transform: scale(1.08);
     }
 
-    /* Danh sách bài hát cuộn đầy đủ */
+    /* Danh sách bài hát cuộn mượt */
     .playlist {
       display: flex;
       flex-direction: column;
@@ -516,34 +537,38 @@
 </head>
 <body>
 
-  <!-- KHUNG BỌC TẠO VIỀN GRADIENT XOAY PHÁT SÁNG -->
+  <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
   <div class="card-border-wrapper">
     <div class="card">
       <div class="avatar-wrapper">
         <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
       </div>
 
-      <h1 class="name">Sagiri Chan💕</h1>
+      <h1 class="name">Sagiri Chan 💕</h1>
       <p class="handle">@_sagiri0502</p>
-      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕<br></p>
+      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
-      <!-- Khu vực 2 Game yêu thích -->
+      <!-- Khu vực 2 Game yêu thích: CÓ VIỀN PHÁT SÁNG CHUYỂN MÀU -->
       <div class="section-title">
         <i class="fa-solid fa-gamepad"></i> Game yêu thích
       </div>
       <div class="games-grid">
-        <!-- Wuthering Waves -->
-        <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
-          <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
-          <span class="game-name">Wuthering Waves</span>
-          <span class="game-action">Mở game ▶</span>
+        <!-- Wuthering Waves có viền chuyển màu -->
+        <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
+            <span class="game-name">Wuthering Waves</span>
+            <span class="game-action">Mở game ▶</span>
+          </div>
         </a>
 
-        <!-- Liên Quân Mobile -->
-        <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
-          <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
-          <span class="game-name">Liên Quân Mobile</span>
-          <span class="game-action">Mở game ▶</span>
+        <!-- Liên Quân Mobile có viền chuyển màu -->
+        <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
+            <span class="game-name">Liên Quân Mobile</span>
+            <span class="game-action">Mở game ▶</span>
+          </div>
         </a>
       </div>
 
@@ -557,10 +582,10 @@
         </a>
 
         <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
-          <i class="fa-solid fa-qrcode"></i> Donate Tà Tữa
+          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
         </button>
 
-        <!-- NÚT DISCORD THAY CHO VIDEO MỚI NHẤT -->
+        <!-- Nút Discord -->
         <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord">
           <i class="fa-brands fa-discord"></i> Discord: sagirichan_0502
         </a>
@@ -605,7 +630,7 @@
   <!-- Popup Donate QR -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 class="modal-title">Quét mã QR để cho Sagiri mua tà tữa💕</h3>
+      <h3 class="modal-title">Quét mã QR để cho Sagiri Tà Tữa💕</h3>
       <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri Chan💕</p>
       <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
       <br />
