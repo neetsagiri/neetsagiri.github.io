@@ -22,7 +22,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px 16px 110px 16px; /* Chừa khoảng trống phía dưới cho bottom bar */
+      padding: 24px 16px 110px 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -404,7 +404,7 @@
     body.music-active .btn-yt-music { box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), inset 0 0 10px rgba(37, 244, 238, 0.3); }
 
     /* ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER (CỐ ĐỊNH ĐÁY MÀN HÌNH)
+       THANH MINI BOTTOM BAR MUSIC PLAYER
        ============================================================ */
     .mini-player-bar {
       position: fixed;
@@ -428,7 +428,6 @@
       transform: translateY(calc(100% - 32px));
     }
 
-    /* Nút thu gọn / mở rộng nhanh */
     .mini-collapse-toggle {
       position: absolute;
       top: -18px;
@@ -448,7 +447,6 @@
       box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
     }
 
-    /* Thanh tiến trình siêu mảnh trên cùng của Bar */
     .mini-progress-bg {
       width: 100%;
       height: 3px;
@@ -474,7 +472,6 @@
       width: 100%;
     }
 
-    /* Đĩa vinyl xoay mini */
     .mini-vinyl-wrapper {
       position: relative;
       width: 42px;
@@ -498,7 +495,6 @@
       object-fit: cover;
     }
 
-    /* Thông tin bài hát + Marquee lướt mượt mà */
     .mini-song-info {
       flex: 1;
       overflow: hidden;
@@ -519,7 +515,6 @@
       color: #a0a0a0;
     }
 
-    /* Sóng âm thanh Neon Equalizer */
     .mini-equalizer {
       display: flex;
       align-items: flex-end;
@@ -541,7 +536,6 @@
       100% { height: 12px; }
     }
 
-    /* Nút điều khiển mini */
     .mini-controls {
       display: flex;
       align-items: center;
@@ -569,13 +563,15 @@
     .mini-btn-play {
       background: linear-gradient(135deg, #fe2c55, #25f4ee);
       border: none;
-      width: 36px;
-      height: 36px;
-      font-size: 0.9rem;
-      box-shadow: 0 0 10px rgba(254, 44, 85, 0.5);
+      width: 38px;
+      height: 38px;
+      font-size: 0.95rem;
+      box-shadow: 0 0 12px rgba(254, 44, 85, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Bảng chọn bài đầy đủ (Popup hoặc Panel) */
     .music-player-panel {
       display: none;
       margin-top: 10px;
@@ -850,16 +846,16 @@
         </div>
       </div>
 
-      <!-- Cụm nút điều khiển -->
+      <!-- Cụm nút điều khiển (Dùng SVG trực tiếp đảm bảo luôn hiện đúng Play/Pause) -->
       <div class="mini-controls">
         <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
-          <i class="fa-solid fa-backward-step"></i>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
         </button>
         <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
-          <i class="fa-solid fa-play" id="miniPlayIcon"></i>
+          <svg id="miniPlayIconSvg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
         <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
-          <i class="fa-solid fa-forward-step"></i>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
         </button>
       </div>
     </div>
@@ -1173,14 +1169,13 @@
     }
 
     function onPlayerStateChange(event) {
-      const playIcon = document.getElementById('playIcon');
-      const miniPlayIcon = document.getElementById('miniPlayIcon');
+      const miniPlayIconSvg = document.getElementById('miniPlayIconSvg');
       const trackStatus = document.getElementById('trackStatus');
 
       if (event.data === YT.PlayerState.PLAYING) {
         isPlaying = true;
-        playIcon.className = "fa-solid fa-pause";
-        miniPlayIcon.className = "fa-solid fa-pause";
+        // Biểu tượng Pause (hai vạch)
+        miniPlayIconSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
         trackStatus.innerText = "Đang phát nhạc...";
         syncVisualEffects();
         renderPlaylist();
@@ -1188,8 +1183,8 @@
         progressInterval = setInterval(updateProgressUI, 500);
       } else if (event.data === YT.PlayerState.PAUSED) {
         isPlaying = false;
-        playIcon.className = "fa-solid fa-play";
-        miniPlayIcon.className = "fa-solid fa-play";
+        // Biểu tượng Play (tam giác)
+        miniPlayIconSvg.innerHTML = '<path d="M8 5v14l11-7z"/>';
         trackStatus.innerText = "Đã tạm dừng";
         syncVisualEffects();
         clearInterval(progressInterval);
@@ -1302,7 +1297,6 @@
       selectTrack(currentTrackIndex);
     }
 
-    // Thu gọn hoặc mở rộng Mini Player Bar dưới đáy
     function toggleMiniPlayerCollapse() {
       const bar = document.getElementById('miniPlayerBar');
       const chevron = document.getElementById('collapseChevron');
