@@ -453,7 +453,7 @@
       font-weight: 600;
     }
 
-    /* CÁC MODAL OVERLAY (DÙNG CHUNG CHO DONATE VÀ THÔNG TIN GAME) */
+    /* MODAL OVERLAY CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -498,7 +498,7 @@
       margin-bottom: 14px;
     }
 
-    /* STYLE KHUNG POPUP THÔNG TIN GAME */
+    /* KHUNG POPUP GAME INFO */
     .game-modal-header {
       display: flex;
       align-items: center;
@@ -573,7 +573,7 @@
       color: #fff;
     }
 
-    /* STYLE POPUP DONATE */
+    /* POPUP DONATE */
     .donate-form {
       display: flex;
       flex-direction: column;
@@ -743,12 +743,16 @@
       color: #666666;
     }
 
-    #ytm-streamer {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
+    /* VỊ TRÍ IFRAME HỢP LỆ TRÁNH BỊ YOUTUBE CHẶN PHÁT NGẦM */
+    #ytm-wrapper {
+      position: fixed;
+      bottom: -300px;
+      right: -300px;
+      width: 200px;
+      height: 200px;
+      opacity: 0.01;
       pointer-events: none;
+      z-index: -999;
     }
   </style>
 </head>
@@ -877,7 +881,7 @@
     </div>
   </div>
 
-  <!-- POPUP DONATE: BƯỚC 1 (NHẬP SỐ TIỀN & LỜI NHẮN) -> BƯỚC 2 (HIỆN MÃ QR & CẢM ƠN) -->
+  <!-- POPUP DONATE -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
 
@@ -936,8 +940,10 @@
     </div>
   </div>
 
-  <!-- Player YouTube ngầm -->
-  <div id="ytm-streamer"></div>
+  <!-- PLAYER YOUTUBE TỐI ƯU CHẠY NỀN -->
+  <div id="ytm-wrapper">
+    <div id="ytm-streamer"></div>
+  </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
@@ -1015,9 +1021,9 @@
     // CẤU HÌNH TÀI KHOẢN BIDV (NAPAS247):
     // ==========================================
     const myBankConfig = {
-      bankId: "BIDV",             // Ngân hàng BIDV
-      accountNo: "8833220630",    // Số tài khoản BIDV
-      accountName: "BUI THANH NAM" // Tên chủ tài khoản
+      bankId: "BIDV",
+      accountNo: "8833220630",
+      accountName: "BUI THANH NAM"
     };
 
     function formatNumberWithDots(val) {
@@ -1069,32 +1075,14 @@
       document.getElementById('qrModal').classList.remove('active');
     }
 
-    // 6 BÀI HÁT THEO ĐÚNG LINK CỦA BẠN:
+    // 6 BÀI HÁT PLAYLIST:
     const playlist = [
-      { 
-        title: "✨ Saving Light", 
-        id: "nl_vdjf-jM0" 
-      },
-      { 
-        title: "🎵 An Unfinished Song (EP 1.3)", 
-        id: "53qYNTdtnpk" 
-      },
-      { 
-        title: "🎭 All Silent Souls Can Sing (Ver 2.0 Trailer)", 
-        id: "SdUgFGx1kOY" 
-      },
-      { 
-        title: "💃 Dancing Through Fantasies", 
-        id: "0hC73MsFBv8" 
-      },
-      { 
-        title: "⚔️ Wuthering Waves OST Track 5", 
-        id: "cW9sz5RJvnc" 
-      },
-      { 
-        title: "🌸 Wuthering Waves OST Track 6", 
-        id: "Yr1RlcoqXTg" 
-      }
+      { title: "✨ Saving Light", id: "nl_vdjf-jM0" },
+      { title: "🎵 An Unfinished Song (EP 1.3)", id: "53qYNTdtnpk" },
+      { title: "🎭 All Silent Souls Can Sing (Ver 2.0 Trailer)", id: "SdUgFGx1kOY" },
+      { title: "💃 Dancing Through Fantasies", id: "0hC73MsFBv8" },
+      { title: "⚔️ Wuthering Waves OST Track 5", id: "cW9sz5RJvnc" },
+      { title: "🌸 Wuthering Waves OST Track 6", id: "Yr1RlcoqXTg" }
     ];
 
     let player = null;
@@ -1103,12 +1091,15 @@
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('ytm-streamer', {
-        height: '10',
-        width: '10',
+        height: '200',
+        width: '200',
         videoId: playlist[currentTrackIndex].id,
         playerVars: {
           'playsinline': 1,
-          'controls': 0
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'rel': 0
         },
         events: {
           'onReady': onPlayerReady,
@@ -1141,6 +1132,13 @@
         nextTrack();
       }
     }
+
+    // Tự động duy trì phát nhạc khi đổi tab hoặc thao tác trên trang
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && isPlaying && player && typeof player.playVideo === 'function') {
+        player.playVideo();
+      }
+    });
 
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
