@@ -42,40 +42,6 @@
       filter: saturate(1.25);
     }
 
-    /* NÚT TẮT/BẬT TIẾNG GÓC TRÊN BÊN PHẢI */
-    .floating-mute-btn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 9999;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(18, 18, 24, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(37, 244, 238, 0.3);
-      opacity: 1;
-      transition: opacity 0.4s ease, transform 0.2s ease, background 0.2s ease;
-    }
-
-    .floating-mute-btn:hover {
-      transform: scale(1.08);
-      opacity: 1 !important;
-      background: rgba(28, 28, 38, 0.9);
-    }
-
-    .floating-mute-btn.idle {
-      opacity: 0.35;
-    }
-
     /* KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD */
     .card-border-wrapper {
       position: relative;
@@ -279,7 +245,7 @@
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
     /* ============================================================
-       THANH MUSIC TRÔI NỔI (POSITION: RELATIVE, KHÔNG CỐ ĐỊNH)
+       THANH MUSIC TRÔI NỔI + TÍCH HỢP NÚT BẬT/TẮT ÂM THANH
        ============================================================ */
     .mini-player-container {
       position: relative;
@@ -287,10 +253,10 @@
       max-width: 400px;
       z-index: 10;
       margin-top: 12px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Khi ẩn: Thu gọn chiều cao và ẩn nội dung bên trong */
+    /* Khi ẩn hoàn toàn */
     .mini-player-container.collapsed .mini-player-border-wrapper {
       max-height: 0;
       padding: 0;
@@ -300,7 +266,7 @@
       margin-top: 0;
     }
 
-    /* Nút mũi tên ẩn/hiện mờ tinh tế nằm ngay mép trên */
+    /* Nút mũi tên ẩn/hiện mờ tinh tế */
     .mini-collapse-toggle {
       position: absolute;
       top: -20px;
@@ -400,14 +366,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* Ảnh đại diện đĩa tròn xoay viền neon */
     .mini-vinyl-wrapper {
       position: relative;
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: #111;
       border: 2px solid #25f4ee;
@@ -436,7 +402,7 @@
       text-align: left;
     }
     .mini-song-title {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #fff;
       white-space: nowrap;
@@ -445,7 +411,7 @@
       text-shadow: 0 0 6px rgba(37, 244, 238, 0.5);
     }
     .mini-artist {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #a0a0a0;
       white-space: nowrap;
       overflow: hidden;
@@ -453,23 +419,23 @@
       margin-top: 2px;
     }
 
-    /* Cụm nút điều khiển tối giản */
+    /* Cụm nút điều khiển tích hợp nút Mute ở thanh dưới */
     .mini-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
     .mini-btn {
       background: transparent;
       border: none;
       color: #ccc;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: 0.2s;
     }
@@ -478,12 +444,12 @@
     .mini-btn-play {
       background: linear-gradient(135deg, #fe2c55, #25f4ee);
       border: none;
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       color: #fff;
-      font-size: 1.1rem;
-      box-shadow: 0 0 16px rgba(254, 44, 85, 0.8), 0 0 16px rgba(37, 244, 238, 0.5);
+      font-size: 1rem;
+      box-shadow: 0 0 14px rgba(254, 44, 85, 0.8), 0 0 14px rgba(37, 244, 238, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -491,7 +457,7 @@
     }
     .mini-btn-play:hover {
       transform: scale(1.06);
-      box-shadow: 0 0 24px rgba(254, 44, 85, 1), 0 0 24px rgba(37, 244, 238, 0.8);
+      box-shadow: 0 0 20px rgba(254, 44, 85, 1), 0 0 20px rgba(37, 244, 238, 0.8);
     }
 
     .music-player-panel {
@@ -629,11 +595,6 @@
 </head>
 <body>
 
-  <!-- NÚT BẬT/TẮT TIẾNG GÓC TRÊN BÊN PHẢI -->
-  <button type="button" class="floating-mute-btn" id="floatingMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh">
-    <i class="fa-solid fa-volume-high" id="floatingMuteIcon"></i>
-  </button>
-
   <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
   <div class="card-border-wrapper">
     <div class="card">
@@ -703,7 +664,7 @@
   </div>
 
   <!-- ============================================================
-       THANH MUSIC TRÔI NỔI (DI CHUYỂN THEO NỘI DUNG LƯỚT)
+       THANH MUSIC TRÔI NỔI (ĐÃ TÍCH HỢP NÚT BẬT/TẮT ÂM THANH TRONG THANH)
        ============================================================ -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <!-- Nút mũi tên ẩn/hiện mờ tinh tế -->
@@ -730,8 +691,11 @@
             <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
           </div>
 
-          <!-- Cụm nút điều khiển -->
+          <!-- Cụm nút điều khiển (Thêm nút Mute ở đây) -->
           <div class="mini-controls">
+            <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh">
+              <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
+            </button>
             <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
               <i class="fa-solid fa-backward-step"></i>
             </button>
@@ -871,7 +835,7 @@
         name: "Liên Quân Mobile",
         icon: "lq.png",
         fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -1077,32 +1041,19 @@
     window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
     window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
 
-    const muteBtn = document.getElementById('floatingMuteBtn');
-    const muteIcon = document.getElementById('floatingMuteIcon');
-    let idleTimer = null;
-
-    function resetIdleTimer() {
-      muteBtn.classList.remove('idle');
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => { muteBtn.classList.add('idle'); }, 3000);
-    }
-    ['mousemove', 'touchstart', 'scroll', 'click'].forEach(evt => {
-      window.addEventListener(evt, resetIdleTimer, { passive: true });
-    });
-    resetIdleTimer();
+    const inlineMuteIcon = document.getElementById('inlineMuteIcon');
 
     function toggleGlobalMute(event) {
       if (event) event.stopPropagation();
-      resetIdleTimer();
 
       if (isMuted) {
         audio.muted = false;
         isMuted = false;
-        muteIcon.className = "fa-solid fa-volume-high";
+        inlineMuteIcon.className = "fa-solid fa-volume-high";
       } else {
         audio.muted = true;
         isMuted = true;
-        muteIcon.className = "fa-solid fa-volume-xmark";
+        inlineMuteIcon.className = "fa-solid fa-volume-xmark";
       }
       syncVisualEffects();
     }
