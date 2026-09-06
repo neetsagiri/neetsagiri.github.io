@@ -151,6 +151,7 @@
       margin-bottom: 6px;
     }
 
+    /* Khung bọc viền xoay chuyển màu cho từng ô game */
     .game-card-wrapper {
       position: relative;
       border-radius: 18px;
@@ -166,6 +167,7 @@
       transform: translateY(-3px);
     }
 
+    /* Hiệu ứng viền chuyển màu xoay tròn phát sáng */
     .game-card-wrapper::before {
       content: "";
       position: absolute;
@@ -264,6 +266,7 @@
       box-shadow: 0 4px 18px rgba(254, 44, 85, 0.5);
     }
 
+    /* Nút Donate Trà Sữa cam hồng */
     .btn-donate {
       background: linear-gradient(135deg, #ff9900, #ff5e62);
       border: none;
@@ -274,6 +277,7 @@
       box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
     }
 
+    /* Nút Discord tím Blurple */
     .btn-discord {
       background: #5865F2;
       border: none;
@@ -285,6 +289,7 @@
       box-shadow: 0 4px 18px rgba(88, 101, 242, 0.55);
     }
 
+    /* Nút Playlist Wuthering Waves */
     .btn-yt-music {
       background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(254, 44, 85, 0.2));
       border: 1px solid rgba(255, 0, 85, 0.4);
@@ -587,11 +592,11 @@
 
         <!-- Nút Bật/Đóng Trình phát Playlist -->
         <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
-          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát (Bấm chọn)
+          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Playlist Wuthering Waves EP
           <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
         </button>
 
-        <!-- Khung Trình phát Playlist -->
+        <!-- Khung Trình phát Playlist có chọn bài trực tiếp -->
         <div id="musicPanel" class="music-player-panel">
           <div class="music-now-playing">
             <div class="music-info">
@@ -611,7 +616,7 @@
             </div>
           </div>
 
-          <!-- Danh sách bài hát hiển thị -->
+          <!-- Danh sách từng bài hát hiển thị để ấn chọn -->
           <div class="playlist" id="playlistContainer"></div>
         </div>
       </div>
@@ -638,22 +643,24 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // Danh sách bài hát được định danh bằng mã Video ID trực tiếp.
-    // Bạn có thể thêm, đổi tên hoặc thay mã video (phần sau ?v=) tùy ý.
+    // Playlist ID mới của bạn: PL58lDM6XV6MDMZrXk82F1fw6Hk_W_WJ1l
+    const targetPlaylistId = "PL58lDM6XV6MDMZrXk82F1fw6Hk_W_WJ1l";
+
+    // Danh sách các bài hát tiêu biểu trong Playlist để hiển thị ngay khi mở trang
     const playlist = [
-      { title: "⚔️ Heart of Lahai-Roi", id: "oENdVrv0nkE" },
-      { title: "❄️ Together Through Wind and Snow", id: "FMStKow9Kqc" },
-      { title: "⚡ Catch Me If You Can", id: "CCCcf9D0FSo" },
-      { title: "✨ The Day the Starlight Arrived", id: "pTwB8gX6cjM" },
-      { title: "☕ OFF WORK? (Zani EP Song)", id: "1hehrBhrpGw" },
-      { title: "🎀 Plush Dream (Mornye Outfit Song)", id: "4xd1clZJ_kE" },
-      { title: "☀️ Lingering Summer Light", id: "Bix3BG4npF8" },
-      { title: "🌸 A Small Miracle", id: "QPCeWCQQACw" },
-      { title: "🌨️ Into Falling Snow", id: "Wf2XLmhSoh4" },
-      { title: "🔥 Final Battle - Jinhsi vs Threnodian", id: "Hk3fK4uL8Yk" },
-      { title: "🍃 Wuthering Waves Main Theme", id: "Y9U3z3y02Hw" },
-      { title: "🌸 Lofi Chill Study Beats", id: "jfKfPfyJRdk" },
-      { title: "🎹 Piano Relaxing Beats", id: "5qap5aO4i9A" }
+      { title: "⚔️ Thawing Fates (Jinhsi & Changli EP 1.1)", index: 0 },
+      { title: "⚡ Catch Me If You Can (Lynae EP)", index: 1 },
+      { title: "🌸 Daisy Crown (Phoebe EP 2.1)", index: 2 },
+      { title: "🌙 By Moon's Grace (Zhezhi EP 1.2)", index: 3 },
+      { title: "☕ OFF WORK? (Zani EP Song)", index: 4 },
+      { title: "🎀 Plush Dream (Mornye Outfit Song)", index: 5 },
+      { title: "☀️ Lingering Summer Light (Chisa Theme)", index: 6 },
+      { title: "❄️ Together Through Wind and Snow (Luuk Herssen)", index: 7 },
+      { title: "✨ The Day the Starlight Arrived", index: 8 },
+      { title: "🌨️ Into Falling Snow (Aemeath Theme)", index: 9 },
+      { title: "🌺 A Small Miracle (Aemeath Cover)", index: 10 },
+      { title: "🔥 Final Battle - Jinhsi vs Threnodian", index: 11 },
+      { title: "🍃 Wuthering Waves Main Theme", index: 12 }
     ];
 
     let player = null;
@@ -664,8 +671,9 @@
       player = new YT.Player('ytm-streamer', {
         height: '10',
         width: '10',
-        videoId: playlist[currentTrackIndex].id,
         playerVars: {
+          'listType': 'playlist',
+          'list': targetPlaylistId,
           'playsinline': 1,
           'controls': 0
         },
@@ -677,19 +685,35 @@
     }
 
     function onPlayerReady(event) {
-      document.getElementById('currentTrackTitle').innerText = playlist[currentTrackIndex].title;
+      document.getElementById('trackStatus').innerText = "Sẵn sàng phát";
       renderPlaylist();
     }
 
     function onPlayerStateChange(event) {
       const playIcon = document.getElementById('playIcon');
       const trackStatus = document.getElementById('trackStatus');
+      const currentTrackTitle = document.getElementById('currentTrackTitle');
 
       if (event.data === YT.PlayerState.PLAYING) {
         isPlaying = true;
         playIcon.className = "fa-solid fa-pause";
-        trackStatus.innerText = "Đang phát nhạc...";
-        document.getElementById('currentTrackTitle').innerText = playlist[currentTrackIndex].title;
+        trackStatus.innerText = "Đang phát...";
+
+        if (player.getPlaylistIndex) {
+          const idx = player.getPlaylistIndex();
+          if (idx >= 0) {
+            currentTrackIndex = idx;
+          }
+        }
+
+        // Tự động nhận diện chính xác tên bài hát đang phát từ YouTube
+        if (player.getVideoData && player.getVideoData().title) {
+          const actualTitle = player.getVideoData().title;
+          currentTrackTitle.innerText = actualTitle;
+          if (playlist[currentTrackIndex]) {
+            playlist[currentTrackIndex].title = actualTitle;
+          }
+        }
         renderPlaylist();
       } else if (event.data === YT.PlayerState.PAUSED) {
         isPlaying = false;
@@ -713,6 +737,722 @@
     }
 
     function toggleMusicPanel() {
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sagiri Profile Bio - @_sagiri0502</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+      background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
+      background-size: 400% 400%;
+      animation: tiktokGradient 8s ease infinite;
+      overflow-x: hidden;
+    }
+
+    @keyframes tiktokGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card-border-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 30px;
+      padding: 3px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+                  0 0 25px rgba(37, 244, 238, 0.2),
+                  0 0 25px rgba(254, 44, 85, 0.2);
+    }
+
+    .card-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: conic-gradient(#25f4ee, #fe2c55, #25f4ee);
+      animation: spin 5s linear infinite;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(rgba(14, 14, 18, 0.82), rgba(14, 14, 18, 0.88)), url('card-bg.jpg') center/cover no-repeat;
+      background-color: rgba(18, 18, 18, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 34px 22px;
+      text-align: center;
+      color: #ffffff;
+      z-index: 1;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 18px;
+    }
+
+    .avatar-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #25f4ee, #fe2c55);
+      z-index: 0;
+      animation: spin 3s linear infinite;
+      filter: blur(2px);
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .avatar {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #141414;
+      z-index: 1;
+      background-color: #222;
+    }
+
+    .name {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .handle {
+      font-size: 0.95rem;
+      color: #a0a0a0;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+
+    .bio {
+      font-size: 0.92rem;
+      color: #dedede;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888888;
+      margin: 18px 0 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .game-card-wrapper {
+      position: relative;
+      border-radius: 18px;
+      padding: 2px;
+      overflow: hidden;
+      display: flex;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: transform 0.25s ease;
+    }
+
+    .game-card-wrapper:hover {
+      transform: translateY(-3px);
+    }
+
+    .game-card-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+
+    .game-btn {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 8px;
+      border-radius: 16px;
+      background: rgba(18, 18, 22, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      transition: background 0.2s ease;
+    }
+
+    .game-card-wrapper:hover .game-btn {
+      background: rgba(28, 28, 35, 0.85);
+    }
+
+    .game-icon-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #111;
+    }
+
+    .game-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .game-action {
+      font-size: 0.68rem;
+      color: #a5a5a5;
+      margin-top: 3px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.93rem;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: -2px 0 12px rgba(37, 244, 238, 0.4), 2px 0 12px rgba(254, 44, 85, 0.4);
+    }
+
+    .btn-tiktok {
+      background: #fe2c55;
+      border: none;
+    }
+
+    .btn-tiktok:hover {
+      background: #e02449;
+      box-shadow: 0 4px 18px rgba(254, 44, 85, 0.5);
+    }
+
+    .btn-donate {
+      background: linear-gradient(135deg, #ff9900, #ff5e62);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-donate:hover {
+      box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
+    }
+
+    .btn-discord {
+      background: #5865F2;
+      border: none;
+      color: #ffffff;
+    }
+
+    .btn-discord:hover {
+      background: #4752c4;
+      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.55);
+    }
+
+    .btn-yt-music {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(254, 44, 85, 0.2));
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-yt-music:hover {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.35), rgba(254, 44, 85, 0.35));
+      box-shadow: 0 0 16px rgba(255, 0, 85, 0.4);
+    }
+
+    .music-player-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 16px;
+      background: rgba(14, 14, 18, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      text-align: left;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .music-player-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .music-now-playing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .music-info {
+      overflow: hidden;
+      padding-right: 10px;
+    }
+
+    .music-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #ff3366;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-status {
+      font-size: 0.72rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .music-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .nav-btn-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .music-control-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(45deg, #ff0055, #ff3366);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 3px 12px rgba(255, 0, 85, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .music-control-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .playlist::-webkit-scrollbar {
+      width: 5px;
+    }
+    .playlist::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 4px;
+    }
+    .playlist::-webkit-scrollbar-thumb {
+      background: rgba(254, 44, 85, 0.4);
+      border-radius: 4px;
+    }
+
+    .track-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #ddd;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .track-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .track-item.playing {
+      background: rgba(255, 0, 85, 0.18);
+      color: #ff3366;
+      border: 1px solid rgba(255, 0, 85, 0.35);
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #18181c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 26px 22px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .modal-desc {
+      font-size: 0.82rem;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    .qr-img {
+      width: 210px;
+      height: 210px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #ffffff;
+      padding: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .close-btn {
+      margin-top: 16px;
+      padding: 9px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .footer {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: #666666;
+    }
+
+    #ytm-streamer {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-border-wrapper">
+    <div class="card">
+      <div class="avatar-wrapper">
+        <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
+      </div>
+
+      <h1 class="name">Sagiri Chan 💕</h1>
+      <p class="handle">@_sagiri0502</p>
+      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
+
+      <div class="section-title">
+        <i class="fa-solid fa-gamepad"></i> Game yêu thích
+      </div>
+      <div class="games-grid">
+        <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
+            <span class="game-name">Wuthering Waves</span>
+            <span class="game-action">Mở game ▶</span>
+          </div>
+        </a>
+
+        <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
+            <span class="game-name">Liên Quân Mobile</span>
+            <span class="game-action">Mở game ▶</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="section-title" style="margin-top: 16px;">
+        <i class="fa-solid fa-link"></i> Liên kết
+      </div>
+      <div class="links">
+        <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
+          <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
+        </a>
+
+        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+        </button>
+
+        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord">
+          <i class="fa-brands fa-discord"></i> Discord: sagirichan_0502
+        </a>
+
+        <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
+          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát
+          <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+        </button>
+
+        <div id="musicPanel" class="music-player-panel">
+          <div class="music-now-playing">
+            <div class="music-info">
+              <div class="music-title" id="currentTrackTitle">Đang tải danh sách...</div>
+              <div class="music-status" id="trackStatus">Sẵn sàng</div>
+            </div>
+            <div class="music-controls-group">
+              <button type="button" class="nav-btn-icon" onclick="prevTrack()" title="Bài trước">
+                <i class="fa-solid fa-backward-step"></i>
+              </button>
+              <button type="button" class="music-control-btn" id="playPauseBtn" onclick="togglePlayPause()">
+                <i class="fa-solid fa-play" id="playIcon"></i>
+              </button>
+              <button type="button" class="nav-btn-icon" onclick="nextTrack()" title="Bài tiếp">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="playlist" id="playlistContainer"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        © @_sagiri0502 • All rights reserved
+      </div>
+    </div>
+  </div>
+
+  <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 class="modal-title">Quét mã QR để cho Sagiri Tà Tữa💕</h3>
+      <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri Chan💕</p>
+      <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
+      <br />
+      <button type="button" class="close-btn" onclick="closeQRModal()">Đóng lại</button>
+    </div>
+  </div>
+
+  <div id="ytm-streamer"></div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const targetPlaylistId = "PL58lDM6XV6MDMZrXk82F1fw6Hk_W_WJ1l";
+
+    let player = null;
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+    let trackList = [];
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytm-streamer', {
+        height: '10',
+        width: '10',
+        playerVars: {
+          'listType': 'playlist',
+          'list': targetPlaylistId,
+          'playsinline': 1,
+          'controls': 0
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady() {
+      // Đọc toàn bộ danh sách video thực tế từ Playlist mà YouTube nạp
+      buildPlaylistFromPlayer();
+    }
+
+    function buildPlaylistFromPlayer() {
+      if (!player) return;
+      
+      const loadedPlaylist = player.getPlaylist ? player.getPlaylist() : null;
+      if (loadedPlaylist && loadedPlaylist.length > 0) {
+        trackList = loadedPlaylist.map((id, index) => ({
+          title: `Bài số ${index + 1}`,
+          id: id,
+          index: index
+        }));
+      } else {
+        // Dự phòng khởi tạo khung chọn trước khi danh sách tải xong
+        trackList = Array.from({ length: 20 }, (_, i) => ({
+          title: `Bài số ${i + 1}`,
+          index: i
+        }));
+      }
+
+      document.getElementById('trackStatus').innerText = `Sẵn sàng (${trackList.length} bài)`;
+      document.getElementById('currentTrackTitle').innerText = "Chọn một bài để phát";
+      renderPlaylist();
+    }
+
+    function onPlayerStateChange(event) {
+      const playIcon = document.getElementById('playIcon');
+      const trackStatus = document.getElementById('trackStatus');
+      const currentTrackTitle = document.getElementById('currentTrackTitle');
+
+      if (event.data === YT.PlayerState.PLAYING) {
+        isPlaying = true;
+        playIcon.className = "fa-solid fa-pause";
+        trackStatus.innerText = "Đang phát...";
+
+        if (player.getPlaylistIndex) {
+          const idx = player.getPlaylistIndex();
+          if (idx >= 0) currentTrackIndex = idx;
+        }
+
+        // Cập nhật tên thực tế của bài đang phát từ YouTube
+        if (player.getVideoData && player.getVideoData().title) {
+          const realTitle = player.getVideoData().title;
+          currentTrackTitle.innerText = realTitle;
+          if (trackList[currentTrackIndex]) {
+            trackList[currentTrackIndex].title = realTitle;
+          }
+        }
+        renderPlaylist();
+      } else if (event.data === YT.PlayerState.PAUSED) {
+        isPlaying = false;
+        playIcon.className = "fa-solid fa-play";
+        trackStatus.innerText = "Đã tạm dừng";
+      } else if (event.data === YT.PlayerState.ENDED) {
+        nextTrack();
+      }
+    }
+
+    function renderPlaylist() {
+      const container = document.getElementById('playlistContainer');
+      container.innerHTML = "";
+      trackList.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
+        item.innerHTML = `<span>${index + 1}. ${track.title}</span><i class="fa-solid fa-play" style="font-size: 0.72rem;"></i>`;
+        item.onclick = () => selectTrack(index);
+        container.appendChild(item);
+      });
+    }
+
+    function toggleMusicPanel() {
       const panel = document.getElementById('musicPanel');
       const chevron = document.getElementById('music-chevron');
       panel.classList.toggle('active');
@@ -720,7 +1460,7 @@
     }
 
     function togglePlayPause() {
-      if (!player || typeof player.playVideo !== 'function') return;
+      if (!player) return;
       if (isPlaying) {
         player.pauseVideo();
       } else {
@@ -730,26 +1470,23 @@
 
     function selectTrack(index) {
       currentTrackIndex = index;
-      document.getElementById('currentTrackTitle').innerText = playlist[currentTrackIndex].title;
       renderPlaylist();
-      if (player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById(playlist[currentTrackIndex].id);
-        player.playVideo();
+      if (player && typeof player.playVideoAt === 'function') {
+        player.playVideoAt(index);
       }
     }
 
     function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      selectTrack(currentTrackIndex);
+      if (player && typeof player.nextVideo === 'function') {
+        player.nextVideo();
+      }
     }
 
     function prevTrack() {
-      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-      selectTrack(currentTrackIndex);
+      if (player && typeof player.previousVideo === 'function') {
+        player.previousVideo();
+      }
     }
-
-    renderPlaylist();
-    document.getElementById('currentTrackTitle').innerText = playlist[0].title;
 
     function openQRModal() {
       document.getElementById('qrModal').classList.add('active');
@@ -760,3 +1497,4 @@
   </script>
 </body>
 </html>
+
