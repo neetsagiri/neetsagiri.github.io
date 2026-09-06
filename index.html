@@ -584,14 +584,14 @@
           <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
         </button>
 
-        <!-- Nút Discord -->
-        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord">
-          <i class="fa-brands fa-discord"></i> Discord: sagirichan_0502
+        <!-- Nút Discord: Tự động copy username khi bấm -->
+        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
+          <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
         </a>
 
         <!-- Nút Bật/Đóng Trình phát Playlist -->
         <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
-          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát yếu thích💕
+          <i class="fa-solid fa-circle-play" style="color: #ff3366;"></i> Danh sách bài hát yêu thích 💕
           <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
         </button>
 
@@ -711,7 +711,7 @@
         playIcon.className = "fa-solid fa-play";
         trackStatus.innerText = "Đã tạm dừng";
       } else if (event.data === YT.PlayerState.ENDED) {
-        nextTrack(); // Tự động phát tiếp bài kế tiếp khi hết bài
+        nextTrack();
       }
     }
 
@@ -765,6 +765,28 @@
 
     renderPlaylist();
     document.getElementById('currentTrackTitle').innerText = playlist[0].title;
+
+    // Tự động sao chép tên Discord khi click
+    function copyDiscordUsername(event) {
+      const username = "sagirichan_0502";
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(username);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = username;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+
+      const textSpan = document.getElementById("discordBtnText");
+      const originalText = textSpan.innerText;
+      textSpan.innerText = "Đã copy: " + username + "!";
+      setTimeout(() => {
+        textSpan.innerText = originalText;
+      }, 2000);
+    }
 
     function openQRModal() {
       document.getElementById('qrModal').classList.add('active');
