@@ -151,7 +151,6 @@
       margin-bottom: 6px;
     }
 
-    /* Khung bọc viền xoay chuyển màu cho từng ô game */
     .game-card-wrapper {
       position: relative;
       border-radius: 18px;
@@ -450,7 +449,7 @@
       font-weight: 600;
     }
 
-    /* Modal Donate */
+    /* Modal Donate Nâng Cấp: Nhập tiền & lời nhắn tạo QR động */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -461,7 +460,7 @@
       z-index: 999;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
     }
 
     .modal-overlay.active {
@@ -471,13 +470,15 @@
     .modal-content {
       background: #18181c;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 22px;
-      padding: 26px 22px;
-      max-width: 320px;
+      border-radius: 24px;
+      padding: 22px 18px;
+      max-width: 350px;
       width: 100%;
       text-align: center;
       position: relative;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-title {
@@ -488,31 +489,100 @@
     }
 
     .modal-desc {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #aaa;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+    }
+
+    .qr-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 12px;
     }
 
     .qr-img {
-      width: 210px;
-      height: 210px;
+      width: 200px;
+      height: 200px;
       border-radius: 14px;
-      object-fit: cover;
+      object-fit: contain;
       background: #ffffff;
-      padding: 8px;
+      padding: 6px;
       border: 2px solid rgba(255, 255, 255, 0.15);
+      transition: opacity 0.2s ease;
+    }
+
+    .donate-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .donate-input-group {
+      text-align: left;
+    }
+
+    .donate-input-label {
+      font-size: 0.75rem;
+      color: #a0a0a0;
+      margin-bottom: 4px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .donate-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .donate-input:focus {
+      border-color: #fe2c55;
+    }
+
+    .quick-amount-buttons {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .amount-tag {
+      flex: 1;
+      padding: 5px 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #ddd;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .amount-tag:hover {
+      background: rgba(254, 44, 85, 0.25);
+      border-color: #fe2c55;
+      color: #fff;
     }
 
     .close-btn {
-      margin-top: 16px;
-      padding: 9px 20px;
+      margin-top: 14px;
+      width: 100%;
+      padding: 10px 0;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
+      border-radius: 12px;
       color: #ffffff;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       cursor: pointer;
+      transition: background 0.2s ease;
     }
 
     .close-btn:hover {
@@ -584,7 +654,7 @@
           <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
         </button>
 
-        <!-- Nút Discord: Tự động copy username khi bấm -->
+        <!-- Nút Discord -->
         <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
           <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
         </a>
@@ -626,13 +696,34 @@
     </div>
   </div>
 
-  <!-- Popup Donate QR -->
+  <!-- Popup Donate QR Tự Động (Nhập số tiền & Lời nhắn) -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 class="modal-title">Quét mã QR để cho Sagiri Tà Tữa💕</h3>
       <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri Chan💕</p>
-      <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
-      <br />
+      
+      <div class="qr-container">
+        <img class="qr-img" id="dynamicQR" src="donate.jpg" alt="Mã QR Donate" />
+      </div>
+
+      <div class="donate-form">
+        <div class="donate-input-group">
+          <label class="donate-input-label"><i class="fa-solid fa-coins"></i> Số tiền (VNĐ):</label>
+          <input type="number" id="donateAmount" class="donate-input" placeholder="Nhập số tiền (ví dụ: 20000)" oninput="updateDynamicQR()" />
+          <div class="quick-amount-buttons">
+            <button type="button" class="amount-tag" onclick="setQuickAmount(10000)">10k</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(20000)">20k</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(50000)">50k</button>
+            <button type="button" class="amount-tag" onclick="setQuickAmount(100000)">100k</button>
+          </div>
+        </div>
+
+        <div class="donate-input-group">
+          <label class="donate-input-label"><i class="fa-solid fa-message"></i> Lời nhắn gửi Sagiri:</label>
+          <input type="text" id="donateMessage" class="donate-input" placeholder="Nhập lời nhắn gửi Sagiri..." value="Cho Sagiri coc tra sua" oninput="updateDynamicQR()" />
+        </div>
+      </div>
+
       <button type="button" class="close-btn" onclick="closeQRModal()">Đóng lại</button>
     </div>
   </div>
@@ -642,6 +733,41 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
+    // ==========================================
+    // CẤU HÌNH TÀI KHOẢN THANH TOÁN QR ĐỘNG:
+    // ==========================================
+    // Mã ngân hàng theo chuẩn VietQR (ví dụ: 970422 cho MBBank, 970436 cho Vietcombank, momo cho Ví MoMo,...)
+    // Hoặc nếu dùng MoMo: mã ngân hàng là 'momo', số tài khoản là số điện thoại MoMo.
+    const myBankConfig = {
+      bankId: "970422",          // Mã ngân hàng nhận tiền (hoặc 'momo' nếu dùng ví MoMo)
+      accountNo: "0345678901",    // Điền số tài khoản ngân hàng hoặc số MoMo của bạn vào đây
+      accountName: "SAGIRI CHAN"  // Tên chủ tài khoản viết hoa không dấu
+    };
+
+    function updateDynamicQR() {
+      const amountInput = document.getElementById("donateAmount").value.trim();
+      const messageInput = document.getElementById("donateMessage").value.trim();
+      const qrImg = document.getElementById("dynamicQR");
+
+      // Nếu chưa điền số tài khoản cụ thể, mặc định hiển thị ảnh donate.jpg có sẵn
+      if (myBankConfig.accountNo === "0345678901") {
+        qrImg.src = "donate.jpg";
+        return;
+      }
+
+      const amount = amountInput ? parseInt(amountInput, 10) : "";
+      const memo = messageInput ? encodeURIComponent(messageInput) : encodeURIComponent("Cho Sagiri coc tra sua");
+
+      // Tạo link API VietQR tự động cập nhật
+      const qrUrl = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
+      qrImg.src = qrUrl;
+    }
+
+    function setQuickAmount(val) {
+      document.getElementById("donateAmount").value = val;
+      updateDynamicQR();
+    }
+
     // 6 BÀI HÁT THEO ĐÚNG LINK CỦA BẠN:
     const playlist = [
       { 
@@ -766,7 +892,6 @@
     renderPlaylist();
     document.getElementById('currentTrackTitle').innerText = playlist[0].title;
 
-    // Tự động sao chép tên Discord khi click
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
       if (navigator.clipboard) {
@@ -790,6 +915,7 @@
 
     function openQRModal() {
       document.getElementById('qrModal').classList.add('active');
+      updateDynamicQR();
     }
     function closeQRModal() {
       document.getElementById('qrModal').classList.remove('active');
