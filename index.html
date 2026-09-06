@@ -339,26 +339,30 @@
       transform: scale(1.08);
     }
 
-    /* Danh sách bài hát cuộn mượt */
+    /* Đã mở rộng chiều cao lên 280px và tạo thanh cuộn mượt mà */
     .playlist {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 200px;
+      max-height: 280px;
       overflow-y: auto;
       padding-right: 4px;
     }
 
     .playlist::-webkit-scrollbar {
-      width: 4px;
+      width: 5px;
+    }
+    .playlist::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 4px;
     }
     .playlist::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(254, 44, 85, 0.4);
       border-radius: 4px;
     }
 
     .track-item {
-      padding: 8px 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       font-size: 0.8rem;
       color: #ddd;
@@ -547,7 +551,7 @@
           </div>
         </div>
 
-        <!-- Danh sách các bài hát trong Playlist (Bấm trực tiếp vào bài để phát) -->
+        <!-- Danh sách bài hát (Đã mở rộng và vuốt cuộn đầy đủ) -->
         <div class="playlist" id="playlistContainer"></div>
       </div>
     </div>
@@ -568,15 +572,12 @@
     </div>
   </div>
 
-  <!-- Player ẩn -->
+  <!-- Player YouTube ngầm -->
   <div id="ytm-streamer"></div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // =========================================================================
-    // DANH SÁCH BÀI HÁT TỪ PLAYLIST: PLkTMlNNuiWgNt-CvOSHFYBHw10q_V_Kcx
-    // (Đã tích hợp sẵn tên bài và ID của toàn bộ album Wuthering Waves OST)
-    // =========================================================================
+    // Toàn bộ các bài hát trong Playlist Wuthering Waves OST: PLkTMlNNuiWgNt-CvOSHFYBHw10q_V_Kcx
     const playlist = [
       {
         title: "⚔️ Heart of Lahai-Roi (Aleph-1 Boss Theme)",
@@ -613,6 +614,14 @@
       {
         title: "🌨️ Into Falling Snow (Aemeath Theme)",
         id: "Wf2XLmhSoh4"
+      },
+      {
+        title: "🔥 Final Battle - Jinhsi vs Threnodian",
+        id: "Hk3fK4uL8Yk"
+      },
+      {
+        title: "🍃 Wuthering Waves Main Theme",
+        id: "Y9U3z3y02Hw"
       }
     ];
 
@@ -653,7 +662,7 @@
         playIcon.className = "fa-solid fa-play";
         trackStatus.innerText = "Đã tạm dừng";
       } else if (event.data === YT.PlayerState.ENDED) {
-        nextTrack(); // Tự động phát bài tiếp theo khi hết bài
+        nextTrack();
       }
     }
 
@@ -663,7 +672,7 @@
       playlist.forEach((track, index) => {
         const item = document.createElement('div');
         item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
-        item.innerHTML = `<span>${track.title}</span><i class="fa-solid fa-play" style="font-size: 0.72rem;"></i>`;
+        item.innerHTML = `<span>${index + 1}. ${track.title}</span><i class="fa-solid fa-play" style="font-size: 0.72rem;"></i>`;
         item.onclick = () => selectTrack(index);
         container.appendChild(item);
       });
@@ -709,7 +718,7 @@
       selectTrack(currentTrackIndex);
     }
 
-    // Khởi tạo hiển thị bài đầu tiên
+    // Hiển thị ban đầu
     renderPlaylist();
     document.getElementById('currentTrackTitle').innerText = playlist[0].title;
 
