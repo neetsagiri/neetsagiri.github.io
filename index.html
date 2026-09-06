@@ -20,9 +20,10 @@
     body {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 24px 16px 130px 16px;
+      padding: 24px 16px 50px 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -90,6 +91,7 @@
                   0 0 25px rgba(37, 244, 238, 0.2),
                   0 0 25px rgba(254, 44, 85, 0.2);
       transition: box-shadow 0.4s ease;
+      margin-bottom: 20px;
     }
 
     .card-border-wrapper::before {
@@ -277,23 +279,64 @@
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
     /* ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER (SỬA LỖI TRÀN KHUNG & CĂN CHUẨN)
+       THANH MUSIC DI CHUYỂN THEO TRANG (KHÔNG CÒN CỐ ĐỊNH FIXED)
        ============================================================ */
+    .mini-player-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      z-index: 9990;
+      margin-top: 10px;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+
+    /* Khi ẩn hoàn toàn, trượt gọn lên trên kèm mờ dần */
+    .mini-player-container.collapsed {
+      transform: translateY(-10px);
+      opacity: 0.2;
+    }
+
+    /* Nút mũi tên ẩn/hiện mờ tinh tế nằm ngay mép trên của khung nhạc */
+    .mini-collapse-toggle {
+      position: absolute;
+      top: -22px;
+      right: 28px;
+      background: rgba(18, 18, 24, 0.7);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(37, 244, 238, 0.3);
+      border-bottom: none;
+      color: rgba(37, 244, 238, 0.6);
+      width: 36px;
+      height: 22px;
+      border-radius: 12px 12px 0 0;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      opacity: 0.5;
+      transition: opacity 0.3s ease, background 0.2s, color 0.2s;
+    }
+
+    .mini-player-container:hover .mini-collapse-toggle,
+    .mini-collapse-toggle:hover {
+      opacity: 1;
+      background: rgba(18, 18, 24, 0.95);
+      color: #25f4ee;
+    }
+
     .mini-player-border-wrapper {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 420px;
+      position: relative;
+      width: 100%;
       border-radius: 34px;
       padding: 2.5px;
-      overflow: hidden; /* Sửa lỗi tràn viền neon */
-      z-index: 9990;
+      overflow: hidden;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85),
                   0 0 25px rgba(37, 244, 238, 0.3),
                   0 0 25px rgba(254, 44, 85, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.4s ease;
+      transition: box-shadow 0.4s ease;
     }
 
     .mini-player-border-wrapper::before {
@@ -321,7 +364,7 @@
     .mini-player-bar {
       position: relative;
       width: 100%;
-      background: rgba(14, 14, 18, 0.94);
+      background: rgba(14, 14, 18, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 32px;
@@ -330,29 +373,6 @@
       flex-direction: column;
       gap: 6px;
       z-index: 1;
-    }
-
-    .mini-player-border-wrapper.collapsed {
-      transform: translate(-50%, calc(100% + 30px));
-    }
-
-    .mini-collapse-toggle {
-      position: absolute;
-      top: -18px;
-      right: 32px;
-      background: rgba(18, 18, 24, 0.95);
-      border: 1.5px solid #25f4ee;
-      color: #25f4ee;
-      width: 32px;
-      height: 20px;
-      border-radius: 10px 10px 0 0;
-      font-size: 0.75rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 -3px 10px rgba(37, 244, 238, 0.4);
-      z-index: 10;
     }
 
     .mini-progress-bg {
@@ -677,42 +697,45 @@
   </div>
 
   <!-- ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER (ĐÃ KHẮC PHỤC LỖI TRÀN)
+       THANH MUSIC DI CHUYỂN THEO TRANG (KHÔNG CỐ ĐỊNH)
        ============================================================ -->
-  <div class="mini-player-border-wrapper" id="miniPlayerBarWrapper">
+  <div class="mini-player-container" id="miniPlayerContainer">
+    <!-- Nút mũi tên ẩn/hiện mờ tinh tế -->
     <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
       <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
     </button>
 
-    <div class="mini-player-bar">
-      <!-- Thanh tiến trình bài hát -->
-      <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
-        <div class="mini-progress-fill" id="miniProgressBarFill"></div>
-      </div>
-
-      <div class="mini-player-content">
-        <!-- Ảnh đại diện đĩa tròn xoay viền neon -->
-        <div class="mini-vinyl-wrapper">
-          <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Vinyl" />
+    <div class="mini-player-border-wrapper">
+      <div class="mini-player-bar">
+        <!-- Thanh tiến trình bài hát -->
+        <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+          <div class="mini-progress-fill" id="miniProgressBarFill"></div>
         </div>
 
-        <!-- Tên bài hát & Nghệ sĩ -->
-        <div class="mini-song-info">
-          <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
-          <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
-        </div>
+        <div class="mini-player-content">
+          <!-- Ảnh đại diện đĩa tròn xoay viền neon -->
+          <div class="mini-vinyl-wrapper">
+            <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Vinyl" />
+          </div>
 
-        <!-- Cụm nút điều khiển -->
-        <div class="mini-controls">
-          <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
-            <i class="fa-solid fa-backward-step"></i>
-          </button>
-          <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
-            <i class="fa-solid fa-play" id="miniPlayIcon"></i>
-          </button>
-          <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
-            <i class="fa-solid fa-forward-step"></i>
-          </button>
+          <!-- Tên bài hát & Nghệ sĩ -->
+          <div class="mini-song-info">
+            <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+            <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
+          </div>
+
+          <!-- Cụm nút điều khiển -->
+          <div class="mini-controls">
+            <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
+              <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
+              <i class="fa-solid fa-play" id="miniPlayIcon"></i>
+            </button>
+            <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
+              <i class="fa-solid fa-forward-step"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -842,7 +865,7 @@
         name: "Liên Quân Mobile",
         icon: "lq.png",
         fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -1098,10 +1121,10 @@
     }
 
     function toggleMiniPlayerCollapse() {
-      const wrapper = document.getElementById('miniPlayerBarWrapper');
+      const container = document.getElementById('miniPlayerContainer');
       const chevron = document.getElementById('collapseChevron');
-      wrapper.classList.toggle('collapsed');
-      chevron.className = wrapper.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+      container.classList.toggle('collapsed');
+      chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
     updateTrackInfo();
