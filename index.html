@@ -687,13 +687,13 @@
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
-      <!-- KHU VỰC 2 GAME YÊU THÍCH: GỌI THẲNG ỨNG DỤNG ANDROID -->
+      <!-- KHU VỰC 2 GAME: DÙNG CUSTOM URL SCHEME TRỰC TIẾP -->
       <div class="section-title">
         <i class="fa-solid fa-gamepad"></i> Game yêu thích
       </div>
       <div class="games-grid">
-        <!-- Wuthering Waves: Mở ứng dụng gốc qua Intent thuần túy không fallback CH Play -->
-        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.kurogame.wutheringwaves.global;end" class="game-card-wrapper">
+        <!-- Wuthering Waves: scheme wutheringwaves:// -->
+        <a href="wutheringwaves://" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="ww.png" onerror="this.src='https://images.seeklogo.com/logo-png/52/1/wuthering-waves-logo-png_seeklogo-526435.png'" alt="Wuthering Waves" />
             <span class="game-name">Wuthering Waves</span>
@@ -701,8 +701,8 @@
           </div>
         </a>
 
-        <!-- Liên Quân Mobile: Mở ứng dụng gốc qua Intent thuần túy không fallback CH Play -->
-        <a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.garena.game.kgvn;end" class="game-card-wrapper">
+        <!-- Liên Quân Mobile: scheme kgvn:// -->
+        <a href="kgvn://" class="game-card-wrapper">
           <div class="game-btn">
             <img class="game-icon-img" src="lq.png" onerror="this.src='https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png'" alt="Liên Quân Mobile" />
             <span class="game-name">Liên Quân Mobile</span>
