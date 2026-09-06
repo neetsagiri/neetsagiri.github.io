@@ -16,7 +16,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* NỀN NGOÀI: Gradient chuyển động và cho phép cuộn trang tự do */
+    /* NỀN NGOÀI: Gradient chuyển động */
     body {
       min-height: 100vh;
       display: flex;
@@ -88,48 +88,71 @@
       z-index: 1;
     }
 
-    /* CONTAINER KHUNG AVATAR CINNAMOROLL */
+    /* ============================================================
+       AVATAR: VIỀN NEON XOAY NHƯNG ẨN/KHUYẾT ĐỈNH CHỖ LINH THÚ
+       ============================================================ */
     .cinnamoroll-avatar-box {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 122px;
+      height: 122px;
       margin: 32px auto 20px auto;
     }
 
-    /* VIỀN TRÒN XANH PASTEL SÁNG */
-    .cinnamoroll-circle-ring {
+    /* Viền neon xoay quanh avatar với mặt nạ mask che khuất đỉnh */
+    .neon-ring-wrapper {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      overflow: hidden;
+      z-index: 1;
+      /* Cắt rỗng khúc đỉnh từ 315 độ đến 45 độ (nơi Cinnamoroll nằm) */
+      -webkit-mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
+      mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
+    }
+
+    .neon-ring-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      animation: spin 3.5s linear infinite;
+    }
+
+    body.music-active .neon-ring-wrapper::before {
+      animation: spin 2s linear infinite;
+    }
+
+    /* Khung avatar tròn bên trong */
+    .avatar-inner {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      padding: 4.5px;
-      background: #cbf2fe;
-      border: 2px solid #28b7fa;
-      box-shadow: 0 0 16px rgba(40, 183, 250, 0.45), inset 0 0 8px rgba(255, 255, 255, 0.8);
-      z-index: 1;
+      z-index: 2;
+      background: #141414;
+      padding: 3.5px;
     }
 
-    .cinnamoroll-circle-ring .avatar {
+    .avatar-inner .avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
       display: block;
-      border: 2px solid #ffffff;
       background: #1a1a24;
     }
 
-    /* BÉ CINNAMOROLL NẰM TRÊN ĐỈNH KHUNG */
+    /* Bé Cinnamoroll nằm nổi đè lên trên đỉnh */
     .cinnamoroll-character {
       position: absolute;
       top: -34px;
       left: 50%;
       transform: translateX(-50%);
       width: 140px;
-      z-index: 3;
+      z-index: 5;
       pointer-events: none;
       animation: cinnaFloat 3s ease-in-out infinite;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
     }
 
     .cinna-svg {
@@ -300,7 +323,7 @@
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
-    /* Nút mũi tên gài dính liền vào mép dưới cùng của card profile */
+    /* Nút mũi tên gài dính sát vào mép dưới cùng của khung card profile */
     .mini-collapse-toggle {
       position: absolute;
       bottom: 0;
@@ -642,12 +665,17 @@
         <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
       </button>
 
-      <!-- KHUNG AVATAR CINNAMOROLL CHUYỂN ĐỘNG -->
+      <!-- KHUNG AVATAR: VIỀN NEON XOAY TỰ ĐỘNG KHUYẾT ĐỈNH CHO LINH THÚ -->
       <div class="cinnamoroll-avatar-box">
-        <div class="cinnamoroll-circle-ring">
+        <!-- Viền xoay neon bị khuyết góc đỉnh -->
+        <div class="neon-ring-wrapper"></div>
+
+        <!-- Ảnh Avatar tròn bên trong -->
+        <div class="avatar-inner">
           <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
         </div>
 
+        <!-- Linh thú Cinnamoroll chuyển động nhún nhảy nằm gọn trên đỉnh khuyết -->
         <div class="cinnamoroll-character">
           <svg viewBox="0 0 160 95" class="cinna-svg">
             <path class="cinna-ear cinna-ear-left" d="M 45 42 C 10 38, -5 55, 3 66 C 12 77, 36 68, 50 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
