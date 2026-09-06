@@ -167,7 +167,7 @@
     }
 
     /* ============================================================
-       PHẦN TÊN SAGIRI CHAN: CHỈ 2 MÀU GIỐNG VIỀN AVATAR (#25f4ee & #fe2c55)
+       PHẦN TÊN SAGIRI CHAN: CHỈ 2 MÀU (CYAN & HỒNG), CHUYỂN ĐỘNG CHẬM
        ============================================================ */
     .name {
       font-size: 1.75rem;
@@ -182,27 +182,25 @@
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: nameNeonFlow 4s linear infinite;
-      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.5)) drop-shadow(0 0 18px rgba(254, 44, 85, 0.5));
-      transition: filter 0.3s ease;
+      animation: nameNeonFlowSlow 8s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.45)) drop-shadow(0 0 16px rgba(254, 44, 85, 0.45));
+      transition: filter 0.4s ease;
     }
 
-    @keyframes nameNeonFlow {
+    @keyframes nameNeonFlowSlow {
       0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
 
-    /* Icon trái tim đứng yên tĩnh, dùng cùng màu hồng viền avatar */
     .heart-icon {
       -webkit-text-fill-color: initial;
       display: inline-block;
       filter: drop-shadow(0 0 6px rgba(254, 44, 85, 0.8));
     }
 
-    /* Khi phát nhạc: Chuyển màu nhanh hơn và độ rực tăng nhẹ */
     body.music-active .name {
-      animation: nameNeonFlow 2s linear infinite;
-      filter: drop-shadow(0 0 14px rgba(37, 244, 238, 0.85)) drop-shadow(0 0 24px rgba(254, 44, 85, 0.85));
+      animation: nameNeonFlowSlow 5s linear infinite;
+      filter: drop-shadow(0 0 12px rgba(37, 244, 238, 0.75)) drop-shadow(0 0 20px rgba(254, 44, 85, 0.75));
     }
 
     .handle {
@@ -967,7 +965,7 @@
         <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
       </div>
 
-      <!-- TÊN SAGIRI CHAN VỚI HIỆU ỨNG CHUYỂN 2 MÀU NEON VÀ TIM TĨNH -->
+      <!-- TÊN SAGIRI CHAN VỚI HIỆU ỨNG CHUYỂN MÀU CYAN & HỒNG CHẬM RÃI -->
       <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
