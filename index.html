@@ -167,7 +167,7 @@
     }
 
     /* ============================================================
-       PHẦN TÊN SAGIRI CHAN NỔI BẬT (NEON GLOW & TRÁI TIM ĐẬP NHẸ)
+       PHẦN TÊN SAGIRI CHAN: HIỆU ỨNG CHUYỂN MÀU CHỮ LIÊN TỤC
        ============================================================ */
     .name {
       font-size: 1.75rem;
@@ -178,32 +178,31 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      background: linear-gradient(135deg, #25f4ee 0%, #ffffff 40%, #fe2c55 100%);
+      background: linear-gradient(90deg, #25f4ee, #ffffff, #fe2c55, #ff9900, #25f4ee);
+      background-size: 300% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.45)) drop-shadow(0 0 18px rgba(254, 44, 85, 0.45));
+      animation: nameColorFlow 5s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.45)) drop-shadow(0 0 16px rgba(254, 44, 85, 0.45));
       transition: filter 0.3s ease;
     }
 
-    /* Trái tim đập nhẹ nhàng */
+    @keyframes nameColorFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* Icon trái tim đứng yên tĩnh, giữ màu hồng phát sáng nhẹ */
     .heart-icon {
       -webkit-text-fill-color: initial;
       display: inline-block;
-      animation: heartBeat 1.4s ease-in-out infinite;
       filter: drop-shadow(0 0 6px rgba(254, 44, 85, 0.8));
     }
 
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); }
-      14% { transform: scale(1.18); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.18); }
-      70% { transform: scale(1); }
-    }
-
-    /* Khi phát nhạc: Tên sáng rực hơn */
+    /* Khi phát nhạc: Chữ chuyển màu nhanh hơn và rực rỡ hơn */
     body.music-active .name {
-      filter: drop-shadow(0 0 14px rgba(37, 244, 238, 0.8)) drop-shadow(0 0 24px rgba(254, 44, 85, 0.8));
+      animation: nameColorFlow 2.5s linear infinite;
+      filter: drop-shadow(0 0 14px rgba(37, 244, 238, 0.8)) drop-shadow(0 0 22px rgba(254, 44, 85, 0.8));
     }
 
     .handle {
@@ -415,6 +414,7 @@
       text-shadow: 0 0 8px #25f4ee;
     }
 
+    /* Khi phát nhạc */
     body.music-active .btn-tiktok {
       box-shadow: 0 0 18px rgba(254, 44, 85, 0.6), inset 0 0 10px rgba(254, 44, 85, 0.3);
     }
@@ -967,7 +967,7 @@
         <img class="avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Avatar Sagiri" />
       </div>
 
-      <!-- TÊN SAGIRI CHAN NỔI BẬT VỚI GRADIENT NEON & TRÁI TIM ĐẬP NHẸ -->
+      <!-- TÊN SAGIRI CHAN VỚI HIỆU ỨNG CHUYỂN MÀU CHỮ VÀ TIM TĨNH -->
       <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
