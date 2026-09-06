@@ -52,7 +52,7 @@
       position: relative;
     }
 
-    /* Hiệu ứng viền Avatar */
+    /* Hiệu ứng viền xoay quanh avatar */
     .avatar-wrapper {
       position: relative;
       width: 112px;
@@ -132,7 +132,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 13px 8px;
+      padding: 12px 8px;
       border-radius: 16px;
       text-decoration: none;
       color: #ffffff;
@@ -156,21 +156,19 @@
       box-shadow: 0 0 15px rgba(254, 44, 85, 0.5);
     }
 
-    .game-icon {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-
-    .game-btn.wuthering .game-icon {
-      color: #25f4ee;
-    }
-
-    .game-btn.lienquan .game-icon {
-      color: #fe2c55;
+    /* Hình ảnh biểu tượng app game sắc nét */
+    .game-icon-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .game-name {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -223,7 +221,6 @@
       box-shadow: 0 4px 18px rgba(254, 44, 85, 0.5);
     }
 
-    /* Nút Donate gradient cam hồng */
     .btn-donate {
       background: linear-gradient(135deg, #ff9900, #ff5e62);
       border: none;
@@ -234,7 +231,7 @@
       box-shadow: 0 4px 18px rgba(255, 120, 80, 0.6);
     }
 
-    /* Cửa sổ Popup mã QR */
+    /* Modal hiển thị mã QR */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -333,16 +330,16 @@
       <i class="fa-solid fa-gamepad"></i> Game yêu thích
     </div>
     <div class="games-grid">
-      <!-- Wuthering Waves -->
+      <!-- Wuthering Waves với logo game chính thức -->
       <a href="intent://#Intent;package=com.kurogame.wutheringwaves.global;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kurogame.wutheringwaves.global;end" class="game-btn wuthering">
-        <i class="fa-solid fa-bolt game-icon"></i>
+        <img class="game-icon-img" src="https://play-lh.googleusercontent.com/9G_0B9_c5QvC19wE0iN_F5B2yP-XqM3h7mG-g7Vn9cK7aT8vB4z1X1D6f9L3k1m0wQ=w240-h480" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Wuthering_Waves_cover.jpg/220px-Wuthering_Waves_cover.jpg'" alt="Wuthering Waves" />
         <span class="game-name">Wuthering Waves</span>
         <span class="game-action">Mở game ▶</span>
       </a>
 
-      <!-- Liên Quân Mobile -->
+      <!-- Liên Quân Mobile với logo game chính thức -->
       <a href="intent://#Intent;package=com.garena.game.kgvn;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.garena.game.kgvn;end" class="game-btn lienquan">
-        <i class="fa-solid fa-shield-halved game-icon"></i>
+        <img class="game-icon-img" src="https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png" onerror="this.src='https://play-lh.googleusercontent.com/f0uWl5XqB2n9K8g7Z6V5L4m3b2v1C0x9z8A7s6D5f4G3h2J1k0L9P8o7I6u5Y4t3=w240-h480'" alt="Liên Quân Mobile" />
         <span class="game-name">Liên Quân Mobile</span>
         <span class="game-action">Mở game ▶</span>
       </a>
@@ -381,7 +378,6 @@
       <h3 class="modal-title">Quét mã QR để ủng hộ ☕</h3>
       <p class="modal-desc">Cảm ơn bạn đã luôn theo dõi và ủng hộ Sagiri!</p>
       
-      <!-- Ảnh mã QR donate -->
       <img class="qr-img" src="donate.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Cam%20on%20ban%20da%20donate%20cho%20Sagiri!'" alt="Mã QR Donate" />
       
       <br />
