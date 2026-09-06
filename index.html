@@ -22,7 +22,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px 16px 110px 16px;
+      padding: 24px 16px 130px 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 8s ease infinite;
@@ -102,14 +102,8 @@
       z-index: 0;
     }
 
-    body.music-active .card-border-wrapper {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85),
-                  0 0 30px rgba(37, 244, 238, 0.45),
-                  0 0 30px rgba(254, 44, 85, 0.45);
-    }
-
-    body.music-active .card-border-wrapper::before {
-      animation: spin 2.8s linear infinite;
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
     }
 
     /* Khung nội dung profile bên trong */
@@ -127,7 +121,6 @@
       z-index: 1;
     }
 
-    /* Hiệu ứng viền xoay quanh avatar */
     .avatar-wrapper {
       position: relative;
       width: 112px;
@@ -146,15 +139,6 @@
       filter: blur(2px);
     }
 
-    body.music-active .avatar-wrapper::before {
-      animation: spin 2s linear infinite;
-      filter: blur(3px);
-    }
-
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
     .avatar {
       position: relative;
       width: 100%;
@@ -166,7 +150,6 @@
       background-color: #222;
     }
 
-    /* TÊN SAGIRI CHAN */
     .name {
       font-size: 1.75rem;
       font-weight: 800;
@@ -181,8 +164,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: nameNeonFlowSlow 8s linear infinite;
-      filter: drop-shadow(0 0 10px rgba(37, 244, 238, 0.45)) drop-shadow(0 0 16px rgba(254, 44, 85, 0.45));
-      transition: filter 0.4s ease;
     }
 
     @keyframes nameNeonFlowSlow {
@@ -196,24 +177,8 @@
       filter: drop-shadow(0 0 6px rgba(254, 44, 85, 0.8));
     }
 
-    body.music-active .name {
-      animation: nameNeonFlowSlow 5s linear infinite;
-      filter: drop-shadow(0 0 12px rgba(37, 244, 238, 0.75)) drop-shadow(0 0 20px rgba(254, 44, 85, 0.75));
-    }
-
-    .handle {
-      font-size: 0.95rem;
-      color: #a0a0a0;
-      margin-bottom: 14px;
-      font-weight: 500;
-    }
-
-    .bio {
-      font-size: 0.92rem;
-      color: #dedede;
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
+    .handle { font-size: 0.95rem; color: #a0a0a0; margin-bottom: 14px; font-weight: 500; }
+    .bio { font-size: 0.92rem; color: #dedede; line-height: 1.5; margin-bottom: 18px; }
 
     .section-title {
       font-size: 0.78rem;
@@ -227,7 +192,6 @@
       gap: 6px;
     }
 
-    /* LƯỚI 2 GAME */
     .games-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -243,15 +207,10 @@
       display: flex;
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      transition: transform 0.25s ease;
       cursor: pointer;
       border: none;
       background: none;
       width: 100%;
-    }
-
-    .game-card-wrapper:hover {
-      transform: translateY(-3px);
     }
 
     .game-card-wrapper::before {
@@ -264,10 +223,6 @@
       background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
       animation: spin 4s linear infinite;
       z-index: 0;
-    }
-
-    body.music-active .game-card-wrapper::before {
-      animation: spin 2.4s linear infinite;
     }
 
     .game-btn {
@@ -284,11 +239,6 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      transition: background 0.2s ease;
-    }
-
-    .game-card-wrapper:hover .game-btn {
-      background: rgba(28, 28, 35, 0.85);
     }
 
     .game-icon-img {
@@ -297,29 +247,14 @@
       border-radius: 13px;
       object-fit: cover;
       margin-bottom: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: #111;
     }
 
-    .game-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
+    .game-name { font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .game-action { font-size: 0.68rem; color: #a5a5a5; margin-top: 3px; }
 
-    .game-action {
-      font-size: 0.68rem;
-      color: #a5a5a5;
-      margin-top: 3px;
-    }
-
-    /* LIÊN KẾT NÚT NEON TRONG SUỐT */
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .links { display: flex; flex-direction: column; gap: 12px; }
 
     .btn-link {
       display: flex;
@@ -331,120 +266,94 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 0.93rem;
-      transition: all 0.25s ease;
       cursor: pointer;
       width: 100%;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
-    .btn-link:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-tiktok {
-      background: rgba(254, 44, 85, 0.12);
-      color: #ff3366;
-      border: 1.5px solid #fe2c55;
-      box-shadow: 0 0 12px rgba(254, 44, 85, 0.35), inset 0 0 8px rgba(254, 44, 85, 0.2);
-      text-shadow: 0 0 6px rgba(254, 44, 85, 0.5);
-    }
-    .btn-tiktok:hover {
-      background: rgba(254, 44, 85, 0.22);
-      color: #ffffff;
-      border-color: #ff6b8b;
-      box-shadow: 0 0 20px rgba(254, 44, 85, 0.7), inset 0 0 12px rgba(254, 44, 85, 0.35);
-    }
-
-    .btn-donate {
-      background: rgba(255, 136, 0, 0.12);
-      color: #ffaa33;
-      border: 1.5px solid #ff9900;
-      box-shadow: 0 0 12px rgba(255, 153, 0, 0.35), inset 0 0 8px rgba(255, 153, 0, 0.2);
-      text-shadow: 0 0 6px rgba(255, 153, 0, 0.5);
-    }
-    .btn-donate:hover {
-      background: rgba(255, 136, 0, 0.22);
-      color: #ffffff;
-      border-color: #ffbe66;
-      box-shadow: 0 0 20px rgba(255, 153, 0, 0.7), inset 0 0 12px rgba(255, 153, 0, 0.35);
-    }
-
-    .btn-discord {
-      background: rgba(88, 101, 242, 0.14);
-      color: #7289da;
-      border: 1.5px solid #5865F2;
-      box-shadow: 0 0 12px rgba(88, 101, 242, 0.35), inset 0 0 8px rgba(88, 101, 242, 0.2);
-      text-shadow: 0 0 6px rgba(88, 101, 242, 0.5);
-    }
-    .btn-discord:hover {
-      background: rgba(88, 101, 242, 0.25);
-      color: #ffffff;
-      border-color: #949efc;
-      box-shadow: 0 0 20px rgba(88, 101, 242, 0.7), inset 0 0 12px rgba(88, 101, 242, 0.35);
-    }
-
-    .btn-yt-music {
-      background: rgba(37, 244, 238, 0.12);
-      color: #25f4ee;
-      border: 1.5px solid #25f4ee;
-      box-shadow: 0 0 12px rgba(37, 244, 238, 0.35), inset 0 0 8px rgba(37, 244, 238, 0.2);
-      text-shadow: 0 0 6px rgba(37, 244, 238, 0.5);
-    }
-    .btn-yt-music:hover {
-      background: rgba(37, 244, 238, 0.22);
-      color: #ffffff;
-      border-color: #85faf6;
-      box-shadow: 0 0 20px rgba(37, 244, 238, 0.7), inset 0 0 12px rgba(37, 244, 238, 0.35);
-    }
-
-    body.music-active .btn-tiktok { box-shadow: 0 0 18px rgba(254, 44, 85, 0.6), inset 0 0 10px rgba(254, 44, 85, 0.3); }
-    body.music-active .btn-donate { box-shadow: 0 0 18px rgba(255, 153, 0, 0.6), inset 0 0 10px rgba(255, 153, 0, 0.3); }
-    body.music-active .btn-discord { box-shadow: 0 0 18px rgba(88, 101, 242, 0.6), inset 0 0 10px rgba(88, 101, 242, 0.3); }
-    body.music-active .btn-yt-music { box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), inset 0 0 10px rgba(37, 244, 238, 0.3); }
+    .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; box-shadow: 0 0 12px rgba(254, 44, 85, 0.35); }
+    .btn-donate { background: rgba(255, 136, 0, 0.12); color: #ffaa33; border: 1.5px solid #ff9900; box-shadow: 0 0 12px rgba(255, 153, 0, 0.35); }
+    .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
+    .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
     /* ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER
+       THANH MINI BOTTOM BAR MUSIC PLAYER (HIỆU ỨNG VIỀN NEON SAGIRI)
        ============================================================ */
-    .mini-player-bar {
+    .mini-player-border-wrapper {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(14, 14, 18, 0.90);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1.5px solid rgba(37, 244, 238, 0.3);
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(254, 44, 85, 0.15);
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 420px;
+      border-radius: 34px;
+      padding: 2.5px;
+      overflow: visible;
       z-index: 9990;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85),
+                  0 0 25px rgba(37, 244, 238, 0.3),
+                  0 0 25px rgba(254, 44, 85, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.4s ease;
+    }
+
+    .mini-player-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      animation: spin 5s linear infinite;
+      z-index: 0;
+    }
+
+    body.music-active .mini-player-border-wrapper {
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9),
+                  0 0 35px rgba(37, 244, 238, 0.6),
+                  0 0 35px rgba(254, 44, 85, 0.6);
+    }
+
+    body.music-active .mini-player-border-wrapper::before {
+      animation: spin 2.5s linear infinite;
+    }
+
+    .mini-player-bar {
+      position: relative;
+      width: 100%;
+      background: rgba(14, 14, 18, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 32px;
       padding: 10px 16px;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      transition: transform 0.3s ease;
+      z-index: 1;
     }
 
-    .mini-player-bar.collapsed {
-      transform: translateY(calc(100% - 32px));
+    .mini-player-border-wrapper.collapsed {
+      transform: translate(-50%, calc(100% + 30px));
     }
 
     .mini-collapse-toggle {
       position: absolute;
-      top: -18px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(18, 18, 24, 0.9);
-      border: 1px solid rgba(37, 244, 238, 0.4);
+      top: -22px;
+      right: 28px;
+      background: rgba(18, 18, 24, 0.95);
+      border: 1.5px solid #25f4ee;
       color: #25f4ee;
-      width: 36px;
-      height: 20px;
+      width: 34px;
+      height: 22px;
       border-radius: 12px 12px 0 0;
       font-size: 0.75rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 -4px 12px rgba(37, 244, 238, 0.4);
+      z-index: 2;
     }
 
     .mini-progress-bg {
@@ -467,30 +376,31 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
     }
 
+    /* Ảnh đại diện bài hát dạng đĩa tròn viền Neon Cyan/Pink */
     .mini-vinyl-wrapper {
       position: relative;
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       background: #111;
-      border: 2px solid rgba(37, 244, 238, 0.5);
-      box-shadow: 0 0 10px rgba(37, 244, 238, 0.3);
+      border: 2px solid #25f4ee;
+      box-shadow: 0 0 12px rgba(37, 244, 238, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      overflow: hidden;
     }
     body.music-active .mini-vinyl-wrapper {
       animation: spin 3s linear infinite;
+      border-color: #fe2c55;
+      box-shadow: 0 0 15px rgba(254, 44, 85, 0.8);
     }
     .mini-vinyl-avatar {
-      width: 24px;
-      height: 24px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -498,44 +408,27 @@
     .mini-song-info {
       flex: 1;
       overflow: hidden;
-      position: relative;
       text-align: left;
     }
     .mini-song-title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-shadow: 0 0 6px rgba(37, 244, 238, 0.4);
+      text-shadow: 0 0 6px rgba(37, 244, 238, 0.5);
     }
     .mini-artist {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: #a0a0a0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
     }
 
-    .mini-equalizer {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 12px;
-      margin-left: 6px;
-    }
-    .mini-equalizer span {
-      width: 2.5px;
-      background: #fe2c55;
-      height: 3px;
-      border-radius: 2px;
-    }
-    body.music-active .mini-equalizer span:nth-child(1) { animation: eqMini 0.5s ease-in-out infinite alternate; }
-    body.music-active .mini-equalizer span:nth-child(2) { animation: eqMini 0.3s ease-in-out infinite alternate; }
-    body.music-active .mini-equalizer span:nth-child(3) { animation: eqMini 0.4s ease-in-out infinite alternate; }
-    @keyframes eqMini {
-      0% { height: 3px; }
-      100% { height: 12px; }
-    }
-
+    /* Cụm nút điều khiển tối giản */
     .mini-controls {
       display: flex;
       align-items: center;
@@ -543,33 +436,37 @@
       flex-shrink: 0;
     }
     .mini-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: #ccc;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
     }
-    .mini-btn:hover {
-      background: rgba(37, 244, 238, 0.3);
-      border-color: #25f4ee;
-    }
+    .mini-btn:hover { color: #25f4ee; transform: scale(1.1); }
+    
     .mini-btn-play {
       background: linear-gradient(135deg, #fe2c55, #25f4ee);
       border: none;
-      width: 38px;
-      height: 38px;
-      font-size: 0.95rem;
-      box-shadow: 0 0 12px rgba(254, 44, 85, 0.6);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.1rem;
+      box-shadow: 0 0 16px rgba(254, 44, 85, 0.8), 0 0 16px rgba(37, 244, 238, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mini-btn-play:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 24px rgba(254, 44, 85, 1), 0 0 24px rgba(37, 244, 238, 0.8);
     }
 
     .music-player-panel {
@@ -622,7 +519,7 @@
       font-weight: 600;
     }
 
-    /* MODAL OVERLAY CHUNG */
+    /* MODAL CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -781,46 +678,43 @@
   </div>
 
   <!-- ============================================================
-       THANH MINI BOTTOM BAR MUSIC PLAYER
+       THANH MINI BOTTOM BAR MUSIC PLAYER (VIỀN NEON SAGIRI)
        ============================================================ -->
-  <div class="mini-player-bar" id="miniPlayerBar">
+  <div class="mini-player-border-wrapper" id="miniPlayerBarWrapper">
     <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
       <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
     </button>
 
-    <!-- Thanh tiến trình bài hát -->
-    <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
-      <div class="mini-progress-fill" id="miniProgressBarFill"></div>
-    </div>
-
-    <div class="mini-player-content">
-      <!-- Đĩa Vinyl xoay mini -->
-      <div class="mini-vinyl-wrapper">
-        <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Vinyl" />
+    <div class="mini-player-bar">
+      <!-- Thanh tiến trình bài hát -->
+      <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+        <div class="mini-progress-fill" id="miniProgressBarFill"></div>
       </div>
 
-      <!-- Tên bài hát & Sóng âm Equalizer -->
-      <div class="mini-song-info">
-        <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="mini-artist">Sagiri Playlist</span>
-          <div class="mini-equalizer">
-            <span></span><span></span><span></span>
-          </div>
+      <div class="mini-player-content">
+        <!-- Ảnh đại diện đĩa tròn xoay viền neon -->
+        <div class="mini-vinyl-wrapper">
+          <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=sagiri0502'" alt="Vinyl" />
         </div>
-      </div>
 
-      <!-- Cụm nút điều khiển -->
-      <div class="mini-controls">
-        <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-        </button>
-        <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
-          <svg id="miniPlayIconSvg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-        <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-        </button>
+        <!-- Tên bài hát & Nghệ sĩ -->
+        <div class="mini-song-info">
+          <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+          <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
+        </div>
+
+        <!-- Cụm nút điều khiển -->
+        <div class="mini-controls">
+          <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng">
+            <i class="fa-solid fa-play" id="miniPlayIcon"></i>
+          </button>
+          <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -949,7 +843,7 @@
         name: "Liên Quân Mobile",
         icon: "lq.png",
         fallbackIcon: "https://cdn.tgdd.vn/GameApp/3/218002/icon-lien-quan-mobile-200x200.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -1055,15 +949,15 @@
     }
 
     // ==========================================
-    // DANH SÁCH PLAYLIST (CHẠY TRỰC TIẾP FILE GỐC)
+    // DANH SÁCH PLAYLIST HOÀN CHỈNH
     // ==========================================
     const playlist = [
-      { title: "✨ Styx Helix", src: "music1.mp3" },
-      { title: "🎵 An Unfinished Song", src: "music2.mp3" },
-      { title: "🎭 All Silent Souls Can Sing", src: "music3.mp3" },
-      { title: "💃 Dancing Through Fantasies", src: "music4.mp3" },
-      { title: "⚔️ With Glory I Shall Fall", src: "music5.mp3" },
-      { title: "🌸 Against the Tide", src: "music6.mp3" }
+      { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3" },
+      { title: "An Unfinished Song", artist: "Wuthering Waves OST", src: "music2.mp3" },
+      { title: "All Silent Souls Can Sing", artist: "Wuthering Waves OST", src: "music3.mp3" },
+      { title: "Dancing Through Fantasies", artist: "Wuthering Waves OST", src: "music4.mp3" },
+      { title: "With Glory I Shall Fall", artist: "Wuthering Waves OST", src: "music5.mp3" },
+      { title: "Against the Tide", artist: "Wuthering Waves OST", src: "music6.mp3" }
     ];
 
     let currentTrackIndex = 0;
@@ -1075,6 +969,7 @@
     function updateTrackInfo() {
       const track = playlist[currentTrackIndex];
       document.getElementById('miniSongTitle').innerText = track.title;
+      document.getElementById('miniArtistText').innerText = track.artist;
       audio.src = track.src;
       renderPlaylist();
     }
@@ -1108,15 +1003,15 @@
     }
 
     function togglePlayPause() {
-      const miniPlayIconSvg = document.getElementById('miniPlayIconSvg');
+      const miniPlayIcon = document.getElementById('miniPlayIcon');
       if (isPlaying) {
         audio.pause();
         isPlaying = false;
-        miniPlayIconSvg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        miniPlayIcon.className = "fa-solid fa-play";
       } else {
         audio.play().then(() => {
           isPlaying = true;
-          miniPlayIconSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+          miniPlayIcon.className = "fa-solid fa-pause";
         }).catch(err => console.log("Autoplay blocked:", err));
       }
       syncVisualEffects();
@@ -1127,7 +1022,7 @@
       updateTrackInfo();
       audio.play().then(() => {
         isPlaying = true;
-        document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
         syncVisualEffects();
       }).catch(err => console.log("Play error:", err));
     }
@@ -1146,7 +1041,7 @@
       if (!isPlaying && audio.paused) {
         audio.play().then(() => {
           isPlaying = true;
-          document.getElementById('miniPlayIconSvg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+          document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
           syncVisualEffects();
         }).catch(() => {});
       }
@@ -1204,10 +1099,10 @@
     }
 
     function toggleMiniPlayerCollapse() {
-      const bar = document.getElementById('miniPlayerBar');
+      const wrapper = document.getElementById('miniPlayerBarWrapper');
       const chevron = document.getElementById('collapseChevron');
-      bar.classList.toggle('collapsed');
-      chevron.className = bar.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+      wrapper.classList.toggle('collapsed');
+      chevron.className = wrapper.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
     updateTrackInfo();
