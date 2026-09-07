@@ -439,6 +439,23 @@
     .handle { font-size: 0.95rem; color: #a0a0a0; margin-bottom: 14px; font-weight: 500; }
     .bio { font-size: 0.92rem; color: #dedede; line-height: 1.5; margin-bottom: 18px; }
 
+    /* BỘ ĐẾM LƯỢT XEM (VISITOR COUNTER) */
+    .visitor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-bottom: 14px;
+    }
+    .visitor-badge strong {
+      color: var(--neon-color-1);
+    }
+
     .section-title {
       font-size: 0.78rem;
       text-transform: uppercase;
@@ -1123,6 +1140,12 @@
         <span class="heart-icon">💕</span>
       </h1>
       <p class="handle">@_sagiri0502</p>
+      
+      <!-- BỘ ĐẾM LƯỢT XEM -->
+      <div class="visitor-badge">
+        <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">1,024</strong>
+      </div>
+
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
       <div class="section-title">
@@ -1394,9 +1417,19 @@
 
   <script>
     /* ============================================================
-       0. THÔNG BÁO KHÁCH GHÉ THĂM (GỬI THẲNG DISCORD WEBHOOK)
+       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
        ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
+      // Bộ đếm lượt xem tăng tự động
+      let views = parseInt(localStorage.getItem('sagiri_page_views'), 10) || 1024;
+      if (!sessionStorage.getItem('sagiri_viewed_session')) {
+        views++;
+        localStorage.setItem('sagiri_page_views', views);
+        sessionStorage.setItem('sagiri_viewed_session', 'true');
+      }
+      document.getElementById('visitorCount').innerText = views.toLocaleString();
+
+      // Gửi thông báo khách ghé thăm về Discord Webhook (1 lần/ngày)
       const lastVisit = localStorage.getItem('sagiri_last_visitor_ping');
       const today = new Date().toDateString();
       if (lastVisit !== today) {
@@ -1408,7 +1441,7 @@
           body: JSON.stringify({
             embeds: [{
               title: "🌸 Có khách ghé thăm Profile!",
-              description: "Một vị khách vừa mở trang web của bạn hôm nay.",
+              description: `Một vị khách vừa mở trang web hôm nay. Tổng lượt xem: **${views}**`,
               color: 2453486,
               timestamp: new Date().toISOString()
             }]
@@ -1725,7 +1758,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
