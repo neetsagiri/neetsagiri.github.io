@@ -1775,7 +1775,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, WEB AUDIO API (KHÔNG HIỆN MEDIA CONTROL NGẦM) & KARAOKE
+       12. PLAYLIST, WEB AUDIO API & KARAOKE
        ============================================================ */
     const playlist = [
       { 
@@ -1927,7 +1927,6 @@
         if (ctx.state === 'suspended') {
           await ctx.resume();
         }
-        document.getElementById('miniSongTitle').innerText = "Đang tải nhạc...";
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
         const decodedBuffer = await ctx.decodeAudioData(arrayBuffer);
@@ -1993,7 +1992,7 @@
     function updateTrackInfo() {
       const track = playlist[currentTrackIndex];
       const titleElem = document.getElementById('miniSongTitle');
-      titleElem.innerText = track.title;
+      titleElem.innerText = track.title; // Cập nhật tên bài hát ngay lập tức
       document.getElementById('miniArtistText').innerText = track.artist;
 
       applyDynamicAccent(track.color1, track.color2);
@@ -2081,7 +2080,7 @@
     function selectTrack(index) {
       currentTrackIndex = index;
       pausedAt = 0;
-      updateTrackInfo();
+      updateTrackInfo(); // Hiển thị tên bài hát ngay lập tức
       loadAndDecodeTrack(playlist[currentTrackIndex].src, () => {
         playBuffer(0);
       });
