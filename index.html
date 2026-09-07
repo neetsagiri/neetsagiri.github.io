@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
 
+  <!-- PWA & MOBILE META -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
   <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
 
+  <!-- OPEN GRAPH / SOCIAL CARD -->
   <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
   <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
   <meta property="og:type" content="website">
@@ -44,11 +46,24 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* CUSTOM CURSOR CHO DESKTOP */
+    /* CUSTOM CURSOR & FAIRY DUST */
     @media (pointer: fine) {
       body, button, a, input {
         cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto !important;
       }
+    }
+
+    .dust-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999999;
+      font-size: 0.75rem;
+      animation: dustFade 0.6s linear forwards;
+      user-select: none;
+    }
+    @keyframes dustFade {
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.3) translateY(-15px); }
     }
 
     body {
@@ -66,7 +81,6 @@
       perspective: 1000px;
     }
 
-    /* AMBIENT DAY/NIGHT */
     body.day-mode {
       background: linear-gradient(-45deg, #061126, #0e1e38, #00f2fe, #fe2c55, #05050f);
       background-size: 400% 400%;
@@ -74,6 +88,12 @@
     body.night-mode {
       background: linear-gradient(-45deg, #010101, #080d1a, #004e92, #6a0572, #000000);
       background-size: 400% 400%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body, .card-border-wrapper::before, .neon-ring-wrapper::before, .game-card-wrapper::before {
+        animation: none !important;
+      }
     }
 
     /* TOAST NOTIFICATION */
@@ -103,18 +123,23 @@
       opacity: 1;
     }
 
-    .btn-screenshot-top {
+    .top-left-actions {
       position: fixed;
       top: 16px;
       left: 16px;
       z-index: 99999;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-top-pill {
       background: rgba(18, 18, 24, 0.85);
       backdrop-filter: blur(8px);
       border: 1px solid var(--neon-color-1);
       color: var(--neon-color-1);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -123,12 +148,11 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(37, 244, 238, 0.3);
       transition: all 0.25s ease;
     }
-    .btn-screenshot-top:hover {
+    .btn-top-pill:hover {
       transform: scale(1.05);
       background: rgba(37, 244, 238, 0.2);
     }
 
-    /* ĐỒNG HỒ THỜI GIAN THỰC GÓC TRÊN BÊN PHẢI */
     .clock-badge-top {
       position: fixed;
       top: 16px;
@@ -170,7 +194,6 @@
       filter: saturate(1.25);
     }
 
-    /* KHUNG PROFILE CARD */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -631,12 +654,26 @@
       border-radius: 2px;
       cursor: pointer;
       overflow: hidden;
+      position: relative;
     }
     .mini-progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--neon-color-1), var(--neon-color-2));
       transition: width 0.1s linear;
+      z-index: 2;
+    }
+    .mini-progress-buffer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: rgba(255, 255, 255, 0.3);
+      z-index: 1;
     }
 
     .mini-player-content {
@@ -744,10 +781,9 @@
       margin-top: 2px;
     }
 
-    /* MINI LYRIC BOX */
     .mini-lyric-box {
       font-size: 0.68rem;
-      color: #25f4ee;
+      color: var(--neon-color-1);
       margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
@@ -918,7 +954,6 @@
       }
     }
 
-    /* POPUP CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1003,15 +1038,23 @@
 </head>
 <body>
 
+  <!-- TOAST NOTIFICATION -->
   <div id="toastNotification" class="toast-container">
     <i class="fa-solid fa-circle-check" style="color: var(--neon-color-1);"></i>
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <button type="button" class="btn-screenshot-top" onclick="downloadCardProfileScreenshot()" id="btnScreenshot">
-    <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh profile</span>
-  </button>
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
+  <div class="top-left-actions">
+    <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
+      <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
+    </button>
+    <button type="button" class="btn-top-pill" onclick="nativeSharePage()" title="Chia sẻ trang">
+      <i class="fa-solid fa-share-nodes"></i>
+    </button>
+  </div>
 
+  <!-- ĐỒNG HỒ VIỆT NAM (GMT+7) -->
   <div class="clock-badge-top" id="clockBadge">
     <i class="fa-regular fa-clock" id="clockIcon"></i>
     <span id="liveClockText">00:00:00</span>
@@ -1136,12 +1179,14 @@
     </div>
   </div>
 
+  <!-- THANH MUSIC VỚI BUFFER BAR -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
         <div class="progress-row">
           <span class="time-display" id="currentTime">00:00</span>
           <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+            <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
             <div class="mini-progress-fill" id="miniProgressBarFill"></div>
           </div>
           <span class="time-display" id="totalDuration">00:00</span>
@@ -1190,6 +1235,7 @@
     </div>
   </div>
 
+  <!-- POPUP 1: UID & INGAME -->
   <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1228,6 +1274,7 @@
     </div>
   </div>
 
+  <!-- POPUP 1.1: ẢNH TÀI KHOẢN GAME -->
   <div id="accountPhotoModal" class="modal-overlay" onclick="closeAccountPhotoModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1241,6 +1288,7 @@
     </div>
   </div>
 
+  <!-- POPUP 2: DONATE TRÀ SỮA -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1297,11 +1345,12 @@
     </div>
   </div>
 
+  <!-- POPUP 3: HỘP TIN NHẮN ẨN DANH (GUESTBOOK) -->
   <div id="guestbookModal" class="modal-overlay" onclick="closeGuestbookModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
         <h3 class="modal-title">Gửi Lời Nhắn Cho Sagiri 💌</h3>
-        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn của bạn sẽ được gửi riêng đến Sagiri</p>
+        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn sẽ được gửi thẳng qua Discord Webhook</p>
 
         <div class="donate-form">
           <div class="donate-input-group">
@@ -1324,7 +1373,43 @@
 
   <script>
     /* ============================================================
-       0. ÂM THANH BUBBLE POP & HAPTIC VIBRATION
+       0. HẠT BỤI TIÊN THEO CON TRỎ CHUỘT
+       ============================================================ */
+    const dustIcons = ['✨', '🌸', '💫', '💖'];
+    let lastDustTime = 0;
+    if (window.matchMedia('(pointer: fine)').matches) {
+      window.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastDustTime > 70) {
+          lastDustTime = now;
+          const dust = document.createElement('div');
+          dust.className = 'dust-particle';
+          dust.innerText = dustIcons[Math.floor(Math.random() * dustIcons.length)];
+          dust.style.left = (e.clientX + (Math.random() * 10 - 5)) + 'px';
+          dust.style.top = (e.clientY + (Math.random() * 10 - 5)) + 'px';
+          document.body.appendChild(dust);
+          setTimeout(() => dust.remove(), 600);
+        }
+      });
+    }
+
+    /* ============================================================
+       1. NATIVE WEB SHARE API
+       ============================================================ */
+    function nativeSharePage() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Sagiri Chan Profile Bio',
+          text: 'Khám phá góc nhỏ của Sagiri Chan (@_sagiri0502) 💕',
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        copyToClipboard(window.location.href, "🌸 Đã sao chép liên kết trang!");
+      }
+    }
+
+    /* ============================================================
+       2. ÂM THANH BUBBLE POP & HAPTIC
        ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 25) {
@@ -1364,11 +1449,10 @@
     });
 
     /* ============================================================
-       1. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
        ============================================================ */
     function updateClockAndAmbient() {
       const now = new Date();
-      // Chuyển theo giờ GMT+7
       const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
       const vnTime = new Date(utc + (3600000 * 7));
 
@@ -1395,7 +1479,7 @@
     updateClockAndAmbient();
 
     /* ============================================================
-       2. HIỂN THỊ TOAST
+       4. TOAST NOTIFICATION
        ============================================================ */
     let toastTimer = null;
     function showToast(msg) {
@@ -1410,7 +1494,7 @@
     }
 
     /* ============================================================
-       3. BỘ ĐẾM TIM & HIỆU ỨNG PHÁO HOA ĂN MỪNG MỐC TIM
+       5. BỘ ĐẾM TIM & PHÁO HOA ĂN MỪNG
        ============================================================ */
     let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
     document.getElementById('heartCount').innerText = totalHearts;
@@ -1446,7 +1530,6 @@
       setTimeout(() => heart.remove(), 800);
       triggerHaptic(35);
 
-      // Kích hoạt pháo hoa nếu chạm mốc chia hết cho 10
       if (totalHearts % 10 === 0) {
         triggerMilestoneCelebration();
       } else {
@@ -1455,7 +1538,7 @@
     }
 
     /* ============================================================
-       4. HIỆU ỨNG NGHIÊNG 3D PARALLAX (DESKTOP)
+       6. PARALLAX 3D (DESKTOP)
        ============================================================ */
     const cardBorder = document.querySelector('.card-border-wrapper');
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -1473,7 +1556,7 @@
     }
 
     /* ============================================================
-       5. CHỤP PROFILE CARD (WATERMARK + FIX CHỮ)
+       7. CHỤP PROFILE CARD
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
@@ -1511,13 +1594,14 @@
     }
 
     /* ============================================================
-       6. HOA ANH ĐÀO BAY (TIẾT KIỆM PIN & TƯƠNG TÁC GYRO)
+       8. HOA ANH ĐÀO BAY (REDUCED MOTION & GYRO)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
     let sakuraAnimId = null;
     let gyroWindX = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1541,7 +1625,7 @@
         this.y = Math.random() * -canvas.height;
         this.size = Math.random() * 8 + 6;
         this.baseSpeedX = Math.random() * 1.5 - 0.5;
-        this.speedY = Math.random() * 1.2 + 0.8;
+        this.speedY = prefersReducedMotion ? 0.4 : (Math.random() * 1.2 + 0.8);
         this.rotation = Math.random() * 360;
         this.rotSpeed = Math.random() * 1.5 - 0.75;
         this.opacity = Math.random() * 0.45 + 0.35;
@@ -1567,7 +1651,7 @@
       }
     }
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < (prefersReducedMotion ? 10 : 30); i++) {
       petals.push(new Petal());
     }
 
@@ -1590,7 +1674,22 @@
     });
 
     /* ============================================================
-       7. DỮ LIỆU GAME & MODAL
+       9. CLICK TRÁI TIM
+       ============================================================ */
+    const sparkles = ['💕', '🌸', '✨', '💖'];
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg')) return;
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 800);
+    });
+
+    /* ============================================================
+       10. DỮ LIỆU GAME & MODAL
        ============================================================ */
     const gamesData = {
       ww: {
@@ -1703,7 +1802,7 @@
     }
 
     /* ============================================================
-       8. HỘP TIN NHẮN ẨN DANH (GUESTBOOK)
+       11. GUESTBOOK (TÍCH HỢP DISCORD WEBHOOK)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
@@ -1718,18 +1817,30 @@
         showToast("⚠️ Hãy nhập lời nhắn trước khi gửi nhé!");
         return;
       }
-      // Lưu lại tin nhắn vào localStorage
+
       const oldMsgs = JSON.parse(localStorage.getItem('sagiri_guestbook') || '[]');
       oldMsgs.push({ name, msg, time: new Date().toISOString() });
       localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
 
+      // Đã tích hợp webhook Discord của bạn
+      const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
+      if (DISCORD_WEBHOOK_URL) {
+        fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `💌 **Tin nhắn ẩn danh mới gửi Sagiri!**\n> **Từ:** ${name}\n> **Nội dung:** ${msg}`
+          })
+        }).catch(() => {});
+      }
+
       document.getElementById('guestMsg').value = "";
       closeGuestbookModal();
-      showToast("💌 Lời nhắn đã được gửi đến Sagiri!");
+      showToast("💌 Lời nhắn đã được gửi thành công!");
     }
 
     /* ============================================================
-       9. PLAYLIST & DYNAMIC COLOR THEME ACCENT & LYRICS
+       12. PLAYLIST, BUFFER BAR & DYNAMIC ACCENT
        ============================================================ */
     const playlist = [
       { 
@@ -1865,6 +1976,12 @@
         const percent = (audio.currentTime / audio.duration) * 100;
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
+
+        if (audio.buffered.length > 0) {
+          const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+          const bufferPercent = (bufferedEnd / audio.duration) * 100;
+          document.getElementById('miniProgressBarBuffer').style.width = bufferPercent + '%';
+        }
 
         if (percent > 80 && !hasPreloadedNext) {
           const nextIdx = (currentTrackIndex + 1) % playlist.length;
