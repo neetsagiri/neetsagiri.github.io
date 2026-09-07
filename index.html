@@ -80,7 +80,7 @@
       padding: 40px 16px 80px 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
-      animation: tiktokGradient 12s ease infinite; /* Kéo dài thời gian animation giúp mượt và đỡ tốn pin */
+      animation: tiktokGradient 12s ease infinite;
       overflow-x: hidden;
       transition: filter 0.5s ease;
       position: relative;
@@ -139,7 +139,7 @@
 
     .btn-top-pill {
       background: rgba(18, 18, 24, 0.85);
-      backdrop-filter: blur(4px); /* Giảm độ mờ blur nhẹ để tối ưu GPU mobile */
+      backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       border: 1px solid var(--neon-color-1);
       color: var(--neon-color-1);
@@ -510,7 +510,46 @@
     }
 
     .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; }
-    .btn-donate { background: rgba(255, 136, 0, 0.12); color: #ffaa33; border: 1.5px solid #ff9900; }
+    
+    /* VIỀN ĐỔI MÀU CHO NÚT DONATE (NỀN BÊN TRONG CỐ ĐỊNH) */
+    .btn-donate-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      padding: 2px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 0 12px rgba(255, 153, 0, 0.35);
+    }
+    .btn-donate-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(from 0deg, #ffaa33, #ff9900, #ff3366, #25f4ee, #ffaa33);
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+    .btn-donate {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      background: rgba(18, 18, 24, 0.92);
+      color: #ffaa33;
+      border: none;
+      border-radius: 12.5px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 0.93rem;
+      cursor: pointer;
+    }
+
     .btn-guestbook { background: rgba(189, 0, 255, 0.12); color: #bd00ff; border: 1.5px solid #bd00ff; }
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; }
@@ -861,9 +900,12 @@
           <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
         </a>
 
-        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
-          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
-        </button>
+        <!-- NÚT DONATE VỚI VIỀN ĐỔI MÀU -->
+        <div class="btn-donate-wrapper">
+          <button type="button" class="btn-donate" onclick="openQRModal()">
+            <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+          </button>
+        </div>
 
         <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
           <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
@@ -1146,7 +1188,7 @@
     if (window.matchMedia('(pointer: fine)').matches) {
       window.addEventListener('mousemove', (e) => {
         const now = Date.now();
-        if (now - lastDustTime > 100) { // Giới hạn tần suất tạo bụi tiên giúp mượt máy yếu
+        if (now - lastDustTime > 100) {
           lastDustTime = now;
           const dust = document.createElement('div');
           dust.className = 'dust-particle';
@@ -1266,7 +1308,7 @@
     document.getElementById('heartCount').innerText = totalHearts;
 
     function triggerMilestoneCelebration() {
-      for (let i = 0; i < 15; i++) { // Giảm số lượng pháo hoa để mượt mà trên máy yếu
+      for (let i = 0; i < 15; i++) {
         setTimeout(() => {
           const heart = document.createElement('div');
           heart.className = 'click-heart';
@@ -1318,7 +1360,7 @@
 
       html2canvas(cardElement, {
         useCORS: true,
-        scale: 2, // Giảm scale từ 2.5 xuống 2 để chống tràn bộ nhớ trên điện thoại yếu
+        scale: 2,
         backgroundColor: null,
         logging: false
       }).then(canvas => {
@@ -1349,7 +1391,7 @@
     let branchWindAngle = 0;
     let deviceWindX = 0;
     let lastTime = 0;
-    const fpsInterval = 33; // Giới hạn ~30 FPS giúp máy yếu không bị giật lag và tiết kiệm pin
+    const fpsInterval = 33;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1407,7 +1449,6 @@
       }
     }
 
-    // Giảm số lượng hạt xuống 18 hạt trên thiết bị yếu để máy chạy cực mượt
     const petalCount = window.innerWidth <= 768 ? 16 : 28;
     for (let i = 0; i < petalCount; i++) {
       petals.push(new Petal());
@@ -1453,7 +1494,6 @@
 
       ctx.restore();
 
-      // Giảm số lượng cụm hoa vẽ để tối ưu khung hình
       const clusters = [
         {x: 60 + sway, y: 30}, {x: 180 + sway*1.1, y: 110}, {x: 320 + sway*1.5, y: 145},
         {x: canvas.width - 60 - swayR, y: 30}, {x: canvas.width - 180 - swayR*1.1, y: 110}, {x: canvas.width - 320 - swayR*1.5, y: 145}
@@ -1473,7 +1513,7 @@
       sakuraAnimId = requestAnimationFrame(animateSakura);
 
       const elapsed = currentTime - lastTime;
-      if (elapsed < fpsInterval) return; // Bỏ qua khung hình nếu chạy quá nhanh để ổn định FPS
+      if (elapsed < fpsInterval) return;
       lastTime = currentTime - (elapsed % fpsInterval);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
