@@ -1069,6 +1069,11 @@
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
     .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
+
+    /* Ẩn cành/thân cây trên màn hình nhỏ di động để không bị che khuất nội dung */
+    @media (max-width: 768px) {
+      /* Trên mobile chỉ giữ hoa rơi, không vẽ thân cây */
+    }
   </style>
 </head>
 <body>
@@ -1095,7 +1100,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS VẼ CÀNH CÂY ANH ĐÀO 2 BÊN & HOA RƠI -->
+  <!-- CANVAS VẼ THÂN CÂY TO & HOA RƠI -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -1649,7 +1654,7 @@
     }
 
     /* ============================================================
-       7. VẼ CÀNH CÂY ANH ĐÀO 2 BÊN & HOA RƠI LÃ TẢ
+       7. VẼ 2 THÂN CÂY ANH ĐÀO LỚN Ở 2 BÊN & HOA RƠI LÃ TẢ
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
@@ -1705,63 +1710,79 @@
       petals.push(new Petal());
     }
 
-    // Hàm vẽ cành cây anh đào rủ ở 2 góc trên màn hình (rung nhẹ theo gió)
-    function drawCherryBranches() {
-      const time = Date.now() * 0.002;
-      const swayLeft = Math.sin(time) * 3;
-      const swayRight = Math.cos(time) * 3;
+    // Hàm vẽ 2 thân cây anh đào lớn mọc từ đáy/mép màn hình tỏa nhánh vươn vào trong
+    function drawFullCherryTrees() {
+      const time = Date.now() * 0.0015;
+      const swayL = Math.sin(time) * 4;
+      const swayR = Math.cos(time) * 4;
 
       ctx.save();
-      ctx.lineWidth = 12;
-      ctx.strokeStyle = "#3a2318";
       ctx.lineCap = "round";
 
-      // --- Cành bên trái ---
+      // --- CÂY BÊN TRÁI ---
+      // Thân chính mọc từ góc dưới bên trái
+      ctx.lineWidth = 32;
+      ctx.strokeStyle = "#2e1b12";
       ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.quadraticCurveTo(120 + swayLeft, 60, 260 + swayLeft * 1.5, 140);
+      ctx.moveTo(0, canvas.height);
+      ctx.quadraticCurveTo(40, canvas.height * 0.6, 90 + swayL, canvas.height * 0.3);
+      ctx.quadraticCurveTo(140 + swayL, canvas.height * 0.15, 280 + swayL * 1.5, 90);
       ctx.stroke();
 
-      // Nhánh phụ trái 1
-      ctx.lineWidth = 7;
+      // Nhánh vươn mạnh sang phải
+      ctx.lineWidth = 16;
       ctx.beginPath();
-      ctx.moveTo(90, 30);
-      ctx.quadraticCurveTo(160 + swayLeft, 110, 210, 180);
+      ctx.moveTo(70, canvas.height * 0.45);
+      ctx.quadraticCurveTo(150, canvas.height * 0.3, 240 + swayL * 1.2, 160);
       ctx.stroke();
 
-      // --- Cành bên phải ---
-      ctx.lineWidth = 12;
+      ctx.lineWidth = 8;
       ctx.beginPath();
-      ctx.moveTo(canvas.width, 0);
-      ctx.quadraticCurveTo(canvas.width - 120 - swayRight, 60, canvas.width - 260 - swayRight * 1.5, 140);
+      ctx.moveTo(180, canvas.height * 0.25);
+      ctx.quadraticCurveTo(230, 120, 310 + swayL, 70);
       ctx.stroke();
 
-      // Nhánh phụ phải 1
-      ctx.lineWidth = 7;
+      // --- CÂY BÊN PHẢI ---
+      // Thân chính mọc từ góc dưới bên phải
+      ctx.lineWidth = 32;
+      ctx.strokeStyle = "#2e1b12";
       ctx.beginPath();
-      ctx.moveTo(canvas.width - 90, 30);
-      ctx.quadraticCurveTo(canvas.width - 160 - swayRight, 110, canvas.width - 210, 180);
+      ctx.moveTo(canvas.width, canvas.height);
+      ctx.quadraticCurveTo(canvas.width - 40, canvas.height * 0.6, canvas.width - 90 - swayR, canvas.height * 0.3);
+      ctx.quadraticCurveTo(canvas.width - 140 - swayR, canvas.height * 0.15, canvas.width - 280 - swayR * 1.5, 90);
+      ctx.stroke();
+
+      // Nhánh vươn mạnh sang trái
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width - 70, canvas.height * 0.45);
+      ctx.quadraticCurveTo(canvas.width - 150, canvas.height * 0.3, canvas.width - 240 - swayR * 1.2, 160);
+      ctx.stroke();
+
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width - 180, canvas.height * 0.25);
+      ctx.quadraticCurveTo(canvas.width - 230, 120, canvas.width - 310 - swayR, 70);
       ctx.stroke();
 
       ctx.restore();
 
-      // Vẽ các chùm hoa (blossoms) bám trên cành
-      const blossomClusters = [
-        {x: 80 + swayLeft, y: 35}, {x: 160 + swayLeft*1.2, y: 80}, {x: 240 + swayLeft*1.5, y: 130}, {x: 190, y: 165},
-        {x: canvas.width - 80 - swayRight, y: 35}, {x: canvas.width - 160 - swayRight*1.2, y: 80}, {x: canvas.width - 240 - swayRight*1.5, y: 130}, {x: canvas.width - 190, y: 165}
+      // Các đám tán hoa bao phủ quanh các đầu nhánh
+      const clusters = [
+        {x: 120 + swayL, y: canvas.height * 0.3}, {x: 220 + swayL*1.2, y: 150}, {x: 290 + swayL*1.5, y: 80}, {x: 190, y: 110},
+        {x: canvas.width - 120 - swayR, y: canvas.height * 0.3}, {x: canvas.width - 220 - swayR*1.2, y: 150}, {x: canvas.width - 290 - swayR*1.5, y: 80}, {x: canvas.width - 190, y: 110}
       ];
 
-      blossomClusters.forEach(b => {
-        for (let i = 0; i < 6; i++) {
+      clusters.forEach(c => {
+        for (let j = 0; j < 9; j++) {
           ctx.beginPath();
-          ctx.arc(b.x + (i*6 - 15), b.y + (Math.sin(i)*8), 7, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255, 192, 203, 0.85)";
+          ctx.arc(c.x + (j * 8 - 28), c.y + (Math.sin(j) * 12), 12, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 182, 193, 0.82)";
           ctx.fill();
         }
-        // Nhụy hoa đậm hơn
         ctx.beginPath();
-        ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = "#ff69b4";
+        ctx.arc(c.x, c.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff5c8d";
         ctx.fill();
       });
     }
@@ -1769,10 +1790,11 @@
     function animateSakura() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Vẽ cành cây rung rinh
-      drawCherryBranches();
+      // Trên máy tính (> 768px): vẽ cả 2 cây to 2 bên. Trên điện thoại: chỉ để hoa bay thoáng đãng.
+      if (window.innerWidth > 768) {
+        drawFullCherryTrees();
+      }
 
-      // Cập nhật và vẽ các cánh hoa rơi
       petals.forEach(petal => {
         petal.update();
         petal.draw();
@@ -1818,7 +1840,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
