@@ -11,13 +11,28 @@
   <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
   <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
 
-  <!-- OPEN GRAPH / SEO -->
+  <!-- CẤU HÌNH THẺ CHIA SẺ LINK HOÀN CHỈNH (ZALO, FACEBOOK, DISCORD) -->
   <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
   <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
+
+  <!-- Open Graph / Facebook / Zalo -->
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neetsagiri.github.io/">
   <meta property="og:title" content="Sagiri Chan 💕 (@_sagiri0502)">
-  <meta property="og:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game và thưởng thức playlist tuyển chọn.">
-  <meta property="og:image" content="avatar.jpg">
+  <meta property="og:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game và nghe playlist yêu thích.">
+  <meta property="og:image" content="https://neetsagiri.github.io/avatar.jpg">
+  <meta property="og:image:secure_url" content="https://neetsagiri.github.io/avatar.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="600">
+  <meta property="og:image:height" content="600">
+
+  <!-- Twitter Card / Discord -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://neetsagiri.github.io/">
+  <meta name="twitter:title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta name="twitter:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan!">
+  <meta name="twitter:image" content="https://neetsagiri.github.io/avatar.jpg">
+
   <meta name="theme-color" content="#25f4ee">
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
@@ -124,7 +139,7 @@
       filter: saturate(1.25);
     }
 
-    /* KHUNG CARD PARALLAX & DYNAMIC ACCENT */
+    /* KHUNG CARD PARALLAX */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -174,7 +189,6 @@
       z-index: 1;
     }
 
-    /* NÚT THẢ TIM TÍCH LŨY (HEART COUNTER) */
     .heart-like-btn {
       position: absolute;
       top: 18px;
@@ -302,7 +316,6 @@
       animation: earWaveRight 1.4s ease-in-out infinite;
     }
 
-    /* LIVE STATUS BADGE (DISCORD PRESENCE) */
     .live-status-pill {
       display: inline-flex;
       align-items: center;
@@ -959,7 +972,6 @@
 
   <div class="card-border-wrapper" id="profileCardToCapture">
     <div class="card">
-      <!-- NÚT THẢ TIM TÍCH LŨY -->
       <button type="button" class="heart-like-btn" onclick="sendHeart(event)" title="Gửi tim cho Sagiri">
         <i class="fa-solid fa-heart"></i> <span id="heartCount">128</span>
       </button>
@@ -989,7 +1001,6 @@
         </div>
       </div>
 
-      <!-- LIVE STATUS PRESENCE -->
       <div>
         <div class="live-status-pill">
           <span class="status-dot"></span>
@@ -1304,7 +1315,6 @@
       document.getElementById('heartCount').innerText = totalHearts;
       localStorage.setItem('sagiri_hearts_count', totalHearts);
 
-      // Tạo tim bay tại vị trí nút
       const rect = e.target.getBoundingClientRect();
       const heart = document.createElement('div');
       heart.className = 'click-heart';
@@ -1389,11 +1399,10 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Cảm biến nghiêng máy trên điện thoại làm đổi hướng gió
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
         if (e.gamma !== null) {
-          gyroWindX = (e.gamma / 90) * 2; // Nghiêng sang trái/phải
+          gyroWindX = (e.gamma / 90) * 2;
         }
       }, true);
     }
@@ -1626,10 +1635,8 @@
       audio.src = track.src;
       hasPreloadedNext = false;
 
-      // Cập nhật màu neon theo bài
       applyDynamicAccent(track.color1, track.color2);
 
-      // Cập nhật live status
       const statusText = document.getElementById('liveStatusText');
       if (isPlaying) {
         statusText.innerText = `Đang nghe: ${track.title} 🎧`;
@@ -1648,7 +1655,7 @@
           title: track.title,
           artist: track.artist,
           album: "Sagiri Playlist 💕",
-          artwork: [{ src: 'avatar.jpg', sizes: '512x512', type: 'image/jpeg' }]
+          artwork: [{ src: 'https://neetsagiri.github.io/avatar.jpg', sizes: '512x512', type: 'image/jpeg' }]
         });
       }
 
