@@ -1402,8 +1402,7 @@
       if (lastVisit !== today) {
         localStorage.setItem('sagiri_last_visitor_ping', today);
         const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
-        const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(discordWebhook);
-        fetch(proxyUrl, {
+        fetch(discordWebhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1726,7 +1725,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -1826,7 +1825,7 @@
     }
 
     /* ============================================================
-       10. GUESTBOOK (DISCORD EMBED WEBHOOK THÔNG QUA PROXY)
+       10. GUESTBOOK (GỬI THẲNG TRỰC TIẾP VỀ DISCORD WEBHOOK)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
@@ -1847,9 +1846,8 @@
       localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
 
       const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
-      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(discordWebhook);
-
-      fetch(proxyUrl, {
+      
+      fetch(discordWebhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
