@@ -1095,7 +1095,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS VẼ CÀNH CÂY ANH ĐÀO ĐUNG ĐƯA & HOA RƠI -->
+  <!-- CANVAS VẼ CÀNH CÂY ANH ĐÀO & HOA RƠI THEO CẢM BIẾN NGHIÊNG -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -1649,13 +1649,14 @@
     }
 
     /* ============================================================
-       7. VẼ CÀNH CÂY ANH ĐÀO GÓC TRÊN ĐUNG ĐƯA & HOA RƠI MƯỢT MÀ
+       7. VẼ CÀNH CÂY ANH ĐÀO & HOA RƠI THEO CẢM BIẾN NGHIÊNG (MOBILE GYRO)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
     let sakuraAnimId = null;
     let branchWindAngle = 0;
+    let deviceWindX = 0;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1663,6 +1664,14 @@
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma !== null) {
+          deviceWindX = (e.gamma / 45) * 1.5;
+        }
+      }, true);
+    }
 
     class Petal {
       constructor() {
@@ -1681,11 +1690,16 @@
       update() {
         this.angle += this.spin;
         this.y += this.speedY;
-        this.x += this.speedX + Math.sin(this.angle) * 0.4;
+        this.x += this.speedX + deviceWindX + Math.sin(this.angle) * 0.4;
 
-        if (this.y > canvas.height + 20 || this.x > canvas.width + 30 || this.x < -30) {
+        if (this.y > canvas.height + 20) {
           this.reset();
           this.y = -10;
+        }
+        if (this.x > canvas.width + 30) {
+          this.x = -20;
+        } else if (this.x < -30) {
+          this.x = canvas.width + 20;
         }
       }
       draw() {
@@ -1706,7 +1720,7 @@
 
     function drawCherryBranchesTop() {
       branchWindAngle += 0.03;
-      const sway = Math.sin(branchWindAngle) * 4;
+      const sway = Math.sin(branchWindAngle) * 4 + (deviceWindX * 8);
 
       ctx.save();
       ctx.lineWidth = 14;
@@ -1714,7 +1728,7 @@
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
 
-      // CÀNH TRÁI ĐUNG ĐƯA
+      // CÀNH TRÁI
       ctx.beginPath();
       ctx.moveTo(-10, -10);
       ctx.quadraticCurveTo(80 + sway, 40, 220 + sway * 1.2, 90);
@@ -1733,8 +1747,8 @@
       ctx.quadraticCurveTo(310 + sway, 170, 360 + sway * 1.2, 240);
       ctx.stroke();
 
-      // CÀNH PHẢI ĐUNG ĐƯA
-      const swayR = Math.cos(branchWindAngle) * 4;
+      // CÀNH PHẢI
+      const swayR = Math.cos(branchWindAngle) * 4 - (deviceWindX * 8);
       ctx.lineWidth = 14;
       ctx.beginPath();
       ctx.moveTo(canvas.width + 10, -10);
@@ -1780,7 +1794,6 @@
     function animateSakura() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Chỉ vẽ cành cây đung đưa trên máy tính (> 768px), điện thoại tự động ẩn
       if (window.innerWidth > 768) {
         drawCherryBranchesTop();
       }
@@ -1831,7 +1844,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
