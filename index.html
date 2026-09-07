@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
 
-  <!-- OPEN GRAPH / SEO META TAGS -->
+  <!-- PWA & MOBILE META -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
+
+  <!-- OPEN GRAPH / SEO -->
   <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
   <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
   <meta property="og:type" content="website">
@@ -18,6 +24,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
+    :root {
+      --neon-color-1: #25f4ee;
+      --neon-color-2: #fe2c55;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -47,7 +58,7 @@
       left: 50%;
       transform: translateX(-50%) translateY(-100px);
       background: rgba(18, 18, 26, 0.95);
-      border: 1px solid #25f4ee;
+      border: 1px solid var(--neon-color-1);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(37, 244, 238, 0.4);
       padding: 10px 20px;
       border-radius: 30px;
@@ -74,8 +85,8 @@
       z-index: 99999;
       background: rgba(18, 18, 24, 0.85);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(37, 244, 238, 0.4);
-      color: #25f4ee;
+      border: 1px solid var(--neon-color-1);
+      color: var(--neon-color-1);
       padding: 8px 14px;
       border-radius: 20px;
       font-size: 0.8rem;
@@ -113,6 +124,7 @@
       filter: saturate(1.25);
     }
 
+    /* KHUNG CARD PARALLAX & DYNAMIC ACCENT */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -124,8 +136,8 @@
       justify-content: center;
       align-items: center;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
-                  0 0 25px rgba(37, 244, 238, 0.2),
-                  0 0 25px rgba(254, 44, 85, 0.2);
+                  0 0 25px rgba(37, 244, 238, 0.25),
+                  0 0 25px rgba(254, 44, 85, 0.25);
       transition: transform 0.15s ease-out, box-shadow 0.4s ease;
       margin-bottom: 16px;
       flex-shrink: 0;
@@ -138,9 +150,10 @@
       position: absolute;
       width: 150%;
       height: 150%;
-      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
       animation: spin 5s linear infinite;
       z-index: 0;
+      transition: background 0.8s ease;
     }
 
     @keyframes spin {
@@ -161,11 +174,38 @@
       z-index: 1;
     }
 
+    /* NÚT THẢ TIM TÍCH LŨY (HEART COUNTER) */
+    .heart-like-btn {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      background: rgba(254, 44, 85, 0.15);
+      border: 1px solid rgba(254, 44, 85, 0.4);
+      color: #ff3366;
+      padding: 5px 10px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      z-index: 10;
+    }
+    .heart-like-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 10px rgba(254, 44, 85, 0.6);
+    }
+    .heart-like-btn:active {
+      transform: scale(0.92);
+    }
+
     .cinnamoroll-avatar-box {
       position: relative;
       width: 120px;
       height: 120px;
-      margin: 32px auto 20px auto;
+      margin: 32px auto 14px auto;
     }
 
     .neon-ring-wrapper {
@@ -182,7 +222,7 @@
       content: "";
       position: absolute;
       inset: -50%;
-      background: conic-gradient(#25f4ee, #fe2c55, #25f4ee);
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-1));
       animation: spin 3.5s linear infinite;
     }
 
@@ -262,6 +302,37 @@
       animation: earWaveRight 1.4s ease-in-out infinite;
     }
 
+    /* LIVE STATUS BADGE (DISCORD PRESENCE) */
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      color: #ddd;
+      margin-bottom: 8px;
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #25f4ee;
+      box-shadow: 0 0 8px #25f4ee;
+      animation: pulseDot 1.8s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
     .name {
       font-size: 1.75rem;
       font-weight: 800;
@@ -274,7 +345,7 @@
     }
 
     .name-text {
-      background: linear-gradient(90deg, #25f4ee, #fe2c55, #25f4ee);
+      background: linear-gradient(90deg, var(--neon-color-1), var(--neon-color-2), var(--neon-color-1));
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -284,8 +355,8 @@
     body.capturing .name-text {
       background: none !important;
       -webkit-background-clip: initial !important;
-      -webkit-text-fill-color: #25f4ee !important;
-      color: #25f4ee !important;
+      -webkit-text-fill-color: var(--neon-color-1) !important;
+      color: var(--neon-color-1) !important;
       text-shadow: 0 0 10px rgba(37, 244, 238, 0.8);
     }
 
@@ -343,7 +414,7 @@
       height: 200%;
       top: -50%;
       left: -50%;
-      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
       animation: spin 4s linear infinite;
       z-index: 0;
     }
@@ -406,9 +477,9 @@
       right: 36px;
       background: rgba(18, 18, 24, 0.95);
       backdrop-filter: blur(6px);
-      border: 1px solid rgba(37, 244, 238, 0.4);
+      border: 1px solid var(--neon-color-1);
       border-bottom: none;
-      color: #25f4ee;
+      color: var(--neon-color-1);
       width: 44px;
       height: 22px;
       border-radius: 12px 12px 0 0;
@@ -472,7 +543,7 @@
       height: 200%;
       top: -50%;
       left: -50%;
-      background: conic-gradient(#25f4ee, #fe2c55, #ff9900, #25f4ee);
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
       animation: spin 5s linear infinite;
       z-index: 0;
     }
@@ -519,7 +590,7 @@
     .mini-progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #25f4ee, #fe2c55);
+      background: linear-gradient(90deg, var(--neon-color-1), var(--neon-color-2));
       transition: width 0.1s linear;
     }
 
@@ -536,7 +607,7 @@
       height: 44px;
       border-radius: 50%;
       background: #111;
-      border: 2px solid #25f4ee;
+      border: 2px solid var(--neon-color-1);
       box-shadow: 0 0 12px rgba(37, 244, 238, 0.6);
       display: flex;
       align-items: center;
@@ -546,7 +617,7 @@
     }
     body.music-active .mini-vinyl-wrapper {
       animation: spin 3s linear infinite;
-      border-color: #fe2c55;
+      border-color: var(--neon-color-2);
       box-shadow: 0 0 15px rgba(254, 44, 85, 0.8);
     }
     .mini-vinyl-avatar {
@@ -605,7 +676,7 @@
     }
     .eq-bar {
       width: 2.5px;
-      background: #25f4ee;
+      background: var(--neon-color-1);
       border-radius: 1px;
       height: 3px;
       transition: height 0.15s ease;
@@ -615,8 +686,8 @@
     body.music-active .eq-bar:nth-child(3) { animation: bounceEq 0.8s ease-in-out infinite alternate 0.3s; }
     body.music-active .eq-bar:nth-child(4) { animation: bounceEq 0.5s ease-in-out infinite alternate 0.05s; }
     @keyframes bounceEq {
-      0% { height: 3px; background: #25f4ee; }
-      100% { height: 13px; background: #fe2c55; }
+      0% { height: 3px; background: var(--neon-color-1); }
+      100% { height: 13px; background: var(--neon-color-2); }
     }
 
     .mini-artist {
@@ -647,7 +718,7 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .mini-btn:hover { color: #25f4ee; transform: scale(1.1); }
+    .mini-btn:hover { color: var(--neon-color-1); transform: scale(1.1); }
 
     .volume-box {
       display: flex;
@@ -670,13 +741,13 @@
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: #25f4ee;
+      background: var(--neon-color-1);
       cursor: pointer;
-      box-shadow: 0 0 6px #25f4ee;
+      box-shadow: 0 0 6px var(--neon-color-1);
     }
 
     .mini-btn-play {
-      background: linear-gradient(135deg, #fe2c55, #25f4ee);
+      background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1));
       border: none;
       width: 38px;
       height: 38px;
@@ -733,8 +804,8 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .tool-icon-btn:hover { color: #25f4ee; }
-    .tool-icon-btn.active { color: #fe2c55; text-shadow: 0 0 8px rgba(254, 44, 85, 0.6); }
+    .tool-icon-btn:hover { color: var(--neon-color-1); }
+    .tool-icon-btn.active { color: var(--neon-color-2); text-shadow: 0 0 8px rgba(254, 44, 85, 0.6); }
 
     .playlist {
       display: flex;
@@ -820,7 +891,7 @@
       position: absolute;
       width: 200%;
       height: 200%;
-      background: conic-gradient(#25f4ee, #fe2c55, #fe2c55);
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-2));
       animation: spin 4s linear infinite;
       z-index: 0;
     }
@@ -846,7 +917,7 @@
     .game-info-row:last-child { margin-bottom: 0; }
     .info-label { font-size: 0.72rem; color: #a0a0a0; text-transform: uppercase; margin-bottom: 4px; }
     .info-value-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .info-val { font-size: 0.95rem; font-weight: 700; color: #25f4ee; }
+    .info-val { font-size: 0.95rem; font-weight: 700; color: var(--neon-color-1); }
     .btn-copy-mini { padding: 5px 12px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
     .btn-view-account-photo { width: 100%; padding: 10px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 12px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .account-photo-img { width: 100%; max-height: 55vh; object-fit: contain; border-radius: 14px; background: #0d0d12; border: 1px solid rgba(255, 255, 255, 0.15); margin: 8px 0 14px; }
@@ -856,7 +927,7 @@
     .donate-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.9rem; outline: none; }
     .quick-amount-buttons { display: flex; gap: 6px; margin-top: 6px; }
     .amount-tag { flex: 1; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; }
-    .btn-done-submit { width: 100%; margin-top: 8px; padding: 11px 0; background: linear-gradient(135deg, #fe2c55, #25f4ee); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
+    .btn-done-submit { width: 100%; margin-top: 8px; padding: 11px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
     #qrResultScreen { display: none; }
     .thankyou-box { background: rgba(254, 44, 85, 0.12); border: 1px solid rgba(254, 44, 85, 0.35); padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; }
     .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
@@ -864,7 +935,7 @@
     .qr-container { position: relative; display: inline-block; margin-bottom: 10px; }
     .qr-img { width: 210px; height: 210px; border-radius: 14px; object-fit: contain; background: #ffffff; padding: 6px; border: 2px solid rgba(255, 255, 255, 0.2); }
     .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 12px; }
-    .qr-info-summary strong { color: #25f4ee; }
+    .qr-info-summary strong { color: var(--neon-color-1); }
     .btn-modal-action { width: 100%; padding: 10px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
     .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
@@ -876,7 +947,7 @@
 
   <!-- TOAST NOTIFICATION -->
   <div id="toastNotification" class="toast-container">
-    <i class="fa-solid fa-circle-check" style="color: #25f4ee;"></i>
+    <i class="fa-solid fa-circle-check" style="color: var(--neon-color-1);"></i>
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
@@ -888,6 +959,11 @@
 
   <div class="card-border-wrapper" id="profileCardToCapture">
     <div class="card">
+      <!-- NÚT THẢ TIM TÍCH LŨY -->
+      <button type="button" class="heart-like-btn" onclick="sendHeart(event)" title="Gửi tim cho Sagiri">
+        <i class="fa-solid fa-heart"></i> <span id="heartCount">128</span>
+      </button>
+
       <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
         <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
       </button>
@@ -910,6 +986,14 @@
             <ellipse cx="69" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
             <ellipse cx="91" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
           </svg>
+        </div>
+      </div>
+
+      <!-- LIVE STATUS PRESENCE -->
+      <div>
+        <div class="live-status-pill">
+          <span class="status-dot"></span>
+          <span id="liveStatusText">Đang cày Wuthering Waves ⚔️</span>
         </div>
       </div>
 
@@ -1209,7 +1293,32 @@
     }
 
     /* ============================================================
-       2. HIỆU ỨNG NGHIÊNG 3D PARALLAX
+       2. BỘ ĐẾM THẢ TIM TÍCH LŨY (HEART COUNTER)
+       ============================================================ */
+    let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
+    document.getElementById('heartCount').innerText = totalHearts;
+
+    function sendHeart(e) {
+      e.stopPropagation();
+      totalHearts++;
+      document.getElementById('heartCount').innerText = totalHearts;
+      localStorage.setItem('sagiri_hearts_count', totalHearts);
+
+      // Tạo tim bay tại vị trí nút
+      const rect = e.target.getBoundingClientRect();
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      heart.innerText = '💖';
+      heart.style.left = (rect.left + rect.width / 2) + 'px';
+      heart.style.top = rect.top + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 800);
+      triggerHaptic(35);
+      showToast("💕 Cảm ơn bạn đã gửi tim!");
+    }
+
+    /* ============================================================
+       3. HIỆU ỨNG NGHIÊNG 3D PARALLAX (DESKTOP)
        ============================================================ */
     const cardBorder = document.querySelector('.card-border-wrapper');
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -1227,7 +1336,7 @@
     }
 
     /* ============================================================
-       3. CHỤP PROFILE CARD
+       4. CHỤP PROFILE CARD (WATERMARK + FIX CHỮ)
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
@@ -1265,12 +1374,13 @@
     }
 
     /* ============================================================
-       4. HOA ANH ĐÀO BAY (TỰ NGẮT KHI ẨN TAB TIẾT KIỆM PIN)
+       5. HOA ANH ĐÀO BAY (TIẾT KIỆM PIN & TƯƠNG TÁC GYRO MOBILE)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
     let sakuraAnimId = null;
+    let gyroWindX = 0;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1279,23 +1389,32 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    // Cảm biến nghiêng máy trên điện thoại làm đổi hướng gió
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma !== null) {
+          gyroWindX = (e.gamma / 90) * 2; // Nghiêng sang trái/phải
+        }
+      }, true);
+    }
+
     class Petal {
       constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * -canvas.height;
         this.size = Math.random() * 8 + 6;
-        this.speedX = Math.random() * 1.5 - 0.5;
+        this.baseSpeedX = Math.random() * 1.5 - 0.5;
         this.speedY = Math.random() * 1.2 + 0.8;
         this.rotation = Math.random() * 360;
         this.rotSpeed = Math.random() * 1.5 - 0.75;
         this.opacity = Math.random() * 0.45 + 0.35;
       }
       update() {
-        this.x += this.speedX;
+        this.x += this.baseSpeedX + gyroWindX;
         this.y += this.speedY;
         this.rotation += this.rotSpeed;
-        if (this.y > canvas.height + 20 || this.x > canvas.width + 20 || this.x < -20) {
+        if (this.y > canvas.height + 20 || this.x > canvas.width + 30 || this.x < -30) {
           this.reset();
           this.y = -10;
         }
@@ -1335,7 +1454,7 @@
     });
 
     /* ============================================================
-       5. CLICK TRÁI TIM
+       6. TƯƠNG TÁC CLICK TRÁI TIM
        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
@@ -1350,7 +1469,7 @@
     });
 
     /* ============================================================
-       6. DỮ LIỆU GAME & MODAL
+       7. DỮ LIỆU GAME & MODAL
        ============================================================ */
     const gamesData = {
       ww: {
@@ -1463,15 +1582,15 @@
     }
 
     /* ============================================================
-       7. PLAYLIST & ĐIỀU KHIỂN NHẠC NÂNG CAO
+       8. PLAYLIST & DYNAMIC COLOR THEME ACCENT
        ============================================================ */
     const playlist = [
-      { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3" },
-      { title: "An Unfinished Song", artist: "Wuthering Waves OST", src: "music2.mp3" },
-      { title: "All Silent Souls Can Sing", artist: "Wuthering Waves OST", src: "music3.mp3" },
-      { title: "Dancing Through Fantasies", artist: "Wuthering Waves OST", src: "music4.mp3" },
-      { title: "With Glory I Shall Fall", artist: "Wuthering Waves OST", src: "music5.mp3" },
-      { title: "Against the Tide", artist: "Wuthering Waves OST", src: "music6.mp3" }
+      { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3", color1: "#bd00ff", color2: "#fe2c55" },
+      { title: "An Unfinished Song", artist: "Wuthering Waves OST", src: "music2.mp3", color1: "#25f4ee", color2: "#0077ff" },
+      { title: "All Silent Souls Can Sing", artist: "Wuthering Waves OST", src: "music3.mp3", color1: "#25f4ee", color2: "#fe2c55" },
+      { title: "Dancing Through Fantasies", artist: "Wuthering Waves OST", src: "music4.mp3", color1: "#ff007f", color2: "#ffaa00" },
+      { title: "With Glory I Shall Fall", artist: "Wuthering Waves OST", src: "music5.mp3", color1: "#00f2fe", color2: "#9900ef" },
+      { title: "Against the Tide", artist: "Wuthering Waves OST", src: "music6.mp3", color1: "#25f4ee", color2: "#ff3366" }
     ];
 
     let savedIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10);
@@ -1487,6 +1606,11 @@
     audio.preload = "auto";
     audio.muted = isMuted;
 
+    function applyDynamicAccent(color1, color2) {
+      document.documentElement.style.setProperty('--neon-color-1', color1 || '#25f4ee');
+      document.documentElement.style.setProperty('--neon-color-2', color2 || '#fe2c55');
+    }
+
     function formatTime(seconds) {
       if (isNaN(seconds)) return "00:00";
       const mins = Math.floor(seconds / 60);
@@ -1501,6 +1625,15 @@
       document.getElementById('miniArtistText').innerText = track.artist;
       audio.src = track.src;
       hasPreloadedNext = false;
+
+      // Cập nhật màu neon theo bài
+      applyDynamicAccent(track.color1, track.color2);
+
+      // Cập nhật live status
+      const statusText = document.getElementById('liveStatusText');
+      if (isPlaying) {
+        statusText.innerText = `Đang nghe: ${track.title} 🎧`;
+      }
 
       if (track.title.length > 18) {
         titleElem.classList.add('marquee-active');
@@ -1545,7 +1678,6 @@
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
 
-        // Preload bài tiếp theo khi đến 80% thời lượng
         if (percent > 80 && !hasPreloadedNext) {
           const nextIdx = (currentTrackIndex + 1) % playlist.length;
           nextAudioPreload.src = playlist[nextIdx].src;
@@ -1574,10 +1706,13 @@
     }
 
     function syncVisualEffects() {
+      const statusText = document.getElementById('liveStatusText');
       if (isPlaying && !isMuted) {
         document.body.classList.add('music-active');
+        statusText.innerText = `Đang nghe: ${playlist[currentTrackIndex].title} 🎧`;
       } else {
         document.body.classList.remove('music-active');
+        statusText.innerText = `Đang cày Wuthering Waves ⚔️`;
       }
     }
 
@@ -1699,9 +1834,7 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    /* ============================================================
-       8. VUỐT CHUYỂN BÀI TRÊN MOBILE (SWIPE GESTURES)
-       ============================================================ */
+    /* VUỐT TRÊN MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchEndX = 0;
@@ -1719,9 +1852,9 @@
       const diff = touchEndX - touchStartX;
       if (Math.abs(diff) > 50) {
         if (diff < 0) {
-          nextTrack(); // Vuốt sang trái: Next bài
+          nextTrack();
         } else {
-          prevTrack(); // Vuốt sang phải: Prev bài
+          prevTrack();
         }
       }
     }
@@ -1747,7 +1880,6 @@
       navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
     }
 
-    // Khởi tạo trạng thái nút Shuffle và Repeat
     document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
     document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
 
