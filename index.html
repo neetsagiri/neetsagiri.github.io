@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
 
-  <!-- PWA & MOBILE META -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
   <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
 
-  <!-- CẤU HÌNH THẺ CHIA SẺ LINK HOÀN CHỈNH (ZALO, FACEBOOK, DISCORD) -->
   <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
   <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
-
-  <!-- Open Graph / Facebook / Zalo -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://neetsagiri.github.io/">
   <meta property="og:title" content="Sagiri Chan 💕 (@_sagiri0502)">
@@ -25,14 +21,11 @@
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="600">
   <meta property="og:image:height" content="600">
-
-  <!-- Twitter Card / Discord -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://neetsagiri.github.io/">
   <meta name="twitter:title" content="Sagiri Chan 💕 (@_sagiri0502)">
   <meta name="twitter:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan!">
   <meta name="twitter:image" content="https://neetsagiri.github.io/avatar.jpg">
-
   <meta name="theme-color" content="#25f4ee">
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
@@ -51,6 +44,13 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
+    /* CUSTOM CURSOR CHO DESKTOP */
+    @media (pointer: fine) {
+      body, button, a, input {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto !important;
+      }
+    }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -64,6 +64,16 @@
       transition: filter 0.5s ease;
       position: relative;
       perspective: 1000px;
+    }
+
+    /* AMBIENT DAY/NIGHT */
+    body.day-mode {
+      background: linear-gradient(-45deg, #061126, #0e1e38, #00f2fe, #fe2c55, #05050f);
+      background-size: 400% 400%;
+    }
+    body.night-mode {
+      background: linear-gradient(-45deg, #010101, #080d1a, #004e92, #6a0572, #000000);
+      background-size: 400% 400%;
     }
 
     /* TOAST NOTIFICATION */
@@ -118,6 +128,27 @@
       background: rgba(37, 244, 238, 0.2);
     }
 
+    /* ĐỒNG HỒ THỜI GIAN THỰC GÓC TRÊN BÊN PHẢI */
+    .clock-badge-top {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 99999;
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ddd;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      font-variant-numeric: tabular-nums;
+    }
+
     #sakuraCanvas {
       position: fixed;
       top: 0;
@@ -139,7 +170,7 @@
       filter: saturate(1.25);
     }
 
-    /* KHUNG CARD PARALLAX */
+    /* KHUNG PROFILE CARD */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -481,6 +512,7 @@
 
     .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; box-shadow: 0 0 12px rgba(254, 44, 85, 0.35); }
     .btn-donate { background: rgba(255, 136, 0, 0.12); color: #ffaa33; border: 1.5px solid #ff9900; box-shadow: 0 0 12px rgba(255, 153, 0, 0.35); }
+    .btn-guestbook { background: rgba(189, 0, 255, 0.12); color: #bd00ff; border: 1.5px solid #bd00ff; box-shadow: 0 0 12px rgba(189, 0, 255, 0.35); }
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
@@ -712,6 +744,18 @@
       margin-top: 2px;
     }
 
+    /* MINI LYRIC BOX */
+    .mini-lyric-box {
+      font-size: 0.68rem;
+      color: #25f4ee;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-style: italic;
+      text-shadow: 0 0 5px rgba(37, 244, 238, 0.4);
+    }
+
     .mini-controls {
       display: flex;
       align-items: center;
@@ -874,6 +918,7 @@
       }
     }
 
+    /* POPUP CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -958,7 +1003,6 @@
 </head>
 <body>
 
-  <!-- TOAST NOTIFICATION -->
   <div id="toastNotification" class="toast-container">
     <i class="fa-solid fa-circle-check" style="color: var(--neon-color-1);"></i>
     <span id="toastMsg">Đã sao chép!</span>
@@ -967,6 +1011,11 @@
   <button type="button" class="btn-screenshot-top" onclick="downloadCardProfileScreenshot()" id="btnScreenshot">
     <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh profile</span>
   </button>
+
+  <div class="clock-badge-top" id="clockBadge">
+    <i class="fa-regular fa-clock" id="clockIcon"></i>
+    <span id="liveClockText">00:00:00</span>
+  </div>
 
   <canvas id="sakuraCanvas"></canvas>
 
@@ -1048,6 +1097,10 @@
           <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
         </button>
 
+        <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
+          <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
+        </button>
+
         <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
           <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
         </a>
@@ -1083,7 +1136,6 @@
     </div>
   </div>
 
-  <!-- THANH MUSIC -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -1113,6 +1165,7 @@
               </div>
             </div>
             <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
+            <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
           </div>
 
           <div class="mini-controls">
@@ -1137,7 +1190,6 @@
     </div>
   </div>
 
-  <!-- POPUP 1: HIỂN THỊ UID & TÊN INGAME -->
   <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1176,7 +1228,6 @@
     </div>
   </div>
 
-  <!-- POPUP 1.1: HIỂN THỊ ẢNH TÀI KHOẢN GAME -->
   <div id="accountPhotoModal" class="modal-overlay" onclick="closeAccountPhotoModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1190,7 +1241,6 @@
     </div>
   </div>
 
-  <!-- POPUP 2: DONATE TRÀ SỮA -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1247,6 +1297,31 @@
     </div>
   </div>
 
+  <div id="guestbookModal" class="modal-overlay" onclick="closeGuestbookModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <h3 class="modal-title">Gửi Lời Nhắn Cho Sagiri 💌</h3>
+        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn của bạn sẽ được gửi riêng đến Sagiri</p>
+
+        <div class="donate-form">
+          <div class="donate-input-group">
+            <label class="donate-input-label"><i class="fa-solid fa-user-secret"></i> Biệt danh (hoặc để trống):</label>
+            <input type="text" id="guestName" class="donate-input" placeholder="Ẩn danh / Anonymous" />
+          </div>
+          <div class="donate-input-group">
+            <label class="donate-input-label"><i class="fa-solid fa-pen-nib"></i> Lời nhắn gửi gắm:</label>
+            <textarea id="guestMsg" class="donate-input" style="height: 80px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
+          </div>
+          <button type="button" class="btn-done-submit" onclick="submitGuestbook()">
+            <i class="fa-solid fa-paper-plane"></i> Gửi Ngay
+          </button>
+        </div>
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeGuestbookModal()">Đóng lại</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ============================================================
        0. ÂM THANH BUBBLE POP & HAPTIC VIBRATION
@@ -1289,7 +1364,38 @@
     });
 
     /* ============================================================
-       1. HIỂN THỊ TOAST
+       1. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+       ============================================================ */
+    function updateClockAndAmbient() {
+      const now = new Date();
+      // Chuyển theo giờ GMT+7
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const vnTime = new Date(utc + (3600000 * 7));
+
+      const h = String(vnTime.getHours()).padStart(2, '0');
+      const m = String(vnTime.getMinutes()).padStart(2, '0');
+      const s = String(vnTime.getSeconds()).padStart(2, '0');
+      document.getElementById('liveClockText').innerText = `${h}:${m}:${s}`;
+
+      const hourInt = vnTime.getHours();
+      const icon = document.getElementById('clockIcon');
+      if (hourInt >= 6 && hourInt < 18) {
+        document.body.classList.add('day-mode');
+        document.body.classList.remove('night-mode');
+        icon.className = "fa-solid fa-sun";
+        icon.style.color = "#ffaa00";
+      } else {
+        document.body.classList.add('night-mode');
+        document.body.classList.remove('day-mode');
+        icon.className = "fa-solid fa-moon";
+        icon.style.color = "#25f4ee";
+      }
+    }
+    setInterval(updateClockAndAmbient, 1000);
+    updateClockAndAmbient();
+
+    /* ============================================================
+       2. HIỂN THỊ TOAST
        ============================================================ */
     let toastTimer = null;
     function showToast(msg) {
@@ -1304,10 +1410,25 @@
     }
 
     /* ============================================================
-       2. BỘ ĐẾM THẢ TIM TÍCH LŨY (HEART COUNTER)
+       3. BỘ ĐẾM TIM & HIỆU ỨNG PHÁO HOA ĂN MỪNG MỐC TIM
        ============================================================ */
     let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
     document.getElementById('heartCount').innerText = totalHearts;
+
+    function triggerMilestoneCelebration() {
+      for (let i = 0; i < 24; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'click-heart';
+          heart.innerText = ['🎉', '💖', '✨', '🌸', '💫'][Math.floor(Math.random() * 5)];
+          heart.style.left = (Math.random() * window.innerWidth) + 'px';
+          heart.style.top = (Math.random() * window.innerHeight * 0.8) + 'px';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 900);
+        }, i * 45);
+      }
+      showToast(`🎉 Wow! Đã chạm mốc ${totalHearts} tim yêu thương 💕`);
+    }
 
     function sendHeart(e) {
       e.stopPropagation();
@@ -1324,11 +1445,17 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 800);
       triggerHaptic(35);
-      showToast("💕 Cảm ơn bạn đã gửi tim!");
+
+      // Kích hoạt pháo hoa nếu chạm mốc chia hết cho 10
+      if (totalHearts % 10 === 0) {
+        triggerMilestoneCelebration();
+      } else {
+        showToast("💕 Cảm ơn bạn đã gửi tim!");
+      }
     }
 
     /* ============================================================
-       3. HIỆU ỨNG NGHIÊNG 3D PARALLAX (DESKTOP)
+       4. HIỆU ỨNG NGHIÊNG 3D PARALLAX (DESKTOP)
        ============================================================ */
     const cardBorder = document.querySelector('.card-border-wrapper');
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -1346,7 +1473,7 @@
     }
 
     /* ============================================================
-       4. CHỤP PROFILE CARD (WATERMARK + FIX CHỮ)
+       5. CHỤP PROFILE CARD (WATERMARK + FIX CHỮ)
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
@@ -1384,7 +1511,7 @@
     }
 
     /* ============================================================
-       5. HOA ANH ĐÀO BAY (TIẾT KIỆM PIN & TƯƠNG TÁC GYRO MOBILE)
+       6. HOA ANH ĐÀO BAY (TIẾT KIỆM PIN & TƯƠNG TÁC GYRO)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
@@ -1460,21 +1587,6 @@
       } else {
         animateSakura();
       }
-    });
-
-    /* ============================================================
-       6. TƯƠNG TÁC CLICK TRÁI TIM
-       ============================================================ */
-    const sparkles = ['💕', '🌸', '✨', '💖'];
-    window.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('.mini-progress-bg')) return;
-      const heart = document.createElement('div');
-      heart.className = 'click-heart';
-      heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
-      heart.style.left = e.clientX + 'px';
-      heart.style.top = e.clientY + 'px';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 800);
     });
 
     /* ============================================================
@@ -1591,15 +1703,83 @@
     }
 
     /* ============================================================
-       8. PLAYLIST & DYNAMIC COLOR THEME ACCENT
+       8. HỘP TIN NHẮN ẨN DANH (GUESTBOOK)
+       ============================================================ */
+    function openGuestbookModal() {
+      document.getElementById('guestbookModal').classList.add('active');
+    }
+    function closeGuestbookModal() {
+      document.getElementById('guestbookModal').classList.remove('active');
+    }
+    function submitGuestbook() {
+      const name = document.getElementById('guestName').value.trim() || "Ẩn danh";
+      const msg = document.getElementById('guestMsg').value.trim();
+      if (!msg) {
+        showToast("⚠️ Hãy nhập lời nhắn trước khi gửi nhé!");
+        return;
+      }
+      // Lưu lại tin nhắn vào localStorage
+      const oldMsgs = JSON.parse(localStorage.getItem('sagiri_guestbook') || '[]');
+      oldMsgs.push({ name, msg, time: new Date().toISOString() });
+      localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
+
+      document.getElementById('guestMsg').value = "";
+      closeGuestbookModal();
+      showToast("💌 Lời nhắn đã được gửi đến Sagiri!");
+    }
+
+    /* ============================================================
+       9. PLAYLIST & DYNAMIC COLOR THEME ACCENT & LYRICS
        ============================================================ */
     const playlist = [
-      { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3", color1: "#bd00ff", color2: "#fe2c55" },
-      { title: "An Unfinished Song", artist: "Wuthering Waves OST", src: "music2.mp3", color1: "#25f4ee", color2: "#0077ff" },
-      { title: "All Silent Souls Can Sing", artist: "Wuthering Waves OST", src: "music3.mp3", color1: "#25f4ee", color2: "#fe2c55" },
-      { title: "Dancing Through Fantasies", artist: "Wuthering Waves OST", src: "music4.mp3", color1: "#ff007f", color2: "#ffaa00" },
-      { title: "With Glory I Shall Fall", artist: "Wuthering Waves OST", src: "music5.mp3", color1: "#00f2fe", color2: "#9900ef" },
-      { title: "Against the Tide", artist: "Wuthering Waves OST", src: "music6.mp3", color1: "#25f4ee", color2: "#ff3366" }
+      { 
+        title: "Styx Helix", 
+        artist: "Re:Zero OST", 
+        src: "music1.mp3", 
+        color1: "#bd00ff", 
+        color2: "#fe2c55",
+        lyric: "Oh please, don't let me die. Waiting for your call..."
+      },
+      { 
+        title: "An Unfinished Song", 
+        artist: "Wuthering Waves OST", 
+        src: "music2.mp3", 
+        color1: "#25f4ee", 
+        color2: "#0077ff",
+        lyric: "♫ Khúc ca dang dở vang vọng giữa tầng không..."
+      },
+      { 
+        title: "All Silent Souls Can Sing", 
+        artist: "Wuthering Waves OST", 
+        src: "music3.mp3", 
+        color1: "#25f4ee", 
+        color2: "#fe2c55",
+        lyric: "♫ Mọi linh hồn lặng lẽ đều cất lên tiếng hát..."
+      },
+      { 
+        title: "Dancing Through Fantasies", 
+        artist: "Wuthering Waves OST", 
+        src: "music4.mp3", 
+        color1: "#ff007f", 
+        color2: "#ffaa00",
+        lyric: "♫ Khiêu vũ giữa thế giới mộng ảo dịu kỳ..."
+      },
+      { 
+        title: "With Glory I Shall Fall", 
+        artist: "Wuthering Waves OST", 
+        src: "music5.mp3", 
+        color1: "#00f2fe", 
+        color2: "#9900ef",
+        lyric: "♫ Nguyện ngã xuống trong ánh hào quang rực rỡ..."
+      },
+      { 
+        title: "Against the Tide", 
+        artist: "Wuthering Waves OST", 
+        src: "music6.mp3", 
+        color1: "#25f4ee", 
+        color2: "#ff3366",
+        lyric: "♫ Nghịch dòng triều cuộn sóng, tìm về bến bình yên..."
+      }
     ];
 
     let savedIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10);
@@ -1632,6 +1812,7 @@
       const titleElem = document.getElementById('miniSongTitle');
       titleElem.innerText = track.title;
       document.getElementById('miniArtistText').innerText = track.artist;
+      document.getElementById('miniLyricText').innerText = track.lyric;
       audio.src = track.src;
       hasPreloadedNext = false;
 
@@ -1867,7 +2048,7 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT') return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.code === 'Space') {
         e.preventDefault();
         togglePlayPause();
