@@ -284,7 +284,7 @@
       position: absolute;
       inset: -50%;
       background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-1));
-      animation: spin 4s linear infinite;
+      animation: spin 3.5s linear infinite;
     }
 
     .avatar-inner {
@@ -507,46 +507,7 @@
     }
 
     .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; }
-    
-    /* VIỀN ĐỔI MÀU CHO NÚT DONATE (NỀN CỐ ĐỊNH) */
-    .btn-donate-wrapper {
-      position: relative;
-      width: 100%;
-      border-radius: 14px;
-      padding: 2px;
-      overflow: hidden;
-      display: flex;
-      box-shadow: 0 0 12px rgba(255, 153, 0, 0.35);
-    }
-    .btn-donate-wrapper::before {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      background: conic-gradient(from 0deg, #ffaa33, #ff9900, #ff3366, #25f4ee, #ffaa33);
-      animation: spin 4s linear infinite;
-      z-index: 0;
-    }
-    .btn-donate {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      background: rgba(18, 18, 24, 0.92);
-      color: #ffaa33;
-      border: none;
-      border-radius: 12.5px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 0.93rem;
-      cursor: pointer;
-    }
-
+    .btn-donate { background: rgba(255, 136, 0, 0.12); color: #ffaa33; border: 1.5px solid #ff9900; }
     .btn-guestbook { background: rgba(189, 0, 255, 0.12); color: #bd00ff; border: 1.5px solid #bd00ff; }
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; }
@@ -900,12 +861,10 @@
           <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
         </a>
 
-        <!-- NÚT DONATE VỚI VIỀN ĐỔI MÀU -->
-        <div class="btn-donate-wrapper">
-          <button type="button" class="btn-donate" onclick="openQRModal()">
-            <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
-          </button>
-        </div>
+        <!-- NÚT DONATE ĐÃ ĐƯA VỀ KIỂU VIỀN XOAY BAN ĐẦU -->
+        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+        </button>
 
         <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
           <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
@@ -1058,7 +1017,7 @@
     </div>
   </div>
 
-  <!-- POPUP 2: DONATE TRÀ SỮA (CẢI TIỆN SAO CHÉP STK & NỘI DUNG) -->
+  <!-- POPUP 2: DONATE TRÀ SỮA -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1105,7 +1064,6 @@
             Quét mã QR bằng mọi ứng dụng Ngân hàng hoặc MoMo
           </div>
 
-          <!-- NÚT SAO CHÉP STK & NỘI DUNG NHANH -->
           <div class="bank-quick-copy">
             <button type="button" class="btn-copy-bank" onclick="copyStkDirect()">
               <i class="fa-solid fa-copy"></i> Sao chép STK
@@ -1626,7 +1584,7 @@
     }
 
     function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, "🌸 Đã chép Ingame: " + gamesData[activeGameKey].ingame); }
-    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeKey].uid); }
+    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeGameKey].uid); }
 
     const myBankConfig = { bankId: "BIDV", accountNo: "8833220630", accountName: "BUI THANH NAM" };
 
@@ -1664,7 +1622,6 @@
       document.getElementById("donateInputScreen").style.display = "none";
       document.getElementById("qrResultScreen").style.display = "block";
 
-      // Hiệu ứng pháo hoa cảm ơn khi bấm Xong
       triggerMilestoneCelebration();
     }
 
