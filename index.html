@@ -46,13 +46,11 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* TĂNG TỐC PHẦN CỨNG CHO CÁC PHẦN TỬ ĐỘNG */
     .card-border-wrapper, .mini-player-container, .neon-ring-wrapper::before, .game-card-wrapper::before {
       will-change: transform;
       transform: translateZ(0);
     }
 
-    /* CUSTOM CURSOR & FAIRY DUST */
     @media (pointer: fine) {
       body, button, a, input {
         cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto !important;
@@ -101,7 +99,6 @@
       }
     }
 
-    /* TOAST NOTIFICATION */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -511,7 +508,7 @@
 
     .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; }
     
-    /* VIỀN ĐỔI MÀU CHO NÚT DONATE (NỀN BÊN TRONG CỐ ĐỊNH) */
+    /* VIỀN ĐỔI MÀU CHO NÚT DONATE (NỀN CỐ ĐỊNH) */
     .btn-donate-wrapper {
       position: relative;
       width: 100%;
@@ -783,9 +780,12 @@
     .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
     .thankyou-sub { color: #bbb; font-size: 0.76rem; margin-top: 3px; }
     .qr-container { position: relative; display: inline-block; margin-bottom: 10px; }
-    .qr-img { width: 200px; height: 200px; border-radius: 14px; object-fit: contain; background: #ffffff; padding: 6px; }
-    .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 12px; }
+    .qr-img { width: 190px; height: 190px; border-radius: 14px; object-fit: contain; background: #ffffff; padding: 6px; }
+    .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 10px; }
     .qr-info-summary strong { color: var(--neon-color-1); }
+    .bank-quick-copy { display: flex; gap: 8px; margin-bottom: 12px; }
+    .btn-copy-bank { flex: 1; padding: 7px 0; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-copy-bank:hover { background: rgba(37, 244, 238, 0.2); border-color: var(--neon-color-1); color: var(--neon-color-1); }
     .btn-modal-action { width: 100%; padding: 10px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
     .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
@@ -1058,7 +1058,7 @@
     </div>
   </div>
 
-  <!-- POPUP 2: DONATE TRÀ SỮA -->
+  <!-- POPUP 2: DONATE TRÀ SỮA (CẢI TIỆN SAO CHÉP STK & NỘI DUNG) -->
   <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1084,7 +1084,7 @@
             </div>
 
             <button type="button" class="btn-done-submit" onclick="submitDonateDone()">
-              <i class="fa-solid fa-check"></i> Xong / Done
+              <i class="fa-solid fa-check"></i> Xong / Done 💕
             </button>
           </div>
 
@@ -1102,7 +1102,17 @@
           </div>
 
           <div class="qr-info-summary" id="qrSummaryText">
-            Quét bằng MoMo hoặc mọi ứng dụng Ngân hàng
+            Quét mã QR bằng mọi ứng dụng Ngân hàng hoặc MoMo
+          </div>
+
+          <!-- NÚT SAO CHÉP STK & NỘI DUNG NHANH -->
+          <div class="bank-quick-copy">
+            <button type="button" class="btn-copy-bank" onclick="copyStkDirect()">
+              <i class="fa-solid fa-copy"></i> Sao chép STK
+            </button>
+            <button type="button" class="btn-copy-bank" onclick="copyMemoDirect()">
+              <i class="fa-solid fa-note-sticky"></i> Sao chép nội dung
+            </button>
           </div>
 
           <button type="button" class="btn-modal-action btn-edit-back" onclick="backToEditDonate()">
@@ -1616,7 +1626,7 @@
     }
 
     function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, "🌸 Đã chép Ingame: " + gamesData[activeGameKey].ingame); }
-    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeGameKey].uid); }
+    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeKey].uid); }
 
     const myBankConfig = { bankId: "BIDV", accountNo: "8833220630", accountName: "BUI THANH NAM" };
 
@@ -1632,6 +1642,8 @@
       document.getElementById("donateAmount").value = formatNumberWithDots(val.toString());
     }
 
+    let lastDonateMemo = "Cho Sagiri coc tra sua";
+
     function submitDonateDone() {
       const amountRaw = document.getElementById("donateAmount").value.replace(/\D/g, "");
       const messageRaw = document.getElementById("donateMessage").value.trim();
@@ -1639,16 +1651,29 @@
       const summary = document.getElementById("qrSummaryText");
 
       const amount = amountRaw ? parseInt(amountRaw, 10) : "";
-      const memo = messageRaw ? encodeURIComponent(messageRaw) : encodeURIComponent("Cho Sagiri coc tra sua");
-      qrImg.src = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
+      lastDonateMemo = messageRaw || "Cho Sagiri coc tra sua";
+      const memoEncoded = encodeURIComponent(lastDonateMemo);
+      
+      qrImg.src = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memoEncoded}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
 
       if (amount) {
-        summary.innerHTML = `Số tiền: <strong>${formatNumberWithDots(amount.toString())} VNĐ</strong><br>Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+        summary.innerHTML = `Số tiền: <strong>${formatNumberWithDots(amount.toString())} VNĐ</strong><br>Lời nhắn: "${lastDonateMemo}"`;
       } else {
-        summary.innerHTML = `Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+        summary.innerHTML = `Lời nhắn: "${lastDonateMemo}"`;
       }
       document.getElementById("donateInputScreen").style.display = "none";
       document.getElementById("qrResultScreen").style.display = "block";
+
+      // Hiệu ứng pháo hoa cảm ơn khi bấm Xong
+      triggerMilestoneCelebration();
+    }
+
+    function copyStkDirect() {
+      copyToClipboard(myBankConfig.accountNo, "🌸 Đã sao chép số tài khoản BIDV!");
+    }
+
+    function copyMemoDirect() {
+      copyToClipboard(lastDonateMemo, "🌸 Đã sao chép nội dung chuyển khoản!");
     }
 
     function backToEditDonate() {
