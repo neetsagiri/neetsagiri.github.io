@@ -781,12 +781,13 @@
       margin-top: 1px;
     }
 
-    /* KHẮC PHỤC LỖI LỜI BÀI HÁT: Chạy chữ mượt mà liên tục không bị che khuất */
     .mini-lyric-container {
       width: 100%;
       overflow: hidden;
       white-space: nowrap;
       margin-top: 2px;
+      height: 16px;
+      position: relative;
     }
 
     .mini-lyric-box {
@@ -794,13 +795,21 @@
       color: var(--neon-color-1);
       font-style: italic;
       text-shadow: 0 0 5px rgba(37, 244, 238, 0.4);
-      display: inline-block;
-      animation: lyricScroll 12s linear infinite;
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    @keyframes lyricScroll {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
+    .mini-lyric-box.fade-out {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    .mini-lyric-box.fade-in {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .mini-controls {
@@ -1107,7 +1116,7 @@
       <div>
         <div class="live-status-pill">
           <span class="status-dot"></span>
-          <span id="liveStatusText">Đang cày Wuthering Waves ⚔️</span>
+          <span id="liveStatusText">Đang kết nối Discord...</span>
         </div>
       </div>
 
@@ -1190,7 +1199,7 @@
     </div>
   </div>
 
-  <!-- THANH MUSIC VỚI BUFFER BAR & LYRICS CUỘN MƯỢT -->
+  <!-- THANH MUSIC VỚI KARAOKE LINE-BY-LINE -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -1223,7 +1232,7 @@
             <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
             
             <div class="mini-lyric-container">
-              <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên... &nbsp;&nbsp;&nbsp;&nbsp; ♫ Giai điệu nhẹ nhàng vang lên...</div>
+              <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
             </div>
           </div>
 
@@ -1387,8 +1396,30 @@
 
   <script>
     /* ============================================================
-       0. HẠT BỤI TIÊN THEO CON TRỎ CHUỘT
+       0. THÔNG BÁO KHÁCH GHÉ THĂM & HẠT BỤI TIÊN TRÊN CHUỘT
        ============================================================ */
+    window.addEventListener('DOMContentLoaded', () => {
+      const lastVisit = localStorage.getItem('sagiri_last_visitor_ping');
+      const today = new Date().toDateString();
+      if (lastVisit !== today) {
+        localStorage.setItem('sagiri_last_visitor_ping', today);
+        const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
+        const proxyUrl = `https://api.allorigins.win/raw?url=` + encodeURIComponent(discordWebhook);
+        fetch(proxyUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [{
+              title: "🌸 Có khách ghé thăm Profile!",
+              description: "Một vị khách vừa mở trang web của bạn hôm nay.",
+              color: 2453486,
+              timestamp: new Date().toISOString()
+            }]
+          })
+        }).catch(() => {});
+      }
+    });
+
     const dustIcons = ['✨', '🌸', '💫', '💖'];
     let lastDustTime = 0;
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -1816,7 +1847,7 @@
     }
 
     /* ============================================================
-       11. GUESTBOOK (DÙNG PROXY VƯỢT CORS BẮN THẲNG VỀ DISCORD)
+       11. GUESTBOOK (DISCORD EMBED WEBHOOK THÔNG QUA PROXY)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
@@ -1843,7 +1874,15 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: `💌 **Tin nhắn ẩn danh mới gửi Sagiri!**\n> **Từ:** ${name}\n> **Nội dung:** ${msg}`
+          embeds: [{
+            title: "💌 Tin nhắn ẩn danh mới!",
+            color: 12451839,
+            fields: [
+              { name: "👤 Người gửi", value: name, inline: true },
+              { name: "💬 Nội dung", value: msg, inline: false }
+            ],
+            timestamp: new Date().toISOString()
+          }]
         })
       }).catch(() => {});
 
@@ -1853,7 +1892,58 @@
     }
 
     /* ============================================================
-       12. PLAYLIST, BUFFER BAR & DYNAMIC ACCENT
+       12. LANYARD DISCORD REALTIME STATUS
+       ============================================================ */
+    function initDiscordPresence() {
+      const DISCORD_USER_ID = "1546332023017185330";
+      const statusTextElem = document.getElementById('liveStatusText');
+      const statusDotElem = document.querySelector('.status-dot');
+
+      if (!DISCORD_USER_ID) return;
+
+      const ws = new WebSocket('wss://api.lanyard.rest/v1/socket');
+
+      ws.onopen = function () {
+        ws.send(JSON.stringify({
+          op: 2,
+          d: { subscribe_to_id: DISCORD_USER_ID }
+        }));
+      };
+
+      ws.onmessage = function (event) {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.t === "INIT_STATE" || data.t === "PRESENCE_UPDATE") {
+            const presence = data.d;
+            if (!presence) return;
+
+            const statusColors = {
+              online: "#23a55a",
+              idle: "#f0b232",
+              dnd: "#f23f43",
+              offline: "#80848e"
+            };
+            if (statusDotElem) {
+              statusDotElem.style.background = statusColors[presence.discord_status] || "#25f4ee";
+              statusDotElem.style.boxShadow = `0 0 8px ${statusColors[presence.discord_status] || "#25f4ee"}`;
+            }
+
+            if (presence.spotify && presence.spotify.song) {
+              statusTextElem.innerText = `Đang nghe Spotify: ${presence.spotify.song} 🎵`;
+            } else if (presence.activities && presence.activities.length > 0) {
+              const act = presence.activities[0];
+              statusTextElem.innerText = `Đang chơi: ${act.name} 🎮`;
+            } else {
+              statusTextElem.innerText = `Đang cày Wuthering Waves ⚔️`;
+            }
+          }
+        } catch (e) {}
+      };
+    }
+    initDiscordPresence();
+
+    /* ============================================================
+       13. PLAYLIST, BUFFER BAR & KARAOKE LINE-BY-LINE LYRICS
        ============================================================ */
     const playlist = [
       { 
@@ -1862,7 +1952,13 @@
         src: "music1.mp3", 
         color1: "#bd00ff", 
         color2: "#fe2c55",
-        lyric: "Oh please, don't let me die. Waiting for your call..."
+        lyrics: [
+          "♫ Oh please, don't let me die...",
+          "Waiting for your call...",
+          "Searching for your voice in the dark night...",
+          "Can you hear me calling out your name?",
+          "♫ Styx Helix - Re:Zero OST"
+        ]
       },
       { 
         title: "An Unfinished Song", 
@@ -1870,7 +1966,12 @@
         src: "music2.mp3", 
         color1: "#25f4ee", 
         color2: "#0077ff",
-        lyric: "♫ Khúc ca dang dở vang vọng giữa tầng không..."
+        lyrics: [
+          "♫ Khúc ca dang dở vang vọng giữa tầng không...",
+          "Lưu giữ những ký ức không bao giờ phai mờ...",
+          "Gió thổi qua những miền đất hoang sơ...",
+          "♫ Hát lên giai điệu của riêng chúng ta..."
+        ]
       },
       { 
         title: "All Silent Souls Can Sing", 
@@ -1878,7 +1979,12 @@
         src: "music3.mp3", 
         color1: "#25f4ee", 
         color2: "#fe2c55",
-        lyric: "♫ Mọi linh hồn lặng lẽ đều cất lên tiếng hát..."
+        lyrics: [
+          "♫ Mọi linh hồn lặng lẽ đều cất lên tiếng hát...",
+          "Hòa cùng nhịp đập của đất trời bao la...",
+          "Vượt qua muôn trùng bão tố hiểm nguy...",
+          "♫ Tìm lại ánh sáng chốn thẳm sâu..."
+        ]
       },
       { 
         title: "Dancing Through Fantasies", 
@@ -1886,7 +1992,12 @@
         src: "music4.mp3", 
         color1: "#ff007f", 
         color2: "#ffaa00",
-        lyric: "♫ Khiêu vũ giữa thế giới mộng ảo dịu kỳ..."
+        lyrics: [
+          "♫ Khiêu vũ giữa thế giới mộng ảo dịu kỳ...",
+          "Nơi ánh sáng và bóng tối đan xen vào nhau...",
+          "Bước chân nhẹ nhàng theo nhịp đập con tim...",
+          "♫ Xóa nhòa mọi khoảng cách thực tại..."
+        ]
       },
       { 
         title: "With Glory I Shall Fall", 
@@ -1894,7 +2005,12 @@
         src: "music5.mp3", 
         color1: "#00f2fe", 
         color2: "#9900ef",
-        lyric: "♫ Nguyện ngã xuống trong ánh hào quang rực rỡ..."
+        lyrics: [
+          "♫ Nguyện ngã xuống trong ánh hào quang rực rỡ...",
+          "Khắc tên mình vào cõi vĩnh hằng...",
+          "Danh dự và kiêu hãnh mãi trường tồn...",
+          "♫ Hẹn gặp lại ở kiếp sau..."
+        ]
       },
       { 
         title: "Against the Tide", 
@@ -1902,7 +2018,12 @@
         src: "music6.mp3", 
         color1: "#25f4ee", 
         color2: "#ff3366",
-        lyric: "♫ Nghịch dòng triều cuộn sóng, tìm về bến bình yên..."
+        lyrics: [
+          "♫ Nghịch dòng triều cuộn sóng...",
+          "Tìm về bến bình yên nơi có người đợi chờ...",
+          "Dù chông gai thử thách vẫn không lùi bước...",
+          "♫ Vững tay chèo đến tận cùng..."
+        ]
       }
     ];
 
@@ -1914,6 +2035,8 @@
     let isRepeatOne = localStorage.getItem('sagiri_repeat') === 'true';
     let nextAudioPreload = new Audio();
     let hasPreloadedNext = false;
+    let lyricInterval = null;
+    let currentLyricIdx = 0;
 
     const audio = new Audio();
     audio.preload = "auto";
@@ -1931,21 +2054,39 @@
       return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
+    function startLyricRotation() {
+      clearInterval(lyricInterval);
+      const track = playlist[currentTrackIndex];
+      const lyricElem = document.getElementById('miniLyricText');
+      currentLyricIdx = 0;
+
+      if (!track.lyrics || track.lyrics.length === 0) return;
+
+      lyricElem.innerText = track.lyrics[0];
+
+      lyricInterval = setInterval(() => {
+        if (!isPlaying) return;
+        lyricElem.classList.add('fade-out');
+        setTimeout(() => {
+          currentLyricIdx = (currentLyricIdx + 1) % track.lyrics.length;
+          lyricElem.innerText = track.lyrics[currentLyricIdx];
+          lyricElem.classList.remove('fade-out');
+          lyricElem.classList.add('fade-in');
+          setTimeout(() => lyricElem.classList.remove('fade-in'), 400);
+        }, 400);
+      }, 4500);
+    }
+
     function updateTrackInfo() {
       const track = playlist[currentTrackIndex];
       const titleElem = document.getElementById('miniSongTitle');
       titleElem.innerText = track.title;
       document.getElementById('miniArtistText').innerText = track.artist;
-      document.getElementById('miniLyricText').innerText = track.lyric + " &nbsp;&nbsp;&nbsp;&nbsp; " + track.lyric;
       audio.src = track.src;
       hasPreloadedNext = false;
 
       applyDynamicAccent(track.color1, track.color2);
-
-      const statusText = document.getElementById('liveStatusText');
-      if (isPlaying) {
-        statusText.innerText = `Đang nghe: ${track.title} 🎧`;
-      }
+      startLyricRotation();
 
       if (track.title.length > 18) {
         titleElem.classList.add('marquee-active');
@@ -2024,13 +2165,10 @@
     }
 
     function syncVisualEffects() {
-      const statusText = document.getElementById('liveStatusText');
       if (isPlaying && !isMuted) {
         document.body.classList.add('music-active');
-        statusText.innerText = `Đang nghe: ${playlist[currentTrackIndex].title} 🎧`;
       } else {
         document.body.classList.remove('music-active');
-        statusText.innerText = `Đang cày Wuthering Waves ⚔️`;
       }
     }
 
