@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
+
+  <!-- OPEN GRAPH / SEO META TAGS -->
+  <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta property="og:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game và thưởng thức playlist tuyển chọn.">
+  <meta property="og:image" content="avatar.jpg">
+  <meta name="theme-color" content="#25f4ee">
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -103,7 +113,6 @@
       filter: saturate(1.25);
     }
 
-    /* KHUNG CARD PARALLAX */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -417,7 +426,6 @@
       display: none !important;
     }
 
-    /* WATERMARK PROFILE KHI CAPTURE */
     .capture-watermark {
       display: none;
       font-size: 0.72rem;
@@ -437,6 +445,7 @@
       margin-top: 8px;
       flex-shrink: 0;
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      touch-action: pan-y;
     }
 
     .mini-player-container.collapsed {
@@ -587,7 +596,6 @@
       100% { transform: translateX(0); }
     }
 
-    /* SÓNG ÂM VISUALIZER */
     .sound-equalizer {
       display: flex;
       align-items: flex-end;
@@ -641,7 +649,6 @@
     }
     .mini-btn:hover { color: #25f4ee; transform: scale(1.1); }
 
-    /* VOLUME SLIDER */
     .volume-box {
       display: flex;
       align-items: center;
@@ -686,7 +693,7 @@
     .music-player-panel {
       display: none;
       margin-top: 10px;
-      padding: 16px;
+      padding: 14px;
       background: rgba(14, 14, 18, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 18px;
@@ -700,11 +707,40 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .playlist-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .playlist-toolbar span {
+      font-size: 0.74rem;
+      color: #aaa;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .playlist-tools-group {
+      display: flex;
+      gap: 12px;
+    }
+    .tool-icon-btn {
+      background: transparent;
+      border: none;
+      color: #777;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tool-icon-btn:hover { color: #25f4ee; }
+    .tool-icon-btn.active { color: #fe2c55; text-shadow: 0 0 8px rgba(254, 44, 85, 0.6); }
+
     .playlist {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 220px;
+      max-height: 200px;
       overflow-y: auto;
       padding-right: 4px;
     }
@@ -927,6 +963,17 @@
         </button>
 
         <div id="musicPanel" class="music-player-panel">
+          <div class="playlist-toolbar">
+            <span>Danh sách bài hát</span>
+            <div class="playlist-tools-group">
+              <button type="button" class="tool-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="Phát ngẫu nhiên">
+                <i class="fa-solid fa-shuffle"></i>
+              </button>
+              <button type="button" class="tool-icon-btn" id="repeatBtn" onclick="toggleRepeat()" title="Lặp lại 1 bài">
+                <i class="fa-solid fa-repeat"></i>
+              </button>
+            </div>
+          </div>
           <div class="playlist" id="playlistContainer"></div>
         </div>
       </div>
@@ -935,7 +982,6 @@
         © @_sagiri0502 • All rights reserved
       </div>
 
-      <!-- WATERMARK KHI TẢI ẢNH -->
       <div class="capture-watermark">
         🌸 Captured from @_sagiri0502 Bio Page
       </div>
@@ -1108,9 +1154,15 @@
 
   <script>
     /* ============================================================
-       0. ÂM THANH BUBBLE POP (WEB AUDIO API TỰ ĐỘNG)
+       0. ÂM THANH BUBBLE POP & HAPTIC VIBRATION
        ============================================================ */
     let audioCtx = null;
+    function triggerHaptic(ms = 25) {
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate(ms); } catch (e) {}
+      }
+    }
+
     function playBubbleSound() {
       if (isMuted) return;
       try {
@@ -1137,17 +1189,19 @@
     document.addEventListener('click', (e) => {
       if (e.target.closest('button') || e.target.closest('.track-item') || e.target.closest('.btn-link')) {
         playBubbleSound();
+        triggerHaptic(20);
       }
     });
 
     /* ============================================================
-       1. HIỂN THỊ TOAST THÔNG BÁO NỔI
+       1. HIỂN THỊ TOAST
        ============================================================ */
     let toastTimer = null;
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMsg').innerText = msg;
       toast.classList.add('show');
+      triggerHaptic(40);
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toast.classList.remove('show');
@@ -1155,7 +1209,7 @@
     }
 
     /* ============================================================
-       2. HIỆU ỨNG NGHIÊNG 3D PARALLAX CHO THẺ CARD
+       2. HIỆU ỨNG NGHIÊNG 3D PARALLAX
        ============================================================ */
     const cardBorder = document.querySelector('.card-border-wrapper');
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -1173,7 +1227,7 @@
     }
 
     /* ============================================================
-       3. CHỤP PROFILE CARD (CÓ WATERMARK, KHÔNG LỖI CHỮ)
+       3. CHỤP PROFILE CARD
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
@@ -1211,11 +1265,12 @@
     }
 
     /* ============================================================
-       4. HIỆU ỨNG HOA ANH ĐÀO BAY (SAKURA RAIN)
+       4. HOA ANH ĐÀO BAY (TỰ NGẮT KHI ẨN TAB TIẾT KIỆM PIN)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
+    let sakuraAnimId = null;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1267,12 +1322,20 @@
         petal.update();
         petal.draw();
       });
-      requestAnimationFrame(animateSakura);
+      sakuraAnimId = requestAnimationFrame(animateSakura);
     }
     animateSakura();
 
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(sakuraAnimId);
+      } else {
+        animateSakura();
+      }
+    });
+
     /* ============================================================
-       5. TƯƠNG TÁC CLICK TRÁI TIM
+       5. CLICK TRÁI TIM
        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
@@ -1400,7 +1463,7 @@
     }
 
     /* ============================================================
-       7. PLAYLIST & ĐIỀU KHIỂN NHẠC
+       7. PLAYLIST & ĐIỀU KHIỂN NHẠC NÂNG CAO
        ============================================================ */
     const playlist = [
       { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3" },
@@ -1415,6 +1478,10 @@
     let currentTrackIndex = (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < playlist.length) ? savedIndex : 0;
     let isPlaying = false;
     let isMuted = localStorage.getItem('sagiri_muted') === 'true';
+    let isShuffle = localStorage.getItem('sagiri_shuffle') === 'true';
+    let isRepeatOne = localStorage.getItem('sagiri_repeat') === 'true';
+    let nextAudioPreload = new Audio();
+    let hasPreloadedNext = false;
 
     const audio = new Audio();
     audio.preload = "auto";
@@ -1433,6 +1500,7 @@
       titleElem.innerText = track.title;
       document.getElementById('miniArtistText').innerText = track.artist;
       audio.src = track.src;
+      hasPreloadedNext = false;
 
       if (track.title.length > 18) {
         titleElem.classList.add('marquee-active');
@@ -1476,11 +1544,24 @@
         const percent = (audio.currentTime / audio.duration) * 100;
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
+
+        // Preload bài tiếp theo khi đến 80% thời lượng
+        if (percent > 80 && !hasPreloadedNext) {
+          const nextIdx = (currentTrackIndex + 1) % playlist.length;
+          nextAudioPreload.src = playlist[nextIdx].src;
+          nextAudioPreload.preload = "auto";
+          hasPreloadedNext = true;
+        }
       }
     });
 
     audio.addEventListener('ended', () => {
-      nextTrack();
+      if (isRepeatOne) {
+        audio.currentTime = 0;
+        audio.play();
+      } else {
+        nextTrack();
+      }
     });
 
     function seekTrack(event) {
@@ -1526,13 +1607,35 @@
     }
 
     function nextTrack() {
-      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-      selectTrack(currentTrackIndex);
+      if (isShuffle) {
+        let randIdx;
+        do {
+          randIdx = Math.floor(Math.random() * playlist.length);
+        } while (randIdx === currentTrackIndex && playlist.length > 1);
+        selectTrack(randIdx);
+      } else {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        selectTrack(currentTrackIndex);
+      }
     }
 
     function prevTrack() {
       currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
       selectTrack(currentTrackIndex);
+    }
+
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      localStorage.setItem('sagiri_shuffle', isShuffle);
+      document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+      showToast(isShuffle ? "🔀 Đã bật phát ngẫu nhiên" : "➡️ Đã tắt phát ngẫu nhiên");
+    }
+
+    function toggleRepeat() {
+      isRepeatOne = !isRepeatOne;
+      localStorage.setItem('sagiri_repeat', isRepeatOne);
+      document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
+      showToast(isRepeatOne ? "🔂 Đã bật lặp lại 1 bài" : "🔁 Đã tắt lặp lại 1 bài");
     }
 
     function triggerPlayOnFirstInteraction() {
@@ -1596,6 +1699,33 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
+    /* ============================================================
+       8. VUỐT CHUYỂN BÀI TRÊN MOBILE (SWIPE GESTURES)
+       ============================================================ */
+    const miniContainer = document.getElementById('miniPlayerContainer');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    miniContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    miniContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          nextTrack(); // Vuốt sang trái: Next bài
+        } else {
+          prevTrack(); // Vuốt sang phải: Prev bài
+        }
+      }
+    }
+
     window.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT') return;
       if (e.code === 'Space') {
@@ -1616,6 +1746,10 @@
       navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
       navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
     }
+
+    // Khởi tạo trạng thái nút Shuffle và Repeat
+    document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+    document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
 
     updateTrackInfo();
     renderPlaylist();
