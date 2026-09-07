@@ -778,18 +778,29 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    /* KHẮC PHỤC LỖI LỜI BÀI HÁT: Chạy chữ mượt mà liên tục không bị che khuất */
+    .mini-lyric-container {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
       margin-top: 2px;
     }
 
     .mini-lyric-box {
       font-size: 0.68rem;
       color: var(--neon-color-1);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-style: italic;
       text-shadow: 0 0 5px rgba(37, 244, 238, 0.4);
+      display: inline-block;
+      animation: lyricScroll 12s linear infinite;
+    }
+
+    @keyframes lyricScroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
     }
 
     .mini-controls {
@@ -1179,7 +1190,7 @@
     </div>
   </div>
 
-  <!-- THANH MUSIC VỚI BUFFER BAR -->
+  <!-- THANH MUSIC VỚI BUFFER BAR & LYRICS CUỘN MƯỢT -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -1210,7 +1221,10 @@
               </div>
             </div>
             <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
-            <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
+            
+            <div class="mini-lyric-container">
+              <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên... &nbsp;&nbsp;&nbsp;&nbsp; ♫ Giai điệu nhẹ nhàng vang lên...</div>
+            </div>
           </div>
 
           <div class="mini-controls">
@@ -1802,7 +1816,7 @@
     }
 
     /* ============================================================
-       11. GUESTBOOK (TÍCH HỢP DISCORD WEBHOOK)
+       11. GUESTBOOK (DÙNG PROXY VƯỢT CORS BẮN THẲNG VỀ DISCORD)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
@@ -1822,17 +1836,16 @@
       oldMsgs.push({ name, msg, time: new Date().toISOString() });
       localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
 
-      // Đã tích hợp webhook Discord của bạn
-      const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
-      if (DISCORD_WEBHOOK_URL) {
-        fetch(DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: `💌 **Tin nhắn ẩn danh mới gửi Sagiri!**\n> **Từ:** ${name}\n> **Nội dung:** ${msg}`
-          })
-        }).catch(() => {});
-      }
+      const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
+      const proxyUrl = `https://api.allorigins.win/raw?url=` + encodeURIComponent(discordWebhook);
+
+      fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: `💌 **Tin nhắn ẩn danh mới gửi Sagiri!**\n> **Từ:** ${name}\n> **Nội dung:** ${msg}`
+        })
+      }).catch(() => {});
 
       document.getElementById('guestMsg').value = "";
       closeGuestbookModal();
@@ -1923,7 +1936,7 @@
       const titleElem = document.getElementById('miniSongTitle');
       titleElem.innerText = track.title;
       document.getElementById('miniArtistText').innerText = track.artist;
-      document.getElementById('miniLyricText').innerText = track.lyric;
+      document.getElementById('miniLyricText').innerText = track.lyric + " &nbsp;&nbsp;&nbsp;&nbsp; " + track.lyric;
       audio.src = track.src;
       hasPreloadedNext = false;
 
