@@ -1095,6 +1095,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
+  <!-- CANVAS VẼ CÀNH CÂY ANH ĐÀO 2 BÊN & HOA RƠI -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -1140,7 +1141,7 @@
         <span class="heart-icon">💕</span>
       </h1>
       <p class="handle">@_sagiri0502</p>
-      
+
       <!-- BỘ ĐẾM LƯỢT XEM -->
       <div class="visitor-badge">
         <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">1,024</strong>
@@ -1420,7 +1421,6 @@
        0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
        ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
-      // Bộ đếm lượt xem tăng tự động
       let views = parseInt(localStorage.getItem('sagiri_page_views'), 10) || 1024;
       if (!sessionStorage.getItem('sagiri_viewed_session')) {
         views++;
@@ -1429,7 +1429,6 @@
       }
       document.getElementById('visitorCount').innerText = views.toLocaleString();
 
-      // Gửi thông báo khách ghé thăm về Discord Webhook (1 lần/ngày)
       const lastVisit = localStorage.getItem('sagiri_last_visitor_ping');
       const today = new Date().toDateString();
       if (lastVisit !== today) {
@@ -1650,14 +1649,13 @@
     }
 
     /* ============================================================
-       7. HOA ANH ĐÀO BAY (REDUCED MOTION & GYRO)
+       7. VẼ CÀNH CÂY ANH ĐÀO 2 BÊN & HOA RƠI LÃ TẢ
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
     let sakuraAnimId = null;
-    let gyroWindX = 0;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let windAngle = 0;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1666,30 +1664,26 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', (e) => {
-        if (e.gamma !== null) {
-          gyroWindX = (e.gamma / 90) * 2;
-        }
-      }, true);
-    }
-
     class Petal {
-      constructor() { this.reset(); }
+      constructor() {
+        this.reset();
+      }
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * -canvas.height;
-        this.size = Math.random() * 8 + 6;
-        this.baseSpeedX = Math.random() * 1.5 - 0.5;
-        this.speedY = prefersReducedMotion ? 0.4 : (Math.random() * 1.2 + 0.8);
+        this.size = Math.random() * 8 + 5;
+        this.speedY = Math.random() * 1.2 + 0.6;
+        this.speedX = Math.random() * 1.2 - 0.6;
         this.rotation = Math.random() * 360;
-        this.rotSpeed = Math.random() * 1.5 - 0.75;
-        this.opacity = Math.random() * 0.45 + 0.35;
+        this.rotSpeed = Math.random() * 2 - 1;
+        this.opacity = Math.random() * 0.5 + 0.4;
       }
       update() {
-        this.x += this.baseSpeedX + gyroWindX;
+        windAngle += 0.02;
+        this.x += this.speedX + Math.sin(windAngle) * 0.7;
         this.y += this.speedY;
         this.rotation += this.rotSpeed;
+
         if (this.y > canvas.height + 20 || this.x > canvas.width + 30 || this.x < -30) {
           this.reset();
           this.y = -10;
@@ -1700,19 +1694,85 @@
         ctx.translate(this.x, this.y);
         ctx.rotate((this.rotation * Math.PI) / 180);
         ctx.beginPath();
-        ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, this.size, this.size / 2.2, 0, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 182, 193, ${this.opacity})`;
         ctx.fill();
         ctx.restore();
       }
     }
 
-    for (let i = 0; i < (prefersReducedMotion ? 10 : 30); i++) {
+    for (let i = 0; i < 35; i++) {
       petals.push(new Petal());
+    }
+
+    // Hàm vẽ cành cây anh đào rủ ở 2 góc trên màn hình (rung nhẹ theo gió)
+    function drawCherryBranches() {
+      const time = Date.now() * 0.002;
+      const swayLeft = Math.sin(time) * 3;
+      const swayRight = Math.cos(time) * 3;
+
+      ctx.save();
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = "#3a2318";
+      ctx.lineCap = "round";
+
+      // --- Cành bên trái ---
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(120 + swayLeft, 60, 260 + swayLeft * 1.5, 140);
+      ctx.stroke();
+
+      // Nhánh phụ trái 1
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(90, 30);
+      ctx.quadraticCurveTo(160 + swayLeft, 110, 210, 180);
+      ctx.stroke();
+
+      // --- Cành bên phải ---
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width, 0);
+      ctx.quadraticCurveTo(canvas.width - 120 - swayRight, 60, canvas.width - 260 - swayRight * 1.5, 140);
+      ctx.stroke();
+
+      // Nhánh phụ phải 1
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width - 90, 30);
+      ctx.quadraticCurveTo(canvas.width - 160 - swayRight, 110, canvas.width - 210, 180);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Vẽ các chùm hoa (blossoms) bám trên cành
+      const blossomClusters = [
+        {x: 80 + swayLeft, y: 35}, {x: 160 + swayLeft*1.2, y: 80}, {x: 240 + swayLeft*1.5, y: 130}, {x: 190, y: 165},
+        {x: canvas.width - 80 - swayRight, y: 35}, {x: canvas.width - 160 - swayRight*1.2, y: 80}, {x: canvas.width - 240 - swayRight*1.5, y: 130}, {x: canvas.width - 190, y: 165}
+      ];
+
+      blossomClusters.forEach(b => {
+        for (let i = 0; i < 6; i++) {
+          ctx.beginPath();
+          ctx.arc(b.x + (i*6 - 15), b.y + (Math.sin(i)*8), 7, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 192, 203, 0.85)";
+          ctx.fill();
+        }
+        // Nhụy hoa đậm hơn
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff69b4";
+        ctx.fill();
+      });
     }
 
     function animateSakura() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Vẽ cành cây rung rinh
+      drawCherryBranches();
+
+      // Cập nhật và vẽ các cánh hoa rơi
       petals.forEach(petal => {
         petal.update();
         petal.draw();
@@ -1758,7 +1818,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
