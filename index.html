@@ -439,7 +439,7 @@
     .handle { font-size: 0.95rem; color: #a0a0a0; margin-bottom: 14px; font-weight: 500; }
     .bio { font-size: 0.92rem; color: #dedede; line-height: 1.5; margin-bottom: 18px; }
 
-    /* BỘ ĐẾM LƯỢT XEM (VISITOR COUNTER) */
+    /* BỘ ĐẾM LƯỢT XEM (VISITOR COUNTER) - RESET 00:00 HÀNG NGÀY */
     .visitor-badge {
       display: inline-flex;
       align-items: center;
@@ -1142,9 +1142,9 @@
       </h1>
       <p class="handle">@_sagiri0502</p>
 
-      <!-- BỘ ĐẾM LƯỢT XEM -->
+      <!-- BỘ ĐẾM LƯỢT XEM (RESET 00:00 HÀNG NGÀY) -->
       <div class="visitor-badge">
-        <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">1,024</strong>
+        <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">0</strong>
       </div>
 
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
@@ -1418,10 +1418,20 @@
 
   <script>
     /* ============================================================
-       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
+       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM (RESET 00:00 HÀNG NGÀY)
        ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
-      let views = parseInt(localStorage.getItem('sagiri_page_views'), 10) || 1024;
+      const today = new Date().toDateString();
+      const savedDate = localStorage.getItem('sagiri_view_date');
+      let views = parseInt(localStorage.getItem('sagiri_page_views'), 10) || 0;
+
+      if (savedDate !== today) {
+        localStorage.setItem('sagiri_view_date', today);
+        views = 0;
+        localStorage.setItem('sagiri_page_views', views);
+        sessionStorage.removeItem('sagiri_viewed_session');
+      }
+
       if (!sessionStorage.getItem('sagiri_viewed_session')) {
         views++;
         localStorage.setItem('sagiri_page_views', views);
@@ -1430,7 +1440,6 @@
       document.getElementById('visitorCount').innerText = views.toLocaleString();
 
       const lastVisit = localStorage.getItem('sagiri_last_visitor_ping');
-      const today = new Date().toDateString();
       if (lastVisit !== today) {
         localStorage.setItem('sagiri_last_visitor_ping', today);
         const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
@@ -1440,7 +1449,7 @@
           body: JSON.stringify({
             embeds: [{
               title: "🌸 Có khách ghé thăm Profile!",
-              description: `Một vị khách vừa mở trang web hôm nay. Tổng lượt xem: **${views}**`,
+              description: `Một vị khách vừa mở trang web hôm nay. Tổng lượt xem trong ngày: **${views}**`,
               color: 2453486,
               timestamp: new Date().toISOString()
             }]
@@ -1844,7 +1853,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
