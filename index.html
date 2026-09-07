@@ -27,6 +27,34 @@
       overflow-x: hidden;
       transition: filter 0.5s ease;
       position: relative;
+      perspective: 1000px;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(18, 18, 26, 0.95);
+      border: 1px solid #25f4ee;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(37, 244, 238, 0.4);
+      padding: 10px 20px;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000000;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    }
+    .toast-container.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     .btn-screenshot-top {
@@ -49,7 +77,6 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(37, 244, 238, 0.3);
       transition: all 0.25s ease;
     }
-
     .btn-screenshot-top:hover {
       transform: scale(1.05);
       background: rgba(37, 244, 238, 0.2);
@@ -76,6 +103,7 @@
       filter: saturate(1.25);
     }
 
+    /* KHUNG CARD PARALLAX */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -89,10 +117,11 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
                   0 0 25px rgba(37, 244, 238, 0.2),
                   0 0 25px rgba(254, 44, 85, 0.2);
-      transition: box-shadow 0.4s ease;
+      transition: transform 0.15s ease-out, box-shadow 0.4s ease;
       margin-bottom: 16px;
       flex-shrink: 0;
       z-index: 1;
+      transform-style: preserve-3d;
     }
 
     .card-border-wrapper::before {
@@ -224,7 +253,6 @@
       animation: earWaveRight 1.4s ease-in-out infinite;
     }
 
-    /* ĐẶC TRỊ LỖI CHỤP MÀN HÌNH CỦA TEXT GRADIENT */
     .name {
       font-size: 1.75rem;
       font-weight: 800;
@@ -244,7 +272,6 @@
       animation: nameNeonFlowSlow 8s linear infinite;
     }
 
-    /* Khi đang chụp màn hình: Chuyển text thành màu solid cyan để html2canvas không bị vỡ vệt màu */
     body.capturing .name-text {
       background: none !important;
       -webkit-background-clip: initial !important;
@@ -390,6 +417,18 @@
       display: none !important;
     }
 
+    /* WATERMARK PROFILE KHI CAPTURE */
+    .capture-watermark {
+      display: none;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 14px;
+      letter-spacing: 0.5px;
+    }
+    body.capturing .capture-watermark {
+      display: block !important;
+    }
+
     .mini-player-container {
       position: relative;
       width: 100%;
@@ -515,11 +554,18 @@
       position: relative;
     }
 
+    .title-equalizer-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
     .marquee-wrapper {
       display: flex;
       white-space: nowrap;
       overflow: hidden;
-      width: 100%;
+      flex: 1;
     }
 
     .mini-song-title {
@@ -541,6 +587,30 @@
       100% { transform: translateX(0); }
     }
 
+    /* SÓNG ÂM VISUALIZER */
+    .sound-equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    .eq-bar {
+      width: 2.5px;
+      background: #25f4ee;
+      border-radius: 1px;
+      height: 3px;
+      transition: height 0.15s ease;
+    }
+    body.music-active .eq-bar:nth-child(1) { animation: bounceEq 0.6s ease-in-out infinite alternate; }
+    body.music-active .eq-bar:nth-child(2) { animation: bounceEq 0.4s ease-in-out infinite alternate 0.15s; }
+    body.music-active .eq-bar:nth-child(3) { animation: bounceEq 0.8s ease-in-out infinite alternate 0.3s; }
+    body.music-active .eq-bar:nth-child(4) { animation: bounceEq 0.5s ease-in-out infinite alternate 0.05s; }
+    @keyframes bounceEq {
+      0% { height: 3px; background: #25f4ee; }
+      100% { height: 13px; background: #fe2c55; }
+    }
+
     .mini-artist {
       font-size: 0.7rem;
       color: #a0a0a0;
@@ -553,7 +623,7 @@
     .mini-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-shrink: 0;
     }
     .mini-btn {
@@ -570,12 +640,39 @@
       transition: 0.2s;
     }
     .mini-btn:hover { color: #25f4ee; transform: scale(1.1); }
-    
+
+    /* VOLUME SLIDER */
+    .volume-box {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 44px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      margin-left: 2px;
+      transition: 0.2s;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #25f4ee;
+      cursor: pointer;
+      box-shadow: 0 0 6px #25f4ee;
+    }
+
     .mini-btn-play {
       background: linear-gradient(135deg, #fe2c55, #25f4ee);
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       color: #fff;
       font-size: 1rem;
@@ -741,14 +838,18 @@
 </head>
 <body>
 
-  <!-- NÚT CHỤP TẢI ẢNH RIÊNG PROFILE CARD -->
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast-container">
+    <i class="fa-solid fa-circle-check" style="color: #25f4ee;"></i>
+    <span id="toastMsg">Đã sao chép!</span>
+  </div>
+
   <button type="button" class="btn-screenshot-top" onclick="downloadCardProfileScreenshot()" id="btnScreenshot">
     <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh profile</span>
   </button>
 
   <canvas id="sakuraCanvas"></canvas>
 
-  <!-- KHUNG BỌC PROFILE CARD CHÍNH CẦN CHỤP -->
   <div class="card-border-wrapper" id="profileCardToCapture">
     <div class="card">
       <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
@@ -776,7 +877,6 @@
         </div>
       </div>
 
-      <!-- TÊN ĐÃ TÁCH LỚP CLASS ĐỂ TRÁNH LỖI HTML2CANVAS -->
       <h1 class="name">
         <span class="name-text">Sagiri Chan</span> 
         <span class="heart-icon">💕</span>
@@ -834,10 +934,15 @@
       <div class="footer">
         © @_sagiri0502 • All rights reserved
       </div>
+
+      <!-- WATERMARK KHI TẢI ẢNH -->
+      <div class="capture-watermark">
+        🌸 Captured from @_sagiri0502 Bio Page
+      </div>
     </div>
   </div>
 
-  <!-- THANH MUSIC NẰM DƯỚI PROFILE CARD -->
+  <!-- THANH MUSIC -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -855,16 +960,27 @@
           </div>
 
           <div class="mini-song-info">
-            <div class="marquee-wrapper">
-              <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+            <div class="title-equalizer-row">
+              <div class="marquee-wrapper">
+                <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+              </div>
+              <div class="sound-equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
             </div>
             <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
           </div>
 
           <div class="mini-controls">
-            <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh (Phím M)">
-              <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
-            </button>
+            <div class="volume-box">
+              <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh (Phím M)">
+                <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
+              </button>
+              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" title="Âm lượng" />
+            </div>
             <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước (Mũi tên trái)">
               <i class="fa-solid fa-backward-step"></i>
             </button>
@@ -992,7 +1108,72 @@
 
   <script>
     /* ============================================================
-       0. HÀM CHỤP & TẢI DUY NHẤT PROFILE CARD (KHÔNG LỖI CHỮ)
+       0. ÂM THANH BUBBLE POP (WEB AUDIO API TỰ ĐỘNG)
+       ============================================================ */
+    let audioCtx = null;
+    function playBubbleSound() {
+      if (isMuted) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(850, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('.track-item') || e.target.closest('.btn-link')) {
+        playBubbleSound();
+      }
+    });
+
+    /* ============================================================
+       1. HIỂN THỊ TOAST THÔNG BÁO NỔI
+       ============================================================ */
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    /* ============================================================
+       2. HIỆU ỨNG NGHIÊNG 3D PARALLAX CHO THẺ CARD
+       ============================================================ */
+    const cardBorder = document.querySelector('.card-border-wrapper');
+    if (window.matchMedia('(pointer: fine)').matches) {
+      window.addEventListener('mousemove', (e) => {
+        const rect = cardBorder.getBoundingClientRect();
+        const cardX = rect.left + rect.width / 2;
+        const cardY = rect.top + rect.height / 2;
+        const angleX = -(e.clientY - cardY) / 32;
+        const angleY = (e.clientX - cardX) / 32;
+        cardBorder.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+      });
+      window.addEventListener('mouseleave', () => {
+        cardBorder.style.transform = `rotateX(0deg) rotateY(0deg)`;
+      });
+    }
+
+    /* ============================================================
+       3. CHỤP PROFILE CARD (CÓ WATERMARK, KHÔNG LỖI CHỮ)
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
@@ -1002,13 +1183,13 @@
       text.innerText = "Đang chụp...";
       btn.style.opacity = "0.5";
 
-      // Bật class capturing để tạm thời vô hiệu hóa text-clip tránh vệt chữ nhật
       document.body.classList.add('capturing');
+      cardBorder.style.transform = 'none';
 
       html2canvas(cardElement, {
         useCORS: true,
-        scale: 2.5, // Tăng nét cao cho thẻ card
-        backgroundColor: null, // Nền trong suốt bo góc
+        scale: 2.5,
+        backgroundColor: null,
         logging: false
       }).then(canvas => {
         document.body.classList.remove('capturing');
@@ -1019,6 +1200,7 @@
         link.download = 'sagiri-card-profile.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
+        showToast("🌸 Đã tải ảnh Profile thành công!");
       }).catch(err => {
         console.error("Lỗi khi chụp:", err);
         document.body.classList.remove('capturing');
@@ -1029,7 +1211,7 @@
     }
 
     /* ============================================================
-       1. HIỆU ỨNG HOA ANH ĐÀO BAY (SAKURA RAIN)
+       4. HIỆU ỨNG HOA ANH ĐÀO BAY (SAKURA RAIN)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
@@ -1090,7 +1272,7 @@
     animateSakura();
 
     /* ============================================================
-       2. TƯƠNG TÁC CLICK BUNG TRÁI TIM / TIA SÁNG
+       5. TƯƠNG TÁC CLICK TRÁI TIM
        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
@@ -1105,7 +1287,7 @@
     });
 
     /* ============================================================
-       3. DỮ LIỆU GAME & MODAL
+       6. DỮ LIỆU GAME & MODAL
        ============================================================ */
     const gamesData = {
       ww: {
@@ -1153,7 +1335,7 @@
       document.getElementById("accountPhotoModal").classList.remove("active");
     }
 
-    function copyToClipboard(text, btnElement, successText) {
+    function copyToClipboard(text, successMsg) {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text);
       } else {
@@ -1164,13 +1346,11 @@
         document.execCommand("copy");
         document.body.removeChild(ta);
       }
-      const orig = btnElement.innerText;
-      btnElement.innerText = successText;
-      setTimeout(() => { btnElement.innerText = orig; }, 2000);
+      showToast(successMsg);
     }
 
-    function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, btn, "Đã chép!"); }
-    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, btn, "Đã chép!"); }
+    function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, "🌸 Đã chép Ingame: " + gamesData[activeGameKey].ingame); }
+    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeGameKey].uid); }
 
     const myBankConfig = { bankId: "BIDV", accountNo: "8833220630", accountName: "BUI THANH NAM" };
 
@@ -1220,7 +1400,7 @@
     }
 
     /* ============================================================
-       4. PLAYLIST & TRÌNH PHÁT NHẠC
+       7. PLAYLIST & ĐIỀU KHIỂN NHẠC
        ============================================================ */
     const playlist = [
       { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3" },
@@ -1272,6 +1452,19 @@
       }
 
       renderPlaylist();
+    }
+
+    function changeVolume(val) {
+      audio.volume = parseFloat(val);
+      if (audio.volume === 0) {
+        audio.muted = true;
+        isMuted = true;
+        document.getElementById('inlineMuteIcon').className = "fa-solid fa-volume-xmark";
+      } else {
+        audio.muted = false;
+        isMuted = false;
+        document.getElementById('inlineMuteIcon').className = "fa-solid fa-volume-high";
+      }
     }
 
     audio.addEventListener('loadedmetadata', () => {
@@ -1366,10 +1559,12 @@
         audio.muted = false;
         isMuted = false;
         inlineMuteIcon.className = "fa-solid fa-volume-high";
+        document.getElementById('volumeSlider').value = audio.volume || 1;
       } else {
         audio.muted = true;
         isMuted = true;
         inlineMuteIcon.className = "fa-solid fa-volume-xmark";
+        document.getElementById('volumeSlider').value = 0;
       }
       localStorage.setItem('sagiri_muted', isMuted);
       syncVisualEffects();
@@ -1427,20 +1622,7 @@
 
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(username);
-      } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = username;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-      }
-      const textSpan = document.getElementById("discordBtnText");
-      const originalText = textSpan.innerText;
-      textSpan.innerText = "Đã copy: " + username + "!";
-      setTimeout(() => { textSpan.innerText = originalText; }, 2000);
+      copyToClipboard(username, "🌸 Đã chép Discord: " + username);
     }
   </script>
 </body>
