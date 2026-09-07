@@ -2315,6 +2315,2323 @@
         prevTrack();
       } else if (e.key === 'm' || e.key === 'M') {
         toggleGlobalMute();
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sagiri Profile Bio - @_sagiri0502</title>
+
+  <!-- PWA & MOBILE META -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
+
+  <!-- OPEN GRAPH / SOCIAL CARD -->
+  <meta name="title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta name="description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game Wuthering Waves, Liên Quân và nghe playlist yêu thích.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neetsagiri.github.io/">
+  <meta property="og:title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta property="og:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan! Khám phá UID game và nghe playlist yêu thích.">
+  <meta property="og:image" content="https://neetsagiri.github.io/avatar.jpg">
+  <meta property="og:image:secure_url" content="https://neetsagiri.github.io/avatar.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="600">
+  <meta property="og:image:height" content="600">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://neetsagiri.github.io/">
+  <meta name="twitter:title" content="Sagiri Chan 💕 (@_sagiri0502)">
+  <meta name="twitter:description" content="Chào mừng bạn đến với góc nhỏ của Sagiri Chan!">
+  <meta name="twitter:image" content="https://neetsagiri.github.io/avatar.jpg">
+  <meta name="theme-color" content="#25f4ee">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --neon-color-1: #25f4ee;
+      --neon-color-2: #fe2c55;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* CUSTOM CURSOR & FAIRY DUST */
+    @media (pointer: fine) {
+      body, button, a, input {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto !important;
+      }
+    }
+
+    .dust-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999999;
+      font-size: 0.75rem;
+      animation: dustFade 0.6s linear forwards;
+      user-select: none;
+    }
+    @keyframes dustFade {
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.3) translateY(-15px); }
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px 16px;
+      background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
+      background-size: 400% 400%;
+      animation: tiktokGradient 8s ease infinite;
+      overflow-x: hidden;
+      transition: filter 0.5s ease;
+      position: relative;
+    }
+
+    body.day-mode {
+      background: linear-gradient(-45deg, #061126, #0e1e38, #00f2fe, #fe2c55, #05050f);
+      background-size: 400% 400%;
+    }
+    body.night-mode {
+      background: linear-gradient(-45deg, #010101, #080d1a, #004e92, #6a0572, #000000);
+      background-size: 400% 400%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body, .card-border-wrapper::before, .neon-ring-wrapper::before, .game-card-wrapper::before {
+        animation: none !important;
+      }
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(18, 18, 26, 0.95);
+      border: 1px solid var(--neon-color-1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(37, 244, 238, 0.4);
+      padding: 10px 20px;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000000;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    }
+    .toast-container.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .top-left-actions {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 99999;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-top-pill {
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--neon-color-1);
+      color: var(--neon-color-1);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(37, 244, 238, 0.3);
+      transition: all 0.25s ease;
+    }
+    .btn-top-pill:hover {
+      transform: scale(1.05);
+      background: rgba(37, 244, 238, 0.2);
+    }
+
+    .clock-badge-top {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 99999;
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ddd;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      font-variant-numeric: tabular-nums;
+    }
+
+    #sakuraCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes tiktokGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body.music-active {
+      animation: tiktokGradient 5s ease infinite;
+      filter: saturate(1.25);
+    }
+
+    .card-border-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 30px;
+      padding: 3px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+                  0 0 25px rgba(37, 244, 238, 0.25),
+                  0 0 25px rgba(254, 44, 85, 0.25);
+      transition: box-shadow 0.4s ease;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .card-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
+      animation: spin 5s linear infinite;
+      z-index: 0;
+      transition: background 0.8s ease;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(rgba(14, 14, 18, 0.82), rgba(14, 14, 18, 0.88)), url('card-bg.jpg') center/cover no-repeat;
+      background-color: rgba(18, 18, 18, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 34px 22px 42px 22px;
+      text-align: center;
+      color: #ffffff;
+      z-index: 1;
+    }
+
+    .heart-like-btn {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      background: rgba(254, 44, 85, 0.15);
+      border: 1px solid rgba(254, 44, 85, 0.4);
+      color: #ff3366;
+      padding: 5px 10px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      z-index: 10;
+    }
+    .heart-like-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 10px rgba(254, 44, 85, 0.6);
+    }
+    .heart-like-btn:active {
+      transform: scale(0.92);
+    }
+
+    .cinnamoroll-avatar-box {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 32px auto 14px auto;
+    }
+
+    .neon-ring-wrapper {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      overflow: hidden;
+      z-index: 1;
+      -webkit-mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
+      mask-image: conic-gradient(from 0deg, transparent 0deg 45deg, #000 45deg 315deg, transparent 315deg 360deg);
+    }
+
+    .neon-ring-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-1));
+      animation: spin 3.5s linear infinite;
+    }
+
+    body.music-active .neon-ring-wrapper::before {
+      animation: spin 2s linear infinite;
+    }
+
+    .avatar-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 2;
+      background: #141414;
+      padding: 3px;
+    }
+
+    .avatar-inner .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #1a1a24;
+    }
+
+    .cinnamoroll-character {
+      position: absolute;
+      top: -34px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      z-index: 5;
+      pointer-events: none;
+      animation: cinnaFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+    }
+
+    .cinna-svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .cinna-ear-left {
+      transform-origin: 50px 48px;
+      animation: earWaveLeft 3s ease-in-out infinite;
+    }
+
+    .cinna-ear-right {
+      transform-origin: 110px 48px;
+      animation: earWaveRight 3s ease-in-out infinite;
+    }
+
+    @keyframes cinnaFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
+    }
+
+    @keyframes earWaveLeft {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-8deg); }
+    }
+
+    @keyframes earWaveRight {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    body.music-active .cinnamoroll-character {
+      animation: cinnaFloat 1.4s ease-in-out infinite;
+    }
+    body.music-active .cinna-ear-left {
+      animation: earWaveLeft 1.4s ease-in-out infinite;
+    }
+    body.music-active .cinna-ear-right {
+      animation: earWaveRight 1.4s ease-in-out infinite;
+    }
+
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      color: #ddd;
+      margin-bottom: 8px;
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #25f4ee;
+      box-shadow: 0 0 8px #25f4ee;
+      animation: pulseDot 1.8s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .name {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .name-text {
+      background: linear-gradient(90deg, var(--neon-color-1), var(--neon-color-2), var(--neon-color-1));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: nameNeonFlowSlow 8s linear infinite;
+    }
+
+    body.capturing .name-text {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      -webkit-text-fill-color: var(--neon-color-1) !important;
+      color: var(--neon-color-1) !important;
+      text-shadow: 0 0 10px rgba(37, 244, 238, 0.8);
+    }
+
+    @keyframes nameNeonFlowSlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .heart-icon {
+      -webkit-text-fill-color: initial;
+      display: inline-block;
+      filter: drop-shadow(0 0 6px rgba(254, 44, 85, 0.8));
+    }
+
+    .handle { font-size: 0.95rem; color: #a0a0a0; margin-bottom: 14px; font-weight: 500; }
+    .bio { font-size: 0.92rem; color: #dedede; line-height: 1.5; margin-bottom: 18px; }
+
+    .section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888888;
+      margin: 18px 0 10px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .game-card-wrapper {
+      position: relative;
+      border-radius: 18px;
+      padding: 2px;
+      overflow: hidden;
+      display: flex;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+    }
+
+    .game-card-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+
+    .game-btn {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 8px;
+      border-radius: 16px;
+      background: rgba(18, 18, 22, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+    }
+
+    .game-icon-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #111;
+    }
+
+    .game-name { font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .game-action { font-size: 0.68rem; color: #a5a5a5; margin-top: 3px; }
+
+    .links { display: flex; flex-direction: column; gap: 12px; }
+
+    .btn-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.93rem;
+      cursor: pointer;
+      width: 100%;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; box-shadow: 0 0 12px rgba(254, 44, 85, 0.35); }
+    .btn-donate { background: rgba(255, 136, 0, 0.12); color: #ffaa33; border: 1.5px solid #ff9900; box-shadow: 0 0 12px rgba(255, 153, 0, 0.35); }
+    .btn-guestbook { background: rgba(189, 0, 255, 0.12); color: #bd00ff; border: 1.5px solid #bd00ff; box-shadow: 0 0 12px rgba(189, 0, 255, 0.35); }
+    .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
+    .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
+
+    .mini-collapse-toggle {
+      position: absolute;
+      bottom: 0;
+      right: 36px;
+      background: rgba(18, 18, 24, 0.95);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--neon-color-1);
+      border-bottom: none;
+      color: var(--neon-color-1);
+      width: 44px;
+      height: 22px;
+      border-radius: 12px 12px 0 0;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 -3px 10px rgba(37, 244, 238, 0.3);
+      z-index: 20;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    body.capturing .mini-collapse-toggle {
+      display: none !important;
+    }
+
+    .capture-watermark {
+      display: none;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 14px;
+      letter-spacing: 0.5px;
+    }
+    body.capturing .capture-watermark {
+      display: block !important;
+    }
+
+    .mini-player-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      z-index: 10;
+      margin-top: 8px;
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      touch-action: pan-y;
+    }
+
+    .mini-player-container.collapsed {
+      transform: translateY(-110px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mini-player-border-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 34px;
+      padding: 2.5px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85),
+                  0 0 25px rgba(37, 244, 238, 0.3),
+                  0 0 25px rgba(254, 44, 85, 0.3);
+    }
+
+    .mini-player-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), #ff9900, var(--neon-color-1));
+      animation: spin 5s linear infinite;
+      z-index: 0;
+    }
+
+    body.music-active .mini-player-border-wrapper::before {
+      animation: spin 2.5s linear infinite;
+    }
+
+    .mini-player-bar {
+      position: relative;
+      width: 100%;
+      background: rgba(14, 14, 18, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 1;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .time-display {
+      font-size: 0.68rem;
+      color: #999;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .mini-progress-bg {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+    .mini-progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-color-1), var(--neon-color-2));
+      transition: width 0.1s linear;
+      z-index: 2;
+    }
+    .mini-progress-buffer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: rgba(255, 255, 255, 0.3);
+      z-index: 1;
+    }
+
+    .mini-player-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mini-vinyl-wrapper {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #111;
+      border: 2px solid var(--neon-color-1);
+      box-shadow: 0 0 12px rgba(37, 244, 238, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    body.music-active .mini-vinyl-wrapper {
+      animation: spin 3s linear infinite;
+      border-color: var(--neon-color-2);
+      box-shadow: 0 0 15px rgba(254, 44, 85, 0.8);
+    }
+    .mini-vinyl-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .mini-song-info {
+      flex: 1;
+      overflow: hidden;
+      text-align: left;
+      position: relative;
+    }
+
+    .title-equalizer-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .marquee-wrapper {
+      display: flex;
+      white-space: nowrap;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .mini-song-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      display: inline-block;
+      text-shadow: 0 0 6px rgba(37, 244, 238, 0.5);
+    }
+
+    .marquee-active {
+      display: inline-block;
+      animation: marqueeFlow 7s linear infinite;
+    }
+
+    @keyframes marqueeFlow {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(-35%); }
+      100% { transform: translateX(0); }
+    }
+
+    .sound-equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    .eq-bar {
+      width: 2.5px;
+      background: var(--neon-color-1);
+      border-radius: 1px;
+      height: 3px;
+      transition: height 0.15s ease;
+    }
+    body.music-active .eq-bar:nth-child(1) { animation: bounceEq 0.6s ease-in-out infinite alternate; }
+    body.music-active .eq-bar:nth-child(2) { animation: bounceEq 0.4s ease-in-out infinite alternate 0.15s; }
+    body.music-active .eq-bar:nth-child(3) { animation: bounceEq 0.8s ease-in-out infinite alternate 0.3s; }
+    body.music-active .eq-bar:nth-child(4) { animation: bounceEq 0.5s ease-in-out infinite alternate 0.05s; }
+    @keyframes bounceEq {
+      0% { height: 3px; background: var(--neon-color-1); }
+      100% { height: 13px; background: var(--neon-color-2); }
+    }
+
+    .mini-artist {
+      font-size: 0.7rem;
+      color: #a0a0a0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .mini-lyric-container {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      margin-top: 2px;
+      height: 16px;
+      position: relative;
+    }
+
+    .mini-lyric-box {
+      font-size: 0.68rem;
+      color: var(--neon-color-1);
+      font-style: italic;
+      text-shadow: 0 0 5px rgba(37, 244, 238, 0.4);
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .mini-lyric-box.fade-out {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    .mini-lyric-box.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .mini-btn {
+      background: transparent;
+      border: none;
+      color: #ccc;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .mini-btn:hover { color: var(--neon-color-1); transform: scale(1.1); }
+
+    .volume-box {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 44px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      margin-left: 2px;
+      transition: 0.2s;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--neon-color-1);
+      cursor: pointer;
+      box-shadow: 0 0 6px var(--neon-color-1);
+    }
+
+    .mini-btn-play {
+      background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1));
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 0 14px rgba(254, 44, 85, 0.8), 0 0 14px rgba(37, 244, 238, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .music-player-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 14px;
+      background: rgba(14, 14, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      text-align: left;
+      animation: fadeIn 0.25s ease-out;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+    .music-player-panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .playlist-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .playlist-toolbar span {
+      font-size: 0.74rem;
+      color: #aaa;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .playlist-tools-group {
+      display: flex;
+      gap: 12px;
+    }
+    .tool-icon-btn {
+      background: transparent;
+      border: none;
+      color: #777;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tool-icon-btn:hover { color: var(--neon-color-1); }
+    .tool-icon-btn.active { color: var(--neon-color-2); text-shadow: 0 0 8px rgba(254, 44, 85, 0.6); }
+
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .playlist::-webkit-scrollbar { width: 5px; }
+    .playlist::-webkit-scrollbar-thumb { background: rgba(254, 44, 85, 0.4); border-radius: 4px; }
+
+    .track-item {
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #ddd;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .track-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .track-item.playing {
+      background: rgba(254, 44, 85, 0.18);
+      color: #ff3366;
+      border: 1px solid rgba(254, 44, 85, 0.35);
+      font-weight: 600;
+    }
+
+    .click-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      animation: floatFade 0.8s ease-out forwards;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+
+    @keyframes floatFade {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.6);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -100%) scale(1.3);
+      }
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.84);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-border-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      border-radius: 28px;
+      padding: 3px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(37, 244, 238, 0.3), 0 0 25px rgba(254, 44, 85, 0.3);
+    }
+    .modal-border-wrapper::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-2));
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+    .modal-content {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(rgba(14, 14, 18, 0.85), rgba(14, 14, 18, 0.90)), url('card-bg.jpg') center/cover no-repeat;
+      background-color: rgba(18, 18, 22, 0.92);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 24px 20px;
+      text-align: center;
+      color: #ffffff;
+      z-index: 1;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: #ffffff; }
+    .game-modal-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .game-modal-icon { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.25); }
+    .game-info-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 14px; text-align: left; margin-bottom: 14px; }
+    .game-info-row { margin-bottom: 12px; }
+    .game-info-row:last-child { margin-bottom: 0; }
+    .info-label { font-size: 0.72rem; color: #a0a0a0; text-transform: uppercase; margin-bottom: 4px; }
+    .info-value-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .info-val { font-size: 0.95rem; font-weight: 700; color: var(--neon-color-1); }
+    .btn-copy-mini { padding: 5px 12px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .btn-view-account-photo { width: 100%; padding: 10px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 12px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .account-photo-img { width: 100%; max-height: 55vh; object-fit: contain; border-radius: 14px; background: #0d0d12; border: 1px solid rgba(255, 255, 255, 0.15); margin: 8px 0 14px; }
+    .donate-form { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .donate-input-group { text-align: left; }
+    .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
+    .donate-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.9rem; outline: none; }
+    .quick-amount-buttons { display: flex; gap: 6px; margin-top: 6px; }
+    .amount-tag { flex: 1; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; }
+    .btn-done-submit { width: 100%; margin-top: 8px; padding: 11px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
+    #qrResultScreen { display: none; }
+    .thankyou-box { background: rgba(254, 44, 85, 0.12); border: 1px solid rgba(254, 44, 85, 0.35); padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; }
+    .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
+    .thankyou-sub { color: #bbb; font-size: 0.76rem; margin-top: 3px; }
+    .qr-container { position: relative; display: inline-block; margin-bottom: 10px; }
+    .qr-img { width: 210px; height: 210px; border-radius: 14px; object-fit: contain; background: #ffffff; padding: 6px; border: 2px solid rgba(255, 255, 255, 0.2); }
+    .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 12px; }
+    .qr-info-summary strong { color: var(--neon-color-1); }
+    .btn-modal-action { width: 100%; padding: 10px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
+    .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
+    .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
+
+    .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast-container">
+    <i class="fa-solid fa-circle-check" style="color: var(--neon-color-1);"></i>
+    <span id="toastMsg">Đã sao chép!</span>
+  </div>
+
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
+  <div class="top-left-actions">
+    <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
+      <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
+    </button>
+    <button type="button" class="btn-top-pill" onclick="nativeSharePage()" title="Chia sẻ trang">
+      <i class="fa-solid fa-share-nodes"></i>
+    </button>
+  </div>
+
+  <!-- ĐỒNG HỒ VIỆT NAM (GMT+7) -->
+  <div class="clock-badge-top" id="clockBadge">
+    <i class="fa-regular fa-clock" id="clockIcon"></i>
+    <span id="liveClockText">00:00:00</span>
+  </div>
+
+  <canvas id="sakuraCanvas"></canvas>
+
+  <div class="card-border-wrapper" id="profileCardToCapture">
+    <div class="card">
+      <button type="button" class="heart-like-btn" onclick="sendHeart(event)" title="Gửi tim cho Sagiri">
+        <i class="fa-solid fa-heart"></i> <span id="heartCount">128</span>
+      </button>
+
+      <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
+        <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
+      </button>
+
+      <div class="cinnamoroll-avatar-box">
+        <div class="neon-ring-wrapper"></div>
+        <div class="avatar-inner">
+          <img class="avatar" src="avatar.jpg" alt="Avatar Sagiri" />
+        </div>
+        <div class="cinnamoroll-character">
+          <svg viewBox="0 0 160 95" class="cinna-svg">
+            <path class="cinna-ear cinna-ear-left" d="M 45 42 C 10 38, -5 55, 3 66 C 12 77, 36 68, 50 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+            <path class="cinna-ear cinna-ear-right" d="M 115 42 C 150 38, 165 55, 157 66 C 148 77, 124 68, 110 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+            <ellipse cx="80" cy="50" rx="35" ry="26" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
+            <ellipse cx="68" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
+            <ellipse cx="92" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
+            <ellipse cx="61" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
+            <ellipse cx="99" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
+            <path d="M 75 54 Q 80 58 85 54" fill="none" stroke="#28b7fa" stroke-width="2.8" stroke-linecap="round"/>
+            <ellipse cx="69" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+            <ellipse cx="91" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div>
+        <div class="live-status-pill">
+          <span class="status-dot"></span>
+          <span id="liveStatusText">Đang cày Wuthering Waves ⚔️</span>
+        </div>
+      </div>
+
+      <h1 class="name">
+        <span class="name-text">Sagiri Chan</span> 
+        <span class="heart-icon">💕</span>
+      </h1>
+      <p class="handle">@_sagiri0502</p>
+      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
+
+      <div class="section-title">
+        <i class="fa-solid fa-gamepad"></i> Game yêu thích
+      </div>
+      <div class="games-grid">
+        <button type="button" onclick="openGameModal('ww')" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="ww.png" alt="Wuthering Waves" />
+            <span class="game-name">Wuthering Waves</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
+          </div>
+        </button>
+
+        <button type="button" onclick="openGameModal('lq')" class="game-card-wrapper">
+          <div class="game-btn">
+            <img class="game-icon-img" src="lq.png" alt="Liên Quân Mobile" />
+            <span class="game-name">Liên Quân Mobile</span>
+            <span class="game-action">Xem UID & Ingame ▶</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="section-title" style="margin-top: 16px;">
+        <i class="fa-solid fa-link"></i> Liên kết
+      </div>
+      <div class="links">
+        <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
+          <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
+        </a>
+
+        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+        </button>
+
+        <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
+          <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
+        </button>
+
+        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
+          <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
+        </a>
+
+        <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
+          <i class="fa-solid fa-circle-play"></i> Danh sách bài hát yêu thích 💕
+          <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+        </button>
+
+        <div id="musicPanel" class="music-player-panel">
+          <div class="playlist-toolbar">
+            <span>Danh sách bài hát</span>
+            <div class="playlist-tools-group">
+              <button type="button" class="tool-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="Phát ngẫu nhiên">
+                <i class="fa-solid fa-shuffle"></i>
+              </button>
+              <button type="button" class="tool-icon-btn" id="repeatBtn" onclick="toggleRepeat()" title="Lặp lại 1 bài">
+                <i class="fa-solid fa-repeat"></i>
+              </button>
+            </div>
+          </div>
+          <div class="playlist" id="playlistContainer"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        © @_sagiri0502 • All rights reserved
+      </div>
+
+      <div class="capture-watermark">
+        🌸 Captured from @_sagiri0502 Bio Page
+      </div>
+    </div>
+  </div>
+
+  <!-- THANH MUSIC VỚI KARAOKE LINE-BY-LINE -->
+  <div class="mini-player-container" id="miniPlayerContainer">
+    <div class="mini-player-border-wrapper">
+      <div class="mini-player-bar">
+        <div class="progress-row">
+          <span class="time-display" id="currentTime">00:00</span>
+          <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+            <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
+            <div class="mini-progress-fill" id="miniProgressBarFill"></div>
+          </div>
+          <span class="time-display" id="totalDuration">00:00</span>
+        </div>
+
+        <div class="mini-player-content">
+          <div class="mini-vinyl-wrapper">
+            <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" alt="Vinyl" />
+          </div>
+
+          <div class="mini-song-info">
+            <div class="title-equalizer-row">
+              <div class="marquee-wrapper">
+                <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+              </div>
+              <div class="sound-equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+            </div>
+            <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
+            
+            <div class="mini-lyric-container">
+              <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
+            </div>
+          </div>
+
+          <div class="mini-controls">
+            <div class="volume-box">
+              <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh (Phím M)">
+                <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
+              </button>
+              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" title="Âm lượng" />
+            </div>
+            <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước (Mũi tên trái)">
+              <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng (Phím Space)">
+              <i class="fa-solid fa-play" id="miniPlayIcon"></i>
+            </button>
+            <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp (Mũi tên phải)">
+              <i class="fa-solid fa-forward-step"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 1: UID & INGAME -->
+  <div id="gameModal" class="modal-overlay" onclick="closeGameModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <div class="game-modal-header">
+          <img id="gameModalImg" class="game-modal-icon" src="" alt="Game Icon" />
+          <div style="text-align: left;">
+            <h3 id="gameModalTitle" class="modal-title" style="margin-bottom: 2px;">Game Name</h3>
+            <p style="font-size: 0.78rem; color: #aaa;">Thông tin kết bạn trong game</p>
+          </div>
+        </div>
+
+        <div class="game-info-card">
+          <div class="game-info-row">
+            <div class="info-label">Tên Ingame</div>
+            <div class="info-value-box">
+              <span id="gameIngameText" class="info-val"></span>
+              <button type="button" class="btn-copy-mini" onclick="copyIngameName(this)">Copy Tên</button>
+            </div>
+          </div>
+
+          <div class="game-info-row">
+            <div class="info-label">UID</div>
+            <div class="info-value-box">
+              <span id="gameUidText" class="info-val"></span>
+              <button type="button" class="btn-copy-mini" onclick="copyGameUid(this)">Copy UID</button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-view-account-photo" onclick="openAccountPhotoModal()">
+          <i class="fa-regular fa-image"></i> Xem ảnh tài khoản
+        </button>
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeGameModal()">Đóng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 1.1: ẢNH TÀI KHOẢN GAME -->
+  <div id="accountPhotoModal" class="modal-overlay" onclick="closeAccountPhotoModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <h3 id="accountPhotoTitle" class="modal-title" style="margin-bottom: 2px;">Ảnh tài khoản</h3>
+        <p style="font-size: 0.78rem; color: #aaa;">Ảnh chụp hồ sơ ingame</p>
+
+        <img id="accountPhotoDisplay" class="account-photo-img" src="" alt="Ảnh tài khoản" />
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeAccountPhotoModal()">Quay lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 2: DONATE TRÀ SỮA -->
+  <div id="qrModal" class="modal-overlay" onclick="closeQRModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <div id="donateInputScreen">
+          <h3 class="modal-title">Gửi Tà Tữa cho Sagiri 💕</h3>
+          <p class="modal-desc">Nhập số tiền và lời nhắn ngọt ngào dành tặng Sagiri Chan</p>
+
+          <div class="donate-form">
+            <div class="donate-input-group">
+              <label class="donate-input-label"><i class="fa-solid fa-coins"></i> Số tiền ủng hộ (VNĐ):</label>
+              <input type="text" id="donateAmount" class="donate-input" placeholder="Nhập số tiền (ví dụ: 10.000)" oninput="handleAmountInput(this)" />
+              <div class="quick-amount-buttons">
+                <button type="button" class="amount-tag" onclick="setQuickAmount(10000)">10.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(20000)">20.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(50000)">50.000 đ</button>
+                <button type="button" class="amount-tag" onclick="setQuickAmount(100000)">100.000 đ</button>
+              </div>
+            </div>
+
+            <div class="donate-input-group">
+              <label class="donate-input-label"><i class="fa-solid fa-message"></i> Lời nhắn gửi Sagiri:</label>
+              <input type="text" id="donateMessage" class="donate-input" placeholder="Nhập lời nhắn..." value="Cho Sagiri coc tra sua" />
+            </div>
+
+            <button type="button" class="btn-done-submit" onclick="submitDonateDone()">
+              <i class="fa-solid fa-check"></i> Xong / Done
+            </button>
+          </div>
+
+          <button type="button" class="btn-modal-action close-btn" onclick="closeQRModal()">Đóng lại</button>
+        </div>
+
+        <div id="qrResultScreen">
+          <div class="thankyou-box">
+            <div class="thankyou-text">Cảm ơn bạn rất nhiều! 💕</div>
+            <div class="thankyou-sub">Đã tiếp thêm năng lượng và yêu thương cho Sagiri Chan!</div>
+          </div>
+
+          <div class="qr-container">
+            <img class="qr-img" id="dynamicQR" src="donate.jpg" alt="Mã QR VietQR BIDV" />
+          </div>
+
+          <div class="qr-info-summary" id="qrSummaryText">
+            Quét bằng MoMo hoặc mọi ứng dụng Ngân hàng
+          </div>
+
+          <button type="button" class="btn-modal-action btn-edit-back" onclick="backToEditDonate()">
+            <i class="fa-solid fa-pen-to-square"></i> Đổi số tiền / Lời nhắn khác
+          </button>
+
+          <button type="button" class="btn-modal-action close-btn" onclick="closeQRModal()">Đóng lại</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP 3: HỘP TIN NHẮN ẨN DANH (GUESTBOOK) -->
+  <div id="guestbookModal" class="modal-overlay" onclick="closeGuestbookModal(event)">
+    <div class="modal-border-wrapper" onclick="event.stopPropagation()">
+      <div class="modal-content">
+        <h3 class="modal-title">Gửi Lời Nhắn Cho Sagiri 💌</h3>
+        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn sẽ được gửi thẳng qua Discord Webhook</p>
+
+        <div class="donate-form">
+          <div class="donate-input-group">
+            <label class="donate-input-label"><i class="fa-solid fa-user-secret"></i> Biệt danh (hoặc để trống):</label>
+            <input type="text" id="guestName" class="donate-input" placeholder="Ẩn danh / Anonymous" />
+          </div>
+          <div class="donate-input-group">
+            <label class="donate-input-label"><i class="fa-solid fa-pen-nib"></i> Lời nhắn gửi gắm:</label>
+            <textarea id="guestMsg" class="donate-input" style="height: 80px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
+          </div>
+          <button type="button" class="btn-done-submit" onclick="submitGuestbook()">
+            <i class="fa-solid fa-paper-plane"></i> Gửi Ngay
+          </button>
+        </div>
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeGuestbookModal()">Đóng lại</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       0. THÔNG BÁO KHÁCH GHÉ THĂM & HẠT BỤI TIÊN TRÊN CHUỘT
+       ============================================================ */
+    window.addEventListener('DOMContentLoaded', () => {
+      const lastVisit = localStorage.getItem('sagiri_last_visitor_ping');
+      const today = new Date().toDateString();
+      if (lastVisit !== today) {
+        localStorage.setItem('sagiri_last_visitor_ping', today);
+        const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
+        const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(discordWebhook);
+        fetch(proxyUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [{
+              title: "🌸 Có khách ghé thăm Profile!",
+              description: "Một vị khách vừa mở trang web của bạn hôm nay.",
+              color: 2453486,
+              timestamp: new Date().toISOString()
+            }]
+          })
+        }).catch(() => {});
+      }
+    });
+
+    const dustIcons = ['✨', '🌸', '💫', '💖'];
+    let lastDustTime = 0;
+    if (window.matchMedia('(pointer: fine)').matches) {
+      window.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastDustTime > 70) {
+          lastDustTime = now;
+          const dust = document.createElement('div');
+          dust.className = 'dust-particle';
+          dust.innerText = dustIcons[Math.floor(Math.random() * dustIcons.length)];
+          dust.style.left = (e.clientX + (Math.random() * 10 - 5)) + 'px';
+          dust.style.top = (e.clientY + (Math.random() * 10 - 5)) + 'px';
+          document.body.appendChild(dust);
+          setTimeout(() => dust.remove(), 600);
+        }
+      });
+    }
+
+    /* ============================================================
+       1. NATIVE WEB SHARE API
+       ============================================================ */
+    function nativeSharePage() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Sagiri Chan Profile Bio',
+          text: 'Khám phá góc nhỏ của Sagiri Chan (@_sagiri0502) 💕',
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        copyToClipboard(window.location.href, "🌸 Đã sao chép liên kết trang!");
+      }
+    }
+
+    /* ============================================================
+       2. ÂM THANH BUBBLE POP & HAPTIC
+       ============================================================ */
+    let audioCtx = null;
+    function triggerHaptic(ms = 25) {
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate(ms); } catch (e) {}
+      }
+    }
+
+    function playBubbleSound() {
+      if (isMuted) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(850, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('.track-item') || e.target.closest('.btn-link')) {
+        playBubbleSound();
+        triggerHaptic(20);
+      }
+    });
+
+    /* ============================================================
+       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+       ============================================================ */
+    function updateClockAndAmbient() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const vnTime = new Date(utc + (3600000 * 7));
+
+      const h = String(vnTime.getHours()).padStart(2, '0');
+      const m = String(vnTime.getMinutes()).padStart(2, '0');
+      const s = String(vnTime.getSeconds()).padStart(2, '0');
+      document.getElementById('liveClockText').innerText = `${h}:${m}:${s}`;
+
+      const hourInt = vnTime.getHours();
+      const icon = document.getElementById('clockIcon');
+      if (hourInt >= 6 && hourInt < 18) {
+        document.body.classList.add('day-mode');
+        document.body.classList.remove('night-mode');
+        icon.className = "fa-solid fa-sun";
+        icon.style.color = "#ffaa00";
+      } else {
+        document.body.classList.add('night-mode');
+        document.body.classList.remove('day-mode');
+        icon.className = "fa-solid fa-moon";
+        icon.style.color = "#25f4ee";
+      }
+    }
+    setInterval(updateClockAndAmbient, 1000);
+    updateClockAndAmbient();
+
+    /* ============================================================
+       4. TOAST NOTIFICATION
+       ============================================================ */
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      triggerHaptic(40);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    /* ============================================================
+       5. BỘ ĐẾM TIM & PHÁO HOA ĂN MỪNG
+       ============================================================ */
+    let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
+    document.getElementById('heartCount').innerText = totalHearts;
+
+    function triggerMilestoneCelebration() {
+      for (let i = 0; i < 24; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'click-heart';
+          heart.innerText = ['🎉', '💖', '✨', '🌸', '💫'][Math.floor(Math.random() * 5)];
+          heart.style.left = (Math.random() * window.innerWidth) + 'px';
+          heart.style.top = (Math.random() * window.innerHeight * 0.8) + 'px';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 900);
+        }, i * 45);
+      }
+      showToast(`🎉 Wow! Đã chạm mốc ${totalHearts} tim yêu thương 💕`);
+    }
+
+    function sendHeart(e) {
+      e.stopPropagation();
+      totalHearts++;
+      document.getElementById('heartCount').innerText = totalHearts;
+      localStorage.setItem('sagiri_hearts_count', totalHearts);
+
+      const rect = e.target.getBoundingClientRect();
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      heart.innerText = '💖';
+      heart.style.left = (rect.left + rect.width / 2) + 'px';
+      heart.style.top = rect.top + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 800);
+      triggerHaptic(35);
+
+      if (totalHearts % 10 === 0) {
+        triggerMilestoneCelebration();
+      } else {
+        showToast("💕 Cảm ơn bạn đã gửi tim!");
+      }
+    }
+
+    /* ============================================================
+       6. CHỤP PROFILE CARD
+       ============================================================ */
+    function downloadCardProfileScreenshot() {
+      const btn = document.getElementById('btnScreenshot');
+      const text = document.getElementById('btnScreenshotText');
+      const cardElement = document.getElementById('profileCardToCapture');
+      const origText = text.innerText;
+      text.innerText = "Đang chụp...";
+      btn.style.opacity = "0.5";
+
+      document.body.classList.add('capturing');
+
+      html2canvas(cardElement, {
+        useCORS: true,
+        scale: 2.5,
+        backgroundColor: null,
+        logging: false
+      }).then(canvas => {
+        document.body.classList.remove('capturing');
+        btn.style.opacity = "1";
+        text.innerText = origText;
+
+        const link = document.createElement('a');
+        link.download = 'sagiri-card-profile.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast("🌸 Đã tải ảnh Profile thành công!");
+      }).catch(err => {
+        console.error("Lỗi khi chụp:", err);
+        document.body.classList.remove('capturing');
+        btn.style.opacity = "1";
+        text.innerText = "Lỗi chụp!";
+        setTimeout(() => { text.innerText = origText; }, 2000);
+      });
+    }
+
+    /* ============================================================
+       7. HOA ANH ĐÀO BAY (REDUCED MOTION & GYRO)
+       ============================================================ */
+    const canvas = document.getElementById('sakuraCanvas');
+    const ctx = canvas.getContext('2d');
+    let petals = [];
+    let sakuraAnimId = null;
+    let gyroWindX = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma !== null) {
+          gyroWindX = (e.gamma / 90) * 2;
+        }
+      }, true);
+    }
+
+    class Petal {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height;
+        this.size = Math.random() * 8 + 6;
+        this.baseSpeedX = Math.random() * 1.5 - 0.5;
+        this.speedY = prefersReducedMotion ? 0.4 : (Math.random() * 1.2 + 0.8);
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = Math.random() * 1.5 - 0.75;
+        this.opacity = Math.random() * 0.45 + 0.35;
+      }
+      update() {
+        this.x += this.baseSpeedX + gyroWindX;
+        this.y += this.speedY;
+        this.rotation += this.rotSpeed;
+        if (this.y > canvas.height + 20 || this.x > canvas.width + 30 || this.x < -30) {
+          this.reset();
+          this.y = -10;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 182, 193, ${this.opacity})`;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < (prefersReducedMotion ? 10 : 30); i++) {
+      petals.push(new Petal());
+    }
+
+    function animateSakura() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      petals.forEach(petal => {
+        petal.update();
+        petal.draw();
+      });
+      sakuraAnimId = requestAnimationFrame(animateSakura);
+    }
+    animateSakura();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(sakuraAnimId);
+      } else {
+        animateSakura();
+      }
+    });
+
+    /* ============================================================
+       8. CLICK TRÁI TIM
+       ============================================================ */
+    const sparkles = ['💕', '🌸', '✨', '💖'];
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg')) return;
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 800);
+    });
+
+    /* ============================================================
+       9. DỮ LIỆU GAME & MODAL
+       ============================================================ */
+    const gamesData = {
+      ww: {
+        name: "Wuthering Waves",
+        icon: "ww.png",
+        ingame: "Sagiri",
+        uid: "900264432",
+        photo: "ww-account.jpg"
+      },
+      lq: {
+        name: "Liên Quân Mobile",
+        icon: "lq.png",
+        ingame: "ThahNamです",
+        uid: "5319141104092273",
+        photo: "lq-account.jpg"
+      }
+    };
+
+    let activeGameKey = "ww";
+
+    function openGameModal(key) {
+      activeGameKey = key;
+      const game = gamesData[key];
+      const modalImg = document.getElementById("gameModalImg");
+      document.getElementById("gameModalTitle").innerText = game.name;
+      modalImg.src = game.icon;
+      document.getElementById("gameIngameText").innerText = game.ingame;
+      document.getElementById("gameUidText").innerText = game.uid;
+      document.getElementById("gameModal").classList.add("active");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("active");
+    }
+
+    function openAccountPhotoModal() {
+      const game = gamesData[activeGameKey];
+      document.getElementById("accountPhotoTitle").innerText = "Tài khoản " + game.name;
+      const photoImg = document.getElementById("accountPhotoDisplay");
+      photoImg.src = game.photo;
+      document.getElementById("accountPhotoModal").classList.add("active");
+    }
+
+    function closeAccountPhotoModal() {
+      document.getElementById("accountPhotoModal").classList.remove("active");
+    }
+
+    function copyToClipboard(text, successMsg) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      showToast(successMsg);
+    }
+
+    function copyIngameName(btn) { copyToClipboard(gamesData[activeGameKey].ingame, "🌸 Đã chép Ingame: " + gamesData[activeGameKey].ingame); }
+    function copyGameUid(btn) { copyToClipboard(gamesData[activeGameKey].uid, "🌸 Đã chép UID: " + gamesData[activeGameKey].uid); }
+
+    const myBankConfig = { bankId: "BIDV", accountNo: "8833220630", accountName: "BUI THANH NAM" };
+
+    function formatNumberWithDots(val) {
+      return val.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function handleAmountInput(input) {
+      input.value = formatNumberWithDots(input.value.replace(/\D/g, ""));
+    }
+
+    function setQuickAmount(val) {
+      document.getElementById("donateAmount").value = formatNumberWithDots(val.toString());
+    }
+
+    function submitDonateDone() {
+      const amountRaw = document.getElementById("donateAmount").value.replace(/\D/g, "");
+      const messageRaw = document.getElementById("donateMessage").value.trim();
+      const qrImg = document.getElementById("dynamicQR");
+      const summary = document.getElementById("qrSummaryText");
+
+      const amount = amountRaw ? parseInt(amountRaw, 10) : "";
+      const memo = messageRaw ? encodeURIComponent(messageRaw) : encodeURIComponent("Cho Sagiri coc tra sua");
+      qrImg.src = `https://img.vietqr.io/image/${myBankConfig.bankId}-${myBankConfig.accountNo}-compact2.png?amount=${amount}&addInfo=${memo}&accountName=${encodeURIComponent(myBankConfig.accountName)}`;
+
+      if (amount) {
+        summary.innerHTML = `Số tiền: <strong>${formatNumberWithDots(amount.toString())} VNĐ</strong><br>Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+      } else {
+        summary.innerHTML = `Lời nhắn: "${messageRaw || 'Cho Sagiri coc tra sua'}"`;
+      }
+      document.getElementById("donateInputScreen").style.display = "none";
+      document.getElementById("qrResultScreen").style.display = "block";
+    }
+
+    function backToEditDonate() {
+      document.getElementById("qrResultScreen").style.display = "none";
+      document.getElementById("donateInputScreen").style.display = "block";
+    }
+
+    function openQRModal() {
+      document.getElementById('qrModal').classList.add('active');
+      backToEditDonate();
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('active');
+    }
+
+    /* ============================================================
+       10. GUESTBOOK (DISCORD EMBED WEBHOOK THÔNG QUA PROXY)
+       ============================================================ */
+    function openGuestbookModal() {
+      document.getElementById('guestbookModal').classList.add('active');
+    }
+    function closeGuestbookModal() {
+      document.getElementById('guestbookModal').classList.remove('active');
+    }
+    function submitGuestbook() {
+      const name = document.getElementById('guestName').value.trim() || "Ẩn danh";
+      const msg = document.getElementById('guestMsg').value.trim();
+      if (!msg) {
+        showToast("⚠️ Hãy nhập lời nhắn trước khi gửi nhé!");
+        return;
+      }
+
+      const oldMsgs = JSON.parse(localStorage.getItem('sagiri_guestbook') || '[]');
+      oldMsgs.push({ name, msg, time: new Date().toISOString() });
+      localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
+
+      const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
+      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=` + encodeURIComponent(discordWebhook);
+
+      fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          embeds: [{
+            title: "💌 Tin nhắn ẩn danh mới!",
+            color: 12451839,
+            fields: [
+              { name: "👤 Người gửi", value: name, inline: true },
+              { name: "💬 Nội dung", value: msg, inline: false }
+            ],
+            timestamp: new Date().toISOString()
+          }]
+        })
+      }).catch(() => {});
+
+      document.getElementById('guestMsg').value = "";
+      closeGuestbookModal();
+      showToast("💌 Lời nhắn đã được gửi thành công!");
+    }
+
+    /* ============================================================
+       11. LANYARD DISCORD REALTIME STATUS
+       ============================================================ */
+    function initDiscordPresence() {
+      const DISCORD_USER_ID = "1546332023017185330";
+      const statusTextElem = document.getElementById('liveStatusText');
+      const statusDotElem = document.querySelector('.status-dot');
+
+      if (!DISCORD_USER_ID) return;
+
+      const ws = new WebSocket('wss://api.lanyard.rest/v1/socket');
+
+      ws.onopen = function () {
+        ws.send(JSON.stringify({
+          op: 2,
+          d: { subscribe_to_id: DISCORD_USER_ID }
+        }));
+      };
+
+      ws.onmessage = function (event) {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.t === "INIT_STATE" || data.t === "PRESENCE_UPDATE") {
+            const presence = data.d;
+            if (!presence) return;
+
+            const statusColors = {
+              online: "#23a55a",
+              idle: "#f0b232",
+              dnd: "#f23f43",
+              offline: "#80848e"
+            };
+            if (statusDotElem) {
+              statusDotElem.style.background = statusColors[presence.discord_status] || "#25f4ee";
+              statusDotElem.style.boxShadow = `0 0 8px ${statusColors[presence.discord_status] || "#25f4ee"}`;
+            }
+
+            if (!isPlaying) {
+              if (presence.spotify && presence.spotify.song) {
+                statusTextElem.innerText = `Đang nghe Spotify: ${presence.spotify.song} 🎵`;
+              } else if (presence.activities && presence.activities.length > 0) {
+                const act = presence.activities.find(a => a.type === 0 || a.type === 3) || presence.activities[0];
+                statusTextElem.innerText = `Đang chơi: ${act.name} 🎮`;
+              } else {
+                statusTextElem.innerText = `Đang cày Wuthering Waves ⚔️`;
+              }
+            }
+          }
+        } catch (e) {}
+      };
+    }
+    initDiscordPresence();
+
+    /* ============================================================
+       12. PLAYLIST, BUFFER BAR & KARAOKE LINE-BY-LINE LYRICS
+       ============================================================ */
+    const playlist = [
+      { 
+        title: "Styx Helix", 
+        artist: "Re:Zero OST", 
+        src: "music1.mp3", 
+        color1: "#bd00ff", 
+        color2: "#fe2c55",
+        lyrics: [
+          "♫ Oh please, don't let me die...",
+          "Waiting for your call...",
+          "Searching for your voice in the dark night...",
+          "Can you hear me calling out your name?",
+          "♫ Styx Helix - Re:Zero OST"
+        ]
+      },
+      { 
+        title: "An Unfinished Song", 
+        artist: "Wuthering Waves OST", 
+        src: "music2.mp3", 
+        color1: "#25f4ee", 
+        color2: "#0077ff",
+        lyrics: [
+          "♫ Khúc ca dang dở vang vọng giữa tầng không...",
+          "Lưu giữ những ký ức không bao giờ phai mờ...",
+          "Gió thổi qua những miền đất hoang sơ...",
+          "♫ Hát lên giai điệu của riêng chúng ta..."
+        ]
+      },
+      { 
+        title: "All Silent Souls Can Sing", 
+        artist: "Wuthering Waves OST", 
+        src: "music3.mp3", 
+        color1: "#25f4ee", 
+        color2: "#fe2c55",
+        lyrics: [
+          "♫ Mọi linh hồn lặng lẽ đều cất lên tiếng hát...",
+          "Hòa cùng nhịp đập của đất trời bao la...",
+          "Vượt qua muôn trùng bão tố hiểm nguy...",
+          "♫ Tìm lại ánh sáng chốn thẳm sâu..."
+        ]
+      },
+      { 
+        title: "Dancing Through Fantasies", 
+        artist: "Wuthering Waves OST", 
+        src: "music4.mp3", 
+        color1: "#ff007f", 
+        color2: "#ffaa00",
+        lyrics: [
+          "♫ Khiêu vũ giữa thế giới mộng ảo dịu kỳ...",
+          "Nơi ánh sáng và bóng tối đan xen vào nhau...",
+          "Bước chân nhẹ nhàng theo nhịp đập con tim...",
+          "♫ Xóa nhòa mọi khoảng cách thực tại..."
+        ]
+      },
+      { 
+        title: "With Glory I Shall Fall", 
+        artist: "Wuthering Waves OST", 
+        src: "music5.mp3", 
+        color1: "#00f2fe", 
+        color2: "#9900ef",
+        lyrics: [
+          "♫ Nguyện ngã xuống trong ánh hào quang rực rỡ...",
+          "Khắc tên mình vào cõi vĩnh hằng...",
+          "Danh dự và kiêu hãnh mãi trường tồn...",
+          "♫ Hẹn gặp lại ở kiếp sau..."
+        ]
+      },
+      { 
+        title: "Against the Tide", 
+        artist: "Wuthering Waves OST", 
+        src: "music6.mp3", 
+        color1: "#25f4ee", 
+        color2: "#ff3366",
+        lyrics: [
+          "♫ Nghịch dòng triều cuộn sóng...",
+          "Tìm về bến bình yên nơi có người đợi chờ...",
+          "Dù chông gai thử thách vẫn không lùi bước...",
+          "♫ Vững tay chèo đến tận cùng..."
+        ]
+      }
+    ];
+
+    let savedIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10);
+    let currentTrackIndex = (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < playlist.length) ? savedIndex : 0;
+    let isPlaying = false;
+    let isMuted = localStorage.getItem('sagiri_muted') === 'true';
+    let isShuffle = localStorage.getItem('sagiri_shuffle') === 'true';
+    let isRepeatOne = localStorage.getItem('sagiri_repeat') === 'true';
+    let nextAudioPreload = new Audio();
+    let hasPreloadedNext = false;
+    let lyricInterval = null;
+    let currentLyricIdx = 0;
+
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.muted = isMuted;
+
+    function applyDynamicAccent(color1, color2) {
+      document.documentElement.style.setProperty('--neon-color-1', color1 || '#25f4ee');
+      document.documentElement.style.setProperty('--neon-color-2', color2 || '#fe2c55');
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "00:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function startLyricRotation() {
+      clearInterval(lyricInterval);
+      const track = playlist[currentTrackIndex];
+      const lyricElem = document.getElementById('miniLyricText');
+      currentLyricIdx = 0;
+
+      if (!track.lyrics || track.lyrics.length === 0) return;
+
+      lyricElem.innerText = track.lyrics[0];
+
+      lyricInterval = setInterval(() => {
+        if (!isPlaying) return;
+        lyricElem.classList.add('fade-out');
+        setTimeout(() => {
+          currentLyricIdx = (currentLyricIdx + 1) % track.lyrics.length;
+          lyricElem.innerText = track.lyrics[currentLyricIdx];
+          lyricElem.classList.remove('fade-out');
+          lyricElem.classList.add('fade-in');
+          setTimeout(() => lyricElem.classList.remove('fade-in'), 400);
+        }, 400);
+      }, 4500);
+    }
+
+    function updateTrackInfo() {
+      const track = playlist[currentTrackIndex];
+      const titleElem = document.getElementById('miniSongTitle');
+      titleElem.innerText = track.title;
+      document.getElementById('miniArtistText').innerText = track.artist;
+      audio.src = track.src;
+      hasPreloadedNext = false;
+
+      applyDynamicAccent(track.color1, track.color2);
+      startLyricRotation();
+
+      const statusText = document.getElementById('liveStatusText');
+      if (isPlaying) {
+        statusText.innerText = `Đang nghe: ${track.title} 🎧`;
+      }
+
+      if (track.title.length > 18) {
+        titleElem.classList.add('marquee-active');
+      } else {
+        titleElem.classList.remove('marquee-active');
+      }
+
+      localStorage.setItem('sagiri_track_idx', currentTrackIndex);
+
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.artist,
+          album: "Sagiri Playlist 💕",
+          artwork: [{ src: 'https://neetsagiri.github.io/avatar.jpg', sizes: '512x512', type: 'image/jpeg' }]
+        });
+      }
+
+      renderPlaylist();
+    }
+
+    function changeVolume(val) {
+      audio.volume = parseFloat(val);
+      if (audio.volume === 0) {
+        audio.muted = true;
+        isMuted = true;
+        document.getElementById('inlineMuteIcon').className = "fa-solid fa-volume-xmark";
+      } else {
+        audio.muted = false;
+        isMuted = false;
+        document.getElementById('inlineMuteIcon').className = "fa-solid fa-volume-high";
+      }
+    }
+
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById('totalDuration').innerText = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('miniProgressBarFill').style.width = percent + '%';
+        document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
+
+        if (audio.buffered.length > 0) {
+          const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+          const bufferPercent = (bufferedEnd / audio.duration) * 100;
+          document.getElementById('miniProgressBarBuffer').style.width = bufferPercent + '%';
+        }
+
+        if (percent > 80 && !hasPreloadedNext) {
+          const nextIdx = (currentTrackIndex + 1) % playlist.length;
+          nextAudioPreload.src = playlist[nextIdx].src;
+          nextAudioPreload.preload = "auto";
+          hasPreloadedNext = true;
+        }
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      if (isRepeatOne) {
+        audio.currentTime = 0;
+        audio.play();
+      } else {
+        nextTrack();
+      }
+    });
+
+    function seekTrack(event) {
+      const bg = document.getElementById('miniProgressBarBg');
+      const rect = bg.getBoundingClientRect();
+      const percent = (event.clientX - rect.left) / rect.width;
+      if (audio.duration) {
+        audio.currentTime = percent * audio.duration;
+      }
+    }
+
+    function syncVisualEffects() {
+      const statusText = document.getElementById('liveStatusText');
+      if (isPlaying && !isMuted) {
+        document.body.classList.add('music-active');
+        statusText.innerText = `Đang nghe: ${playlist[currentTrackIndex].title} 🎧`;
+      } else {
+        document.body.classList.remove('music-active');
+        statusText.innerText = `Đang cày Wuthering Waves ⚔️`;
+      }
+    }
+
+    function togglePlayPause() {
+      const miniPlayIcon = document.getElementById('miniPlayIcon');
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        miniPlayIcon.className = "fa-solid fa-play";
+      } else {
+        audio.play().then(() => {
+          isPlaying = true;
+          miniPlayIcon.className = "fa-solid fa-pause";
+        }).catch(err => console.log("Autoplay blocked:", err));
+      }
+      syncVisualEffects();
+    }
+
+    function selectTrack(index) {
+      currentTrackIndex = index;
+      updateTrackInfo();
+      audio.play().then(() => {
+        isPlaying = true;
+        document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+        syncVisualEffects();
+      }).catch(err => console.log("Play error:", err));
+    }
+
+    function nextTrack() {
+      if (isShuffle) {
+        let randIdx;
+        do {
+          randIdx = Math.floor(Math.random() * playlist.length);
+        } while (randIdx === currentTrackIndex && playlist.length > 1);
+        selectTrack(randIdx);
+      } else {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        selectTrack(currentTrackIndex);
+      }
+    }
+
+    function prevTrack() {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      selectTrack(currentTrackIndex);
+    }
+
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      localStorage.setItem('sagiri_shuffle', isShuffle);
+      document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+      showToast(isShuffle ? "🔀 Đã bật phát ngẫu nhiên" : "➡️ Đã tắt phát ngẫu nhiên");
+    }
+
+    function toggleRepeat() {
+      isRepeatOne = !isRepeatOne;
+      localStorage.setItem('sagiri_repeat', isRepeatOne);
+      document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
+      showToast(isRepeatOne ? "🔂 Đã bật lặp lại 1 bài" : "🔁 Đã tắt lặp lại 1 bài");
+    }
+
+    function triggerPlayOnFirstInteraction() {
+      if (!isPlaying && audio.paused) {
+        audio.play().then(() => {
+          isPlaying = true;
+          document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+          syncVisualEffects();
+        }).catch(() => {});
+      }
+    }
+    window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
+    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
+
+    const inlineMuteIcon = document.getElementById('inlineMuteIcon');
+    if (isMuted) {
+      inlineMuteIcon.className = "fa-solid fa-volume-xmark";
+    }
+
+    function toggleGlobalMute(event) {
+      if (event) event.stopPropagation();
+
+      if (isMuted) {
+        audio.muted = false;
+        isMuted = false;
+        inlineMuteIcon.className = "fa-solid fa-volume-high";
+        document.getElementById('volumeSlider').value = audio.volume || 1;
+      } else {
+        audio.muted = true;
+        isMuted = true;
+        inlineMuteIcon.className = "fa-solid fa-volume-xmark";
+        document.getElementById('volumeSlider').value = 0;
+      }
+      localStorage.setItem('sagiri_muted', isMuted);
+      syncVisualEffects();
+    }
+
+    function renderPlaylist() {
+      const container = document.getElementById('playlistContainer');
+      container.innerHTML = "";
+      playlist.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
+        item.innerHTML = `<span>${index + 1}. ${track.title}</span><i class="fa-solid fa-play" style="font-size: 0.72rem;"></i>`;
+        item.onclick = () => selectTrack(index);
+        container.appendChild(item);
+      });
+    }
+
+    function toggleMusicPanel() {
+      const panel = document.getElementById('musicPanel');
+      const chevron = document.getElementById('music-chevron');
+      panel.classList.toggle('active');
+      chevron.className = panel.classList.contains('active') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    }
+
+    function toggleMiniPlayerCollapse() {
+      const container = document.getElementById('miniPlayerContainer');
+      const chevron = document.getElementById('collapseChevron');
+      container.classList.toggle('collapsed');
+      chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    }
+
+    /* VUỐT TRÊN MOBILE */
+    const miniContainer = document.getElementById('miniPlayerContainer');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    miniContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    miniContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          nextTrack();
+        } else {
+          prevTrack();
+        }
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayPause();
+      } else if (e.code === 'ArrowRight') {
+        nextTrack();
+      } else if (e.code === 'ArrowLeft') {
+        prevTrack();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleGlobalMute();
       }
     });
 
@@ -2338,3 +4655,4 @@
   </script>
 </body>
 </html>
+
