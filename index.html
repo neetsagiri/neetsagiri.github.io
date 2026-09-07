@@ -1069,11 +1069,6 @@
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
     .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
-
-    /* Ẩn cành/thân cây trên màn hình nhỏ di động để không bị che khuất nội dung */
-    @media (max-width: 768px) {
-      /* Trên mobile chỉ giữ hoa rơi, không vẽ thân cây */
-    }
   </style>
 </head>
 <body>
@@ -1100,7 +1095,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS VẼ THÂN CÂY TO & HOA RƠI -->
+  <!-- CANVAS VẼ CÁNH HOA RƠI MƯỢT MÀ -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -1654,13 +1649,12 @@
     }
 
     /* ============================================================
-       7. VẼ 2 THÂN CÂY ANH ĐÀO LỚN Ở 2 BÊN & HOA RƠI LÃ TẢ
+       7. HIỆU ỨNG HOA ANH ĐÀO RƠI MƯỢT MÀ KHÔNG BỊ RUNG LẮC
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d');
     let petals = [];
     let sakuraAnimId = null;
-    let windAngle = 0;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1676,18 +1670,17 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * -canvas.height;
-        this.size = Math.random() * 8 + 5;
-        this.speedY = Math.random() * 1.2 + 0.6;
-        this.speedX = Math.random() * 1.2 - 0.6;
-        this.rotation = Math.random() * 360;
-        this.rotSpeed = Math.random() * 2 - 1;
-        this.opacity = Math.random() * 0.5 + 0.4;
+        this.size = Math.random() * 7 + 5;
+        this.speedY = Math.random() * 0.8 + 0.5; // Tốc độ rơi đều đặn mượt mà
+        this.speedX = Math.random() * 0.6 - 0.3; // Độ trôi ngang ổn định
+        this.angle = Math.random() * Math.PI * 2;
+        this.spin = Math.random() * 0.03 - 0.015;
+        this.opacity = Math.random() * 0.4 + 0.4;
       }
       update() {
-        windAngle += 0.02;
-        this.x += this.speedX + Math.sin(windAngle) * 0.7;
+        this.angle += this.spin;
         this.y += this.speedY;
-        this.rotation += this.rotSpeed;
+        this.x += this.speedX + Math.sin(this.angle) * 0.4; // Trôi dạt mềm mại không bị giật
 
         if (this.y > canvas.height + 20 || this.x > canvas.width + 30 || this.x < -30) {
           this.reset();
@@ -1697,7 +1690,7 @@
       draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.rotate(this.angle);
         ctx.beginPath();
         ctx.ellipse(0, 0, this.size, this.size / 2.2, 0, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 182, 193, ${this.opacity})`;
@@ -1706,99 +1699,18 @@
       }
     }
 
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 30; i++) {
       petals.push(new Petal());
-    }
-
-    // Hàm vẽ 2 thân cây anh đào lớn mọc từ đáy/mép màn hình tỏa nhánh vươn vào trong
-    function drawFullCherryTrees() {
-      const time = Date.now() * 0.0015;
-      const swayL = Math.sin(time) * 4;
-      const swayR = Math.cos(time) * 4;
-
-      ctx.save();
-      ctx.lineCap = "round";
-
-      // --- CÂY BÊN TRÁI ---
-      // Thân chính mọc từ góc dưới bên trái
-      ctx.lineWidth = 32;
-      ctx.strokeStyle = "#2e1b12";
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height);
-      ctx.quadraticCurveTo(40, canvas.height * 0.6, 90 + swayL, canvas.height * 0.3);
-      ctx.quadraticCurveTo(140 + swayL, canvas.height * 0.15, 280 + swayL * 1.5, 90);
-      ctx.stroke();
-
-      // Nhánh vươn mạnh sang phải
-      ctx.lineWidth = 16;
-      ctx.beginPath();
-      ctx.moveTo(70, canvas.height * 0.45);
-      ctx.quadraticCurveTo(150, canvas.height * 0.3, 240 + swayL * 1.2, 160);
-      ctx.stroke();
-
-      ctx.lineWidth = 8;
-      ctx.beginPath();
-      ctx.moveTo(180, canvas.height * 0.25);
-      ctx.quadraticCurveTo(230, 120, 310 + swayL, 70);
-      ctx.stroke();
-
-      // --- CÂY BÊN PHẢI ---
-      // Thân chính mọc từ góc dưới bên phải
-      ctx.lineWidth = 32;
-      ctx.strokeStyle = "#2e1b12";
-      ctx.beginPath();
-      ctx.moveTo(canvas.width, canvas.height);
-      ctx.quadraticCurveTo(canvas.width - 40, canvas.height * 0.6, canvas.width - 90 - swayR, canvas.height * 0.3);
-      ctx.quadraticCurveTo(canvas.width - 140 - swayR, canvas.height * 0.15, canvas.width - 280 - swayR * 1.5, 90);
-      ctx.stroke();
-
-      // Nhánh vươn mạnh sang trái
-      ctx.lineWidth = 16;
-      ctx.beginPath();
-      ctx.moveTo(canvas.width - 70, canvas.height * 0.45);
-      ctx.quadraticCurveTo(canvas.width - 150, canvas.height * 0.3, canvas.width - 240 - swayR * 1.2, 160);
-      ctx.stroke();
-
-      ctx.lineWidth = 8;
-      ctx.beginPath();
-      ctx.moveTo(canvas.width - 180, canvas.height * 0.25);
-      ctx.quadraticCurveTo(canvas.width - 230, 120, canvas.width - 310 - swayR, 70);
-      ctx.stroke();
-
-      ctx.restore();
-
-      // Các đám tán hoa bao phủ quanh các đầu nhánh
-      const clusters = [
-        {x: 120 + swayL, y: canvas.height * 0.3}, {x: 220 + swayL*1.2, y: 150}, {x: 290 + swayL*1.5, y: 80}, {x: 190, y: 110},
-        {x: canvas.width - 120 - swayR, y: canvas.height * 0.3}, {x: canvas.width - 220 - swayR*1.2, y: 150}, {x: canvas.width - 290 - swayR*1.5, y: 80}, {x: canvas.width - 190, y: 110}
-      ];
-
-      clusters.forEach(c => {
-        for (let j = 0; j < 9; j++) {
-          ctx.beginPath();
-          ctx.arc(c.x + (j * 8 - 28), c.y + (Math.sin(j) * 12), 12, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255, 182, 193, 0.82)";
-          ctx.fill();
-        }
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, 6, 0, Math.PI * 2);
-        ctx.fillStyle = "#ff5c8d";
-        ctx.fill();
-      });
     }
 
     function animateSakura() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Trên máy tính (> 768px): vẽ cả 2 cây to 2 bên. Trên điện thoại: chỉ để hoa bay thoáng đãng.
-      if (window.innerWidth > 768) {
-        drawFullCherryTrees();
-      }
 
       petals.forEach(petal => {
         petal.update();
         petal.draw();
       });
+
       sakuraAnimId = requestAnimationFrame(animateSakura);
     }
     animateSakura();
@@ -1840,7 +1752,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
