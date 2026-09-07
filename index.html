@@ -6,7 +6,6 @@
   <title>Sagiri Profile Bio - @_sagiri0502</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Thư viện chụp toàn bộ trang thành ảnh -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * {
@@ -30,13 +29,12 @@
       position: relative;
     }
 
-    /* NÚT CHỤP TẢI ẢNH TOÀN BỘ TRANG (GÓC TRÁI TRÊN CÙNG) */
     .btn-screenshot-top {
       position: fixed;
       top: 16px;
       left: 16px;
       z-index: 99999;
-      background: rgba(18, 18, 24, 0.8);
+      background: rgba(18, 18, 24, 0.85);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(37, 244, 238, 0.4);
       color: #25f4ee;
@@ -55,7 +53,6 @@
     .btn-screenshot-top:hover {
       transform: scale(1.05);
       background: rgba(37, 244, 238, 0.2);
-      box-shadow: 0 0 15px rgba(37, 244, 238, 0.6);
     }
 
     #sakuraCanvas {
@@ -227,6 +224,7 @@
       animation: earWaveRight 1.4s ease-in-out infinite;
     }
 
+    /* ĐẶC TRỊ LỖI CHỤP MÀN HÌNH CỦA TEXT GRADIENT */
     .name {
       font-size: 1.75rem;
       font-weight: 800;
@@ -236,11 +234,23 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+    }
+
+    .name-text {
       background: linear-gradient(90deg, #25f4ee, #fe2c55, #25f4ee);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: nameNeonFlowSlow 8s linear infinite;
+    }
+
+    /* Khi đang chụp màn hình: Chuyển text thành màu solid cyan để html2canvas không bị vỡ vệt màu */
+    body.capturing .name-text {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      -webkit-text-fill-color: #25f4ee !important;
+      color: #25f4ee !important;
+      text-shadow: 0 0 10px rgba(37, 244, 238, 0.8);
     }
 
     @keyframes nameNeonFlowSlow {
@@ -354,7 +364,6 @@
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; box-shadow: 0 0 12px rgba(88, 101, 242, 0.35); }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; box-shadow: 0 0 12px rgba(37, 244, 238, 0.35); }
 
-    /* NÚT MŨI TÊN DÍNH LIỀN VÀO VIỀN ĐÁY CARD */
     .mini-collapse-toggle {
       position: absolute;
       bottom: 0;
@@ -376,9 +385,9 @@
       z-index: 20;
       transition: background 0.2s, color 0.2s;
     }
-    .mini-collapse-toggle:hover {
-      background: #25f4ee;
-      color: #000;
+
+    body.capturing .mini-collapse-toggle {
+      display: none !important;
     }
 
     .mini-player-container {
@@ -576,10 +585,6 @@
       justify-content: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .mini-btn-play:hover {
-      transform: scale(1.06);
-      box-shadow: 0 0 20px rgba(254, 44, 85, 1), 0 0 20px rgba(37, 244, 238, 0.8);
-    }
 
     .music-player-panel {
       display: none;
@@ -652,7 +657,6 @@
       }
     }
 
-    /* MODAL CHUNG */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -737,16 +741,15 @@
 </head>
 <body>
 
-  <!-- NÚT TẢI ẢNH TOÀN BỘ GIAO DIỆN TRANG (BAO GỒM NỀN VÀ MỌI THỨ) -->
-  <button type="button" class="btn-screenshot-top" onclick="downloadWholePageScreenshot()" id="btnScreenshot">
-    <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh trang</span>
+  <!-- NÚT CHỤP TẢI ẢNH RIÊNG PROFILE CARD -->
+  <button type="button" class="btn-screenshot-top" onclick="downloadCardProfileScreenshot()" id="btnScreenshot">
+    <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh profile</span>
   </button>
 
-  <!-- CANVAS HIỆU ỨNG HOA ANH ĐÀO RƠI PHỦ LÊN PROFILE -->
   <canvas id="sakuraCanvas"></canvas>
 
-  <!-- KHUNG BỌC VIỀN XOAY CỦA PROFILE CARD -->
-  <div class="card-border-wrapper">
+  <!-- KHUNG BỌC PROFILE CARD CHÍNH CẦN CHỤP -->
+  <div class="card-border-wrapper" id="profileCardToCapture">
     <div class="card">
       <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
         <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
@@ -773,7 +776,11 @@
         </div>
       </div>
 
-      <h1 class="name">Sagiri Chan <span class="heart-icon">💕</span></h1>
+      <!-- TÊN ĐÃ TÁCH LỚP CLASS ĐỂ TRÁNH LỖI HTML2CANVAS -->
+      <h1 class="name">
+        <span class="name-text">Sagiri Chan</span> 
+        <span class="heart-icon">💕</span>
+      </h1>
       <p class="handle">@_sagiri0502</p>
       <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
 
@@ -830,7 +837,7 @@
     </div>
   </div>
 
-  <!-- THANH MUSIC VỚI BỘ ĐẾM THỜI GIAN & MARQUEE SLIDER -->
+  <!-- THANH MUSIC NẰM DƯỚI PROFILE CARD -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -985,37 +992,36 @@
 
   <script>
     /* ============================================================
-       0. CHỨC NĂNG CHỤP & TẢI ẢNH TOÀN BỘ TRANG (BAO GỒM CẢ NỀN)
+       0. HÀM CHỤP & TẢI DUY NHẤT PROFILE CARD (KHÔNG LỖI CHỮ)
        ============================================================ */
-    function downloadWholePageScreenshot() {
+    function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
       const text = document.getElementById('btnScreenshotText');
+      const cardElement = document.getElementById('profileCardToCapture');
       const origText = text.innerText;
-      text.innerText = "Đang xử lý...";
+      text.innerText = "Đang chụp...";
       btn.style.opacity = "0.5";
 
-      // Tạm thời ẩn nút chụp để ảnh chụp được sạch đẹp
-      btn.style.display = "none";
+      // Bật class capturing để tạm thời vô hiệu hóa text-clip tránh vệt chữ nhật
+      document.body.classList.add('capturing');
 
-      html2canvas(document.body, {
+      html2canvas(cardElement, {
         useCORS: true,
-        scale: 2, // Chụp với độ phân giải cao sắc nét (Retina 2x)
-        backgroundColor: null,
-        scrollX: 0,
-        scrollY: -window.scrollY
+        scale: 2.5, // Tăng nét cao cho thẻ card
+        backgroundColor: null, // Nền trong suốt bo góc
+        logging: false
       }).then(canvas => {
-        btn.style.display = "flex";
+        document.body.classList.remove('capturing');
         btn.style.opacity = "1";
         text.innerText = origText;
 
-        // Tự động tải ảnh về máy
         const link = document.createElement('a');
-        link.download = 'sagiri-full-profile.png';
+        link.download = 'sagiri-card-profile.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
       }).catch(err => {
-        console.error("Lỗi khi chụp màn hình:", err);
-        btn.style.display = "flex";
+        console.error("Lỗi khi chụp:", err);
+        document.body.classList.remove('capturing');
         btn.style.opacity = "1";
         text.innerText = "Lỗi chụp!";
         setTimeout(() => { text.innerText = origText; }, 2000);
@@ -1214,7 +1220,7 @@
     }
 
     /* ============================================================
-       4. PLAYLIST & QUẢN LÝ TRÌNH PHÁT NHẠC
+       4. PLAYLIST & TRÌNH PHÁT NHẠC
        ============================================================ */
     const playlist = [
       { title: "Styx Helix", artist: "Re:Zero OST", src: "music1.mp3" },
