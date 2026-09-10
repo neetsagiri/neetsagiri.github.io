@@ -86,7 +86,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(env(safe-area-inset-top, 20px) + 40px) 16px calc(env(safe-area-inset-bottom, 20px) + 95px) 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 95px) 16px;
       background: radial-gradient(circle at 50% 20%, rgba(37, 244, 238, 0.08), transparent 45%),
                   radial-gradient(circle at 80% 80%, rgba(254, 44, 85, 0.08), transparent 45%),
                   linear-gradient(-45deg, #010101, #080d1a, #00363a, #240012, #000000);
@@ -149,28 +149,28 @@
 
     .top-left-actions {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 12px) + 8px);
-      left: calc(env(safe-area-inset-left, 10px) + 10px);
+      top: calc(env(safe-area-inset-top, 16px) + 12px);
+      left: calc(env(safe-area-inset-left, 16px) + 12px);
       z-index: 99999;
       display: flex;
-      gap: 5px;
+      gap: 8px;
     }
 
     .btn-top-pill {
-      background: rgba(14, 15, 22, 0.85);
+      background: rgba(14, 15, 22, 0.82);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       color: #eaeaea;
-      padding: 6px 9px;
-      border-radius: 16px;
-      font-size: 0.72rem;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      gap: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-top-pill:hover {
@@ -185,22 +185,22 @@
 
     .clock-badge-top {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 12px) + 8px);
-      right: calc(env(safe-area-inset-right, 10px) + 10px);
+      top: calc(env(safe-area-inset-top, 16px) + 12px);
+      right: calc(env(safe-area-inset-right, 16px) + 12px);
       z-index: 99999;
-      background: rgba(14, 15, 22, 0.85);
+      background: rgba(14, 15, 22, 0.82);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
-      color: #ddd;
-      padding: 6px 10px;
-      border-radius: 16px;
-      font-size: 0.72rem;
+      color: #eaeaea;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 5px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      gap: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
       font-variant-numeric: tabular-nums;
     }
 
@@ -1083,6 +1083,7 @@
         </button>
 
         <div id="musicPanel" class="music-player-panel">
+          <!-- KHỐI NHẬP VÀ THÊM LINK YOUTUBE -->
           <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 14px; border: 1px dashed var(--border-subtle);">
             <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
               <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
@@ -1327,7 +1328,7 @@
     </div>
   </div>
 
-  <!-- CONTAINER YOUTUBE -->
+  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE -->
   <div style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; clip-path: inset(100%); pointer-events: none; z-index: -1;">
     <div id="ytPlayer"></div>
   </div>
@@ -1335,8 +1336,8 @@
 
   <script>
     /* ============================================================
-        0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
-        ============================================================ */
+       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
+       ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toDateString();
       const savedDate = localStorage.getItem('sagiri_view_date');
@@ -1391,8 +1392,8 @@
     }
 
     /* ============================================================
-        1. NATIVE WEB SHARE API & RELOAD
-        ============================================================ */
+       1. NATIVE WEB SHARE API & RELOAD
+       ============================================================ */
     function nativeSharePage() {
       if (navigator.share) {
         navigator.share({
@@ -1413,8 +1414,8 @@
     }
 
     /* ============================================================
-        2. ÂM THANH BUBBLE POP & HAPTIC
-        ============================================================ */
+       2. ÂM THANH BUBBLE POP & HAPTIC
+       ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 20) {
       if ('vibrate' in navigator) {
@@ -1453,8 +1454,8 @@
     });
 
     /* ============================================================
-        3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
-        ============================================================ */
+       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+       ============================================================ */
     function updateClockAndAmbient() {
       const now = new Date();
       const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -1483,8 +1484,8 @@
     updateClockAndAmbient();
 
     /* ============================================================
-        4. TOAST NOTIFICATION
-        ============================================================ */
+       4. TOAST NOTIFICATION
+       ============================================================ */
     let toastTimer = null;
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
@@ -1498,8 +1499,8 @@
     }
 
     /* ============================================================
-        5. BỘ ĐẾM TIM & ĂN MỪNG
-        ============================================================ */
+       5. BỘ ĐẾM TIM & ĂN MỪNG
+       ============================================================ */
     let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
     document.getElementById('heartCount').innerText = totalHearts;
 
@@ -1542,8 +1543,8 @@
     }
 
     /* ============================================================
-        6. CHỤP PROFILE CARD
-        ============================================================ */
+       6. CHỤP PROFILE CARD
+       ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
       const text = document.getElementById('btnScreenshotText');
@@ -1578,8 +1579,8 @@
     }
 
     /* ============================================================
-        7. VẼ HOA ANH ĐÀO
-        ============================================================ */
+       7. VẼ HOA ANH ĐÀO (CÁNH HOA TO RÕ, KHÔNG CÒN CHẤM LI TI)
+       ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
     let petals = [];
@@ -1717,8 +1718,8 @@
     });
 
     /* ============================================================
-        7.1. AUDIO CONTEXT CANVAS VISUALIZER
-        ============================================================ */
+       7.1. AUDIO CONTEXT CANVAS VISUALIZER (SÓNG NHẠC NEON PHÂN LỚP)
+       ============================================================ */
     const vCanvas = document.getElementById('visualizerCanvas');
     const vCtx = vCanvas.getContext('2d');
     let analyserNode = null;
@@ -1798,8 +1799,8 @@
     requestAnimationFrame(drawAudioVisualizer);
 
     /* ============================================================
-        8. CLICK TRÁI TIM
-        ============================================================ */
+       8. CLICK TRÁI TIM
+       ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
       if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg')) return;
@@ -1813,8 +1814,8 @@
     });
 
     /* ============================================================
-        9. DỮ LIỆU GAME & MODAL
-        ============================================================ */
+       9. DỮ LIỆU GAME & MODAL
+       ============================================================ */
     const gamesData = {
       ww: {
         name: "Wuthering Waves",
@@ -1826,7 +1827,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNamです",
+        ingame: "ThahNam입니다",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -1940,8 +1941,8 @@
     }
 
     /* ============================================================
-        10. GUESTBOOK
-        ============================================================ */
+       10. GUESTBOOK (DISCORD WEBHOOK)
+       ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
     }
@@ -1984,8 +1985,8 @@
     }
 
     /* ============================================================
-        11. LANYARD DISCORD REALTIME STATUS
-        ============================================================ */
+       11. LANYARD DISCORD REALTIME STATUS
+       ============================================================ */
     function initDiscordPresence() {
       const DISCORD_USER_ID = "1546332023017185330";
       const statusTextElem = document.getElementById('liveStatusText');
@@ -2037,8 +2038,8 @@
     initDiscordPresence();
 
     /* ============================================================
-        12. PLAYLIST & MEDIA SESSION & YOUTUBE HYBRID
-        ============================================================ */
+       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID
+       ============================================================ */
     const playlist = [
       { 
         title: "Styx Helix", 
@@ -2245,25 +2246,23 @@
 
     function initAudioGraph() {
       if (!soundContext) {
-        try {
-          soundContext = new (window.AudioContext || window.webkitAudioContext)();
-          gainNode = soundContext.createGain();
-          
-          analyserNode = soundContext.createAnalyser();
-          analyserNode.fftSize = 128;
-          analyserNode.smoothingTimeConstant = 0.8;
-          dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+        soundContext = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = soundContext.createGain();
+        
+        analyserNode = soundContext.createAnalyser();
+        analyserNode.fftSize = 128;
+        analyserNode.smoothingTimeConstant = 0.8;
+        dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-          audioSourceNode = soundContext.createMediaElementSource(audioElement);
-          audioSourceNode.connect(analyserNode);
-          analyserNode.connect(gainNode);
-          gainNode.connect(soundContext.destination);
+        audioSourceNode = soundContext.createMediaElementSource(audioElement);
+        audioSourceNode.connect(analyserNode);
+        analyserNode.connect(gainNode);
+        gainNode.connect(soundContext.destination);
 
-          const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
-          gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
-        } catch (e) {}
+        const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
+        gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
       }
-      if (soundContext && soundContext.state === 'suspended') {
+      if (soundContext.state === 'suspended') {
         soundContext.resume();
       }
     }
@@ -2326,6 +2325,33 @@
         navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+          const track = playlist[currentTrackIndex];
+          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
+            const curr = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(Math.max(curr - (details.seekOffset || 10), 0), true);
+          } else {
+            audioElement.currentTime = Math.max(audioElement.currentTime - (details.seekOffset || 10), 0);
+          }
+        });
+        navigator.mediaSession.setActionHandler('seekforward', (details) => {
+          const track = playlist[currentTrackIndex];
+          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
+            const curr = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(Math.min(curr + (details.seekOffset || 10), ytPlayer.getDuration()), true);
+          } else {
+            audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration || 0);
+          }
+        });
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+          const track = playlist[currentTrackIndex];
+          if (track.ytId && ytPlayer && ytPlayer.seekTo) {
+            ytPlayer.seekTo(details.seekTime, true);
+          } else {
+            audioElement.currentTime = details.seekTime;
+          }
+        });
       }
     }
 
@@ -2770,6 +2796,7 @@
       }
     }
 
+    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchStartY = 0;
