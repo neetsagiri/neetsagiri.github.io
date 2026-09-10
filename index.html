@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Sagiri Profile Bio - @_sagiri0502</title>
 
   <!-- PWA & MOBILE META -->
@@ -44,6 +44,8 @@
       padding: 0;
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .card-border-wrapper, .mini-player-container, .neon-ring-wrapper::before, .game-card-wrapper::before {
@@ -75,7 +77,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 16px 80px 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 80px) 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 12s ease infinite;
@@ -101,7 +103,7 @@
 
     .toast-container {
       position: fixed;
-      top: 20px;
+      top: calc(env(safe-area-inset-top, 20px) + 12px);
       left: 50%;
       transform: translateX(-50%) translateY(-100px);
       background: rgba(18, 18, 26, 0.95);
@@ -127,8 +129,8 @@
 
     .top-left-actions {
       position: fixed;
-      top: 16px;
-      left: 16px;
+      top: calc(env(safe-area-inset-top, 16px) + 12px);
+      left: calc(env(safe-area-inset-left, 16px) + 12px);
       z-index: 99999;
       display: flex;
       gap: 8px;
@@ -136,8 +138,8 @@
 
     .btn-top-pill {
       background: rgba(18, 18, 24, 0.85);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--neon-color-1);
       color: var(--neon-color-1);
       padding: 8px 12px;
@@ -151,19 +153,19 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       transition: all 0.25s ease;
     }
-    .btn-top-pill:hover {
-      transform: scale(1.05);
-      background: rgba(37, 244, 238, 0.2);
+    .btn-top-pill:active {
+      transform: scale(0.95);
+      background: rgba(37, 244, 238, 0.25);
     }
 
     .clock-badge-top {
       position: fixed;
-      top: 16px;
-      right: 16px;
+      top: calc(env(safe-area-inset-top, 16px) + 12px);
+      right: calc(env(safe-area-inset-right, 16px) + 12px);
       z-index: 99999;
       background: rgba(18, 18, 24, 0.85);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #ddd;
       padding: 8px 14px;
@@ -236,7 +238,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-radius: 28px;
-      padding: 34px 22px 42px 22px;
+      padding: 34px 20px 42px 20px;
       text-align: center;
       color: #ffffff;
       z-index: 1;
@@ -245,11 +247,11 @@
     .heart-like-btn {
       position: absolute;
       top: 18px;
-      left: 20px;
+      left: 18px;
       background: rgba(254, 44, 85, 0.15);
       border: 1px solid rgba(254, 44, 85, 0.4);
       color: #ff3366;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 16px;
       font-size: 0.75rem;
       font-weight: 700;
@@ -260,13 +262,13 @@
       transition: transform 0.15s;
       z-index: 10;
     }
-    .heart-like-btn:hover { transform: scale(1.08); }
+    .heart-like-btn:active { transform: scale(0.92); }
 
     .cinnamoroll-avatar-box {
       position: relative;
       width: 120px;
       height: 120px;
-      margin: 32px auto 14px auto;
+      margin: 30px auto 14px auto;
     }
 
     .neon-ring-wrapper {
@@ -341,8 +343,8 @@
       gap: 6px;
       background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 4px 10px;
-      border-radius: 12px;
+      padding: 5px 12px;
+      border-radius: 14px;
       font-size: 0.72rem;
       color: #ddd;
       margin-bottom: 8px;
@@ -474,6 +476,7 @@
       -webkit-backdrop-filter: blur(8px);
       color: #ffffff;
     }
+    .game-btn:active { background: rgba(26, 26, 34, 0.95); }
 
     .game-icon-img {
       width: 48px;
@@ -495,8 +498,8 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 13px;
-      border-radius: 14px;
+      padding: 14px;
+      border-radius: 16px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.93rem;
@@ -504,6 +507,11 @@
       width: 100%;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .btn-link:active {
+      transform: scale(0.98);
+      filter: brightness(1.2);
     }
 
     .btn-tiktok { background: rgba(254, 44, 85, 0.12); color: #ff3366; border: 1.5px solid #fe2c55; }
@@ -521,7 +529,7 @@
       border-bottom: none;
       color: var(--neon-color-1);
       width: 44px;
-      height: 22px;
+      height: 24px;
       border-radius: 12px 12px 0 0;
       font-size: 0.75rem;
       cursor: pointer;
@@ -548,12 +556,12 @@
       z-index: 10;
       margin-top: 8px;
       flex-shrink: 0;
-      transition: transform 0.3s ease, opacity 0.2s ease;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
       touch-action: pan-y;
     }
 
     .mini-player-container.collapsed {
-      transform: translateY(-110px);
+      transform: translateY(-115px);
       opacity: 0;
       pointer-events: none;
     }
@@ -564,7 +572,7 @@
       border-radius: 34px;
       padding: 2.5px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
     }
 
     .mini-player-border-wrapper::before {
@@ -583,25 +591,43 @@
       position: relative;
       width: 100%;
       background: rgba(14, 14, 18, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 32px;
-      padding: 10px 16px;
+      padding: 8px 16px 12px 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       z-index: 1;
+    }
+
+    /* THANH GẠT VUỐT TIỆN LỢI TRÊN MOBILE */
+    .swipe-indicator-bar {
+      width: 38px;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      margin: 2px auto 6px auto;
     }
 
     .progress-row { display: flex; align-items: center; gap: 8px; }
     .time-display { font-size: 0.68rem; color: #999; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
+    /* MỞ RỘNG VÙNG CHẠM THANH TUA CHO MOBILE */
     .mini-progress-bg {
       flex: 1;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
+      height: 18px;
+      display: flex;
+      align-items: center;
       cursor: pointer;
+      position: relative;
+      touch-action: none;
+    }
+    .mini-progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
       overflow: hidden;
       position: relative;
     }
@@ -662,16 +688,18 @@
     .mini-lyric-box { font-size: 0.68rem; color: var(--neon-color-1); font-style: italic; position: absolute; width: 100%; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.3s ease; }
 
     .mini-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .mini-btn { background: transparent; border: none; color: #ccc; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; }
+    .mini-btn { background: transparent; border: none; color: #ccc; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; cursor: pointer; }
+    .mini-btn:active { transform: scale(0.9); }
     .volume-box { display: flex; align-items: center; position: relative; }
-    .volume-slider { -webkit-appearance: none; width: 40px; height: 3px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; outline: none; cursor: pointer; margin-left: 2px; }
-    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; border-radius: 50%; background: var(--neon-color-1); cursor: pointer; }
+    .volume-slider { -webkit-appearance: none; width: 38px; height: 3px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; outline: none; cursor: pointer; margin-left: 2px; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--neon-color-1); cursor: pointer; }
 
     .mini-btn-play {
       background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1));
-      border: none; width: 38px; height: 38px; border-radius: 50%; color: #fff; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(254, 44, 85, 0.6);
+      border: none; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(254, 44, 85, 0.6);
     }
+    .mini-btn-play:active { transform: scale(0.92); }
 
     .music-player-panel {
       display: none; margin-top: 10px; padding: 14px;
@@ -681,13 +709,13 @@
     .music-player-panel.active { display: block; }
     .playlist-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     .playlist-toolbar span { font-size: 0.74rem; color: #aaa; text-transform: uppercase; font-weight: 600; }
-    .playlist-tools-group { display: flex; gap: 12px; }
-    .tool-icon-btn { background: transparent; border: none; color: #777; font-size: 0.85rem; cursor: pointer; }
+    .playlist-tools-group { display: flex; gap: 14px; }
+    .tool-icon-btn { background: transparent; border: none; color: #777; font-size: 0.9rem; cursor: pointer; padding: 4px; }
     .tool-icon-btn.active { color: var(--neon-color-2); }
 
-    .playlist { display: flex; flex-direction: column; gap: 6px; max-height: 230px; overflow-y: auto; padding-right: 4px; }
+    .playlist { display: flex; flex-direction: column; gap: 6px; max-height: 230px; overflow-y: auto; padding-right: 4px; -webkit-overflow-scrolling: touch; }
     .track-item { 
-      padding: 8px 12px; 
+      padding: 9px 12px; 
       border-radius: 12px; 
       font-size: 0.8rem; 
       color: #ddd; 
@@ -698,6 +726,7 @@
       gap: 10px; 
       transition: all 0.2s ease;
     }
+    .track-item:active { background: rgba(255, 255, 255, 0.1); }
     .track-item.playing { 
       background: rgba(254, 44, 85, 0.18); 
       color: #ff3366; 
@@ -718,8 +747,8 @@
       background: rgba(254, 44, 85, 0.18);
       border: 1px solid rgba(254, 44, 85, 0.45);
       color: #fe2c55;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -729,10 +758,10 @@
       flex-shrink: 0;
       transition: all 0.2s ease;
     }
-    .btn-delete-track:hover {
+    .btn-delete-track:active {
       background: #fe2c55;
       color: #ffffff;
-      transform: scale(1.08);
+      transform: scale(0.92);
     }
 
     .click-heart {
@@ -746,7 +775,7 @@
 
     .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 99999;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999;
       justify-content: center; align-items: center; padding: 16px;
     }
     .modal-overlay.active { display: flex; }
@@ -761,7 +790,7 @@
     }
     .modal-content {
       position: relative; width: 100%; background: rgba(18, 18, 22, 0.95);
-      border-radius: 25px; padding: 24px 20px; text-align: center; color: #ffffff; z-index: 1; max-height: 85vh; overflow-y: auto;
+      border-radius: 25px; padding: 24px 20px; text-align: center; color: #ffffff; z-index: 1; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
     .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: #ffffff; }
     .game-modal-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
@@ -771,17 +800,18 @@
     .game-info-row:last-child { margin-bottom: 0; }
     .info-label { font-size: 0.72rem; color: #a0a0a0; text-transform: uppercase; margin-bottom: 4px; }
     .info-value-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .info-val { font-size: 0.95rem; font-weight: 700; color: var(--neon-color-1); }
-    .btn-copy-mini { padding: 5px 12px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    .btn-view-account-photo { width: 100%; padding: 10px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 12px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .info-val { font-size: 0.95rem; font-weight: 700; color: var(--neon-color-1); word-break: break-all; }
+    .btn-copy-mini { padding: 6px 14px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .btn-copy-mini:active { transform: scale(0.92); }
+    .btn-view-account-photo { width: 100%; padding: 11px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 14px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .account-photo-img { width: 100%; max-height: 50vh; object-fit: contain; border-radius: 14px; background: #0d0d12; margin: 8px 0 14px; }
     .donate-form { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .donate-input-group { text-align: left; }
     .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
     .donate-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.9rem; outline: none; }
     .quick-amount-buttons { display: flex; gap: 6px; margin-top: 6px; }
-    .amount-tag { flex: 1; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border-radius: 8px; cursor: pointer; }
-    .btn-done-submit { width: 100%; margin-top: 8px; padding: 11px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
+    .amount-tag { flex: 1; padding: 7px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border-radius: 8px; cursor: pointer; }
+    .btn-done-submit { width: 100%; margin-top: 8px; padding: 12px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
     #qrResultScreen { display: none; }
     .thankyou-box { background: rgba(254, 44, 85, 0.12); border: 1px solid rgba(254, 44, 85, 0.35); padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; }
     .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
@@ -791,9 +821,9 @@
     .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 10px; }
     .qr-info-summary strong { color: var(--neon-color-1); }
     .bank-quick-copy { display: flex; gap: 8px; margin-bottom: 12px; }
-    .btn-copy-bank { flex: 1; padding: 7px 0; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .btn-copy-bank:hover { background: rgba(37, 244, 238, 0.2); border-color: var(--neon-color-1); color: var(--neon-color-1); }
-    .btn-modal-action { width: 100%; padding: 10px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
+    .btn-copy-bank { flex: 1; padding: 8px 0; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-copy-bank:active { background: rgba(37, 244, 238, 0.2); border-color: var(--neon-color-1); color: var(--neon-color-1); }
+    .btn-modal-action { width: 100%; padding: 11px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
     .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
@@ -931,7 +961,7 @@
               <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
             </div>
             <div style="display: flex; gap: 6px;">
-              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." style="font-size: 0.8rem; padding: 7px 10px;" />
+              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." style="font-size: 0.8rem; padding: 8px 10px;" />
               <button type="button" class="btn-copy-bank" onclick="addCustomTrackFromYT()" style="width: auto; padding: 0 14px; white-space: nowrap; background: rgba(37,244,238,0.2); border-color: var(--neon-color-1); color: var(--neon-color-1);">
                 <i class="fa-solid fa-plus"></i> Thêm
               </button>
@@ -966,12 +996,15 @@
   <!-- THANH MINI PLAYER -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
-      <div class="mini-player-bar">
+      <div class="mini-player-bar" id="miniPlayerBar">
+        <div class="swipe-indicator-bar"></div>
         <div class="progress-row">
           <span class="time-display" id="currentTime">00:00</span>
           <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
-            <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
-            <div class="mini-progress-fill" id="miniProgressBarFill"></div>
+            <div class="mini-progress-track">
+              <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
+              <div class="mini-progress-fill" id="miniProgressBarFill"></div>
+            </div>
           </div>
           <span class="time-display" id="totalDuration">00:00</span>
         </div>
@@ -1167,8 +1200,8 @@
     </div>
   </div>
 
-  <!-- CONTAINER YOUTUBE TRÁNH BỊ CHROME FREEZE NGẦM -->
-  <div style="position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -999;">
+  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE: KHÔNG BỊ TRÌNH DUYỆT CHẶN PHÁT -->
+  <div style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; clip-path: inset(100%); pointer-events: none; z-index: -1;">
     <div id="ytPlayer"></div>
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -1246,7 +1279,7 @@
     }
 
     /* ============================================================
-       2. ÂM THANH BUBBLE POP & HAPTIC
+       2. ÂM THANH BUBBLE POP & HAPTIC TỐI ƯU CẢM ỨNG MOBILE
        ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 20) {
@@ -1281,7 +1314,7 @@
     document.addEventListener('click', (e) => {
       if (e.target.closest('button') || e.target.closest('.track-item') || e.target.closest('.btn-link')) {
         playBubbleSound();
-        triggerHaptic(20);
+        triggerHaptic(18);
       }
     });
 
@@ -1365,7 +1398,7 @@
       heart.style.top = rect.top + 'px';
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 700);
-      triggerHaptic(30);
+      triggerHaptic(25);
 
       if (totalHearts % 10 === 0) {
         triggerMilestoneCelebration();
@@ -1411,7 +1444,7 @@
     }
 
     /* ============================================================
-       7. VẼ HOA ANH ĐÀO (TỐI ƯU PC & MOBILE)
+       7. VẼ HOA ANH ĐÀO (TIẾT KIỆM PIN THÔNG MINH CHO MOBILE)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -1422,6 +1455,7 @@
     let lastTime = 0;
     let fpsInterval = 33;
     let isCanvasVisible = true;
+    let isLowBatteryMode = false;
 
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     const deviceRAM = navigator.deviceMemory || 4;
@@ -1436,13 +1470,29 @@
     } else {
       if (deviceRAM < 3) {
         enableBranches = false;
-        maxPetals = 12;
-        fpsInterval = 40;
+        maxPetals = 10;
+        fpsInterval = 45;
       } else {
         enableBranches = true;
-        maxPetals = 20;
+        maxPetals = 16;
         fpsInterval = 33;
       }
+    }
+
+    // Tự động tối ưu giảm tải khi điện thoại dưới 20% pin
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then(battery => {
+        function checkBattery() {
+          if (battery.level <= 0.2 && !battery.charging) {
+            isLowBatteryMode = true;
+            maxPetals = 6;
+            enableBranches = false;
+          }
+        }
+        checkBattery();
+        battery.addEventListener('levelchange', checkBattery);
+        battery.addEventListener('chargingchange', checkBattery);
+      }).catch(() => {});
     }
 
     function resizeCanvas() {
@@ -1559,7 +1609,7 @@
     }
 
     function animateSakura(currentTime) {
-      if (!isCanvasVisible || document.hidden) {
+      if (!isCanvasVisible || document.hidden || isLowBatteryMode) {
         sakuraAnimId = requestAnimationFrame(animateSakura);
         return;
       }
@@ -1838,7 +1888,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID CHUẨN XÁC
+       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID
        ============================================================ */
     const playlist = [
       { 
@@ -1934,7 +1984,6 @@
       }
     ];
 
-    // Nạp các bài hát YouTube từ LocalStorage (tự động gắn cờ isCustom)
     const savedCustomTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
     savedCustomTracks.forEach(t => {
       t.isCustom = true;
@@ -1961,12 +2010,14 @@
 
     let ytPlayer = null;
     let isYTReady = false;
+    let pendingYTVideoId = null;
 
-    // Khởi tạo YouTube Iframe Player
     window.onYouTubeIframeAPIReady = function() {
+      const originHost = (window.location.protocol === 'file:') ? '*' : window.location.origin;
+
       ytPlayer = new YT.Player('ytPlayer', {
-        height: '100%',
-        width: '100%',
+        height: '200',
+        width: '200',
         playerVars: {
           'autoplay': 0,
           'controls': 0,
@@ -1974,18 +2025,26 @@
           'disablekb': 1,
           'fs': 0,
           'rel': 0,
-          'origin': window.location.origin
+          'origin': originHost
         },
         events: {
           'onReady': () => { 
             isYTReady = true;
-            if (isMuted) ytPlayer.mute();
-            else ytPlayer.setVolume(parseFloat(document.getElementById('volumeSlider').value) * 100);
+            if (isMuted) {
+              ytPlayer.mute();
+            } else {
+              ytPlayer.unMute();
+              ytPlayer.setVolume(parseFloat(document.getElementById('volumeSlider').value) * 100);
+            }
 
-            // Nạp video sẵn nếu bài hiện tại sau khi F5 là YouTube
-            const track = playlist[currentTrackIndex];
-            if (track && track.ytId && ytPlayer.cueVideoById) {
-              ytPlayer.cueVideoById(track.ytId);
+            if (pendingYTVideoId && ytPlayer.loadVideoById) {
+              ytPlayer.loadVideoById(pendingYTVideoId);
+              pendingYTVideoId = null;
+            } else {
+              const currentT = playlist[currentTrackIndex];
+              if (currentT && currentT.ytId && ytPlayer.cueVideoById) {
+                ytPlayer.cueVideoById(currentT.ytId);
+              }
             }
           },
           'onStateChange': onYTPlayerStateChange
@@ -2183,7 +2242,6 @@
       document.getElementById('currentTime').innerText = "00:00";
       document.getElementById('miniProgressBarFill').style.width = '0%';
 
-      // Dừng cả 2 nguồn phát
       audioElement.pause();
       audioElement.currentTime = 0;
       if (ytPlayer && isYTReady && ytPlayer.stopVideo) {
@@ -2198,17 +2256,9 @@
             document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
             if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
           } else {
-            const checkReady = setInterval(() => {
-              if (ytPlayer && isYTReady && ytPlayer.loadVideoById) {
-                clearInterval(checkReady);
-                ytPlayer.loadVideoById(track.ytId);
-                isPlaying = true;
-                document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
-              }
-            }, 100);
+            pendingYTVideoId = track.ytId;
           }
         } else {
-          // Chuẩn bị sẵn video ngầm lúc mở trang
           if (ytPlayer && isYTReady && ytPlayer.cueVideoById) {
             ytPlayer.cueVideoById(track.ytId);
           }
@@ -2240,17 +2290,16 @@
 
       if (track.ytId) {
         if (!ytPlayer || !isYTReady) {
-          // Trường hợp API chưa sẵn sàng thì thử load lại
           loadTrack(currentTrackIndex, true);
           return;
         }
 
-        const state = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() : -1;
+        const state = (ytPlayer.getPlayerState) ? ytPlayer.getPlayerState() : -1;
         if (state === YT.PlayerState.PLAYING) {
           ytPlayer.pauseVideo();
           isPlaying = false;
           miniPlayIcon.className = "fa-solid fa-play";
-        } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
+        } else if (state === YT.PlayerState.PAUSED) {
           ytPlayer.playVideo();
           isPlaying = true;
           miniPlayIcon.className = "fa-solid fa-pause";
@@ -2346,7 +2395,7 @@
     function seekTrack(event) {
       const bg = document.getElementById('miniProgressBarBg');
       const rect = bg.getBoundingClientRect();
-      const percent = (event.clientX - rect.left) / rect.width;
+      const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
       const track = playlist[currentTrackIndex];
 
       if (track.ytId && ytPlayer && ytPlayer.getDuration) {
@@ -2433,6 +2482,9 @@
 
     function triggerPlayOnFirstInteraction() {
       initAudioGraph();
+      if (ytPlayer && isYTReady && ytPlayer.unMute && !isMuted) {
+        ytPlayer.unMute();
+      }
     }
     window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
     window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
@@ -2442,7 +2494,7 @@
       inlineMuteIcon.className = "fa-solid fa-volume-xmark";
     }
 
-    /* RENDER PLAYLIST: TẤT CẢ BÀI CÓ YTID ĐỀU HIỆN NÚT XÓA */
+    /* RENDER PLAYLIST */
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
       container.innerHTML = "";
@@ -2468,7 +2520,6 @@
       });
     }
 
-    /* XÓA BÀI HÁT KHỎI DANH SÁCH & LOCALSTORAGE */
     function deleteCustomTrack(event, index) {
       if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
@@ -2510,7 +2561,6 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    /* BỘ TÁCH ID YOUTUBE TOÀN DIỆN */
     function extractYouTubeID(url) {
       if (!url) return null;
       url = url.trim();
@@ -2590,27 +2640,40 @@
       }
     }
 
-    /* VUỐT TRÊN MOBILE */
+    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE (VUỐT NGANG ĐỔI BÀI, VUỐT DỌC THU GỌN) */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
+    let touchEndY = 0;
 
     miniContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
 
     miniContainer.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
+      touchEndY = e.changedTouches[0].screenY;
+      handleMobileGestures();
     }, { passive: true });
 
-    function handleSwipe() {
-      const diff = touchEndX - touchStartX;
-      if (Math.abs(diff) > 50) {
-        if (diff < 0) {
+    function handleMobileGestures() {
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      // Nếu vuốt ngang > 50px: Đổi bài
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX < 0) {
           nextTrack();
         } else {
           prevTrack();
+        }
+      }
+      // Nếu vuốt dọc lên trên > 40px: Thu gọn Mini Player
+      else if (diffY < -40 && Math.abs(diffX) < 40) {
+        if (!miniContainer.classList.contains('collapsed')) {
+          toggleMiniPlayerCollapse();
         }
       }
     }
