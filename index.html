@@ -147,7 +147,6 @@
       opacity: 1;
     }
 
-    /* Tối ưu hóa hiển thị gọn gàng trên mobile để không bị tràn màn hình */
     .top-left-actions {
       position: fixed;
       top: calc(env(safe-area-inset-top, 12px) + 8px);
@@ -963,7 +962,7 @@
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG (Đã thu gọn để hiển thị hoàn hảo trên Mobile) -->
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG (Thêm nút tải lại trang) -->
   <div class="top-left-actions">
     <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
       <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
@@ -1084,7 +1083,6 @@
         </button>
 
         <div id="musicPanel" class="music-player-panel">
-          <!-- KHỐI NHẬP VÀ THÊM LINK YOUTUBE -->
           <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 14px; border: 1px dashed var(--border-subtle);">
             <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
               <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
@@ -1329,7 +1327,7 @@
     </div>
   </div>
 
-  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE -->
+  <!-- CONTAINER YOUTUBE -->
   <div style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; clip-path: inset(100%); pointer-events: none; z-index: -1;">
     <div id="ytPlayer"></div>
   </div>
@@ -1337,8 +1335,8 @@
 
   <script>
     /* ============================================================
-       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
-       ============================================================ */
+        0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
+        ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toDateString();
       const savedDate = localStorage.getItem('sagiri_view_date');
@@ -1393,8 +1391,8 @@
     }
 
     /* ============================================================
-       1. NATIVE WEB SHARE API & RELOAD
-       ============================================================ */
+        1. NATIVE WEB SHARE API & RELOAD
+        ============================================================ */
     function nativeSharePage() {
       if (navigator.share) {
         navigator.share({
@@ -1415,8 +1413,8 @@
     }
 
     /* ============================================================
-       2. ÂM THANH BUBBLE POP & HAPTIC
-       ============================================================ */
+        2. ÂM THANH BUBBLE POP & HAPTIC
+        ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 20) {
       if ('vibrate' in navigator) {
@@ -1455,8 +1453,8 @@
     });
 
     /* ============================================================
-       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
-       ============================================================ */
+        3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+        ============================================================ */
     function updateClockAndAmbient() {
       const now = new Date();
       const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -1485,8 +1483,8 @@
     updateClockAndAmbient();
 
     /* ============================================================
-       4. TOAST NOTIFICATION
-       ============================================================ */
+        4. TOAST NOTIFICATION
+        ============================================================ */
     let toastTimer = null;
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
@@ -1500,8 +1498,8 @@
     }
 
     /* ============================================================
-       5. BỘ ĐẾM TIM & ĂN MỪNG
-       ============================================================ */
+        5. BỘ ĐẾM TIM & ĂN MỪNG
+        ============================================================ */
     let totalHearts = parseInt(localStorage.getItem('sagiri_hearts_count'), 10) || 128;
     document.getElementById('heartCount').innerText = totalHearts;
 
@@ -1544,8 +1542,8 @@
     }
 
     /* ============================================================
-       6. CHỤP PROFILE CARD
-       ============================================================ */
+        6. CHỤP PROFILE CARD
+        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
       const text = document.getElementById('btnScreenshotText');
@@ -1580,8 +1578,8 @@
     }
 
     /* ============================================================
-       7. VẼ HOA ANH ĐÀO (CÁNH HOA TO RÕ, KHÔNG CÒN CHẤM LI TI)
-       ============================================================ */
+        7. VẼ HOA ANH ĐÀO
+        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
     let petals = [];
@@ -1719,8 +1717,8 @@
     });
 
     /* ============================================================
-       7.1. AUDIO CONTEXT CANVAS VISUALIZER (SÓNG NHẠC NEON PHÂN LỚP)
-       ============================================================ */
+        7.1. AUDIO CONTEXT CANVAS VISUALIZER
+        ============================================================ */
     const vCanvas = document.getElementById('visualizerCanvas');
     const vCtx = vCanvas.getContext('2d');
     let analyserNode = null;
@@ -1800,8 +1798,8 @@
     requestAnimationFrame(drawAudioVisualizer);
 
     /* ============================================================
-       8. CLICK TRÁI TIM
-       ============================================================ */
+        8. CLICK TRÁI TIM
+        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
       if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg')) return;
@@ -1815,8 +1813,8 @@
     });
 
     /* ============================================================
-       9. DỮ LIỆU GAME & MODAL
-       ============================================================ */
+        9. DỮ LIỆU GAME & MODAL
+        ============================================================ */
     const gamesData = {
       ww: {
         name: "Wuthering Waves",
@@ -1942,8 +1940,8 @@
     }
 
     /* ============================================================
-       10. GUESTBOOK (DISCORD WEBHOOK)
-       ============================================================ */
+        10. GUESTBOOK
+        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
     }
@@ -1986,8 +1984,8 @@
     }
 
     /* ============================================================
-       11. LANYARD DISCORD REALTIME STATUS
-       ============================================================ */
+        11. LANYARD DISCORD REALTIME STATUS
+        ============================================================ */
     function initDiscordPresence() {
       const DISCORD_USER_ID = "1546332023017185330";
       const statusTextElem = document.getElementById('liveStatusText');
@@ -2039,8 +2037,8 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID (SỬA LỖI PC AUDIO GRAPH)
-       ============================================================ */
+        12. PLAYLIST & MEDIA SESSION & YOUTUBE HYBRID
+        ============================================================ */
     const playlist = [
       { 
         title: "Styx Helix", 
@@ -2263,10 +2261,7 @@
 
           const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
           gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
-        } catch (e) {
-          // Fallback an toàn nếu trình duyệt chặn createMediaElementSource
-          audioElement.onvolumechange = null;
-        }
+        } catch (e) {}
       }
       if (soundContext && soundContext.state === 'suspended') {
         soundContext.resume();
@@ -2331,33 +2326,6 @@
         navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
-
-        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
-            const curr = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(Math.max(curr - (details.seekOffset || 10), 0), true);
-          } else {
-            audioElement.currentTime = Math.max(audioElement.currentTime - (details.seekOffset || 10), 0);
-          }
-        });
-        navigator.mediaSession.setActionHandler('seekforward', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
-            const curr = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(Math.min(curr + (details.seekOffset || 10), ytPlayer.getDuration()), true);
-          } else {
-            audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration || 0);
-          }
-        });
-        navigator.mediaSession.setActionHandler('seekto', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.seekTo) {
-            ytPlayer.seekTo(details.seekTime, true);
-          } else {
-            audioElement.currentTime = details.seekTime;
-          }
-        });
       }
     }
 
@@ -2802,7 +2770,6 @@
       }
     }
 
-    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchStartY = 0;
