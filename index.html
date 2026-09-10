@@ -972,7 +972,7 @@
           <!-- KHỐI NHẬP VÀ THÊM LINK YOUTUBE -->
           <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
             <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube (Tự động lọc QC)
+              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát (Phát nền & Lọc QC)
             </div>
             <div style="display: flex; gap: 6px;">
               <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
@@ -1214,7 +1214,7 @@
     </div>
   </div>
 
-  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE: KHÔNG BỊ TRÌNH DUYỆT CHẶN PHÁT -->
+  <!-- CONTAINER YOUTUBE DỰ PHÒNG -->
   <div style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; clip-path: inset(100%); pointer-events: none; z-index: -1;">
     <div id="ytPlayer"></div>
   </div>
@@ -1458,7 +1458,7 @@
     }
 
     /* ============================================================
-       7. VẼ HOA ANH ĐÀO (TIẾT KIỆM PIN THÔNG MINH CHO MOBILE)
+       7. VẼ HOA ANH ĐÀO
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -1906,7 +1906,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID
+       12. PLAYLIST, NATIVE BACKGROUND AUDIO & LỌC QUẢNG CÁO
        ============================================================ */
     const playlist = [
       { 
@@ -2018,6 +2018,7 @@
     let currentLyricIdx = 0;
     let ytProgressTimer = null;
 
+    // THẺ AUDIO NATIVE CHÍNH - CHO PHÉP CHẠY NỀN & KHÓA MÀN HÌNH
     const audioElement = new Audio();
     audioElement.preload = "auto";
     audioElement.crossOrigin = "anonymous";
@@ -2032,7 +2033,6 @@
 
     window.onYouTubeIframeAPIReady = function() {
       const originHost = (window.location.protocol === 'file:') ? '*' : window.location.origin;
-
       ytPlayer = new YT.Player('ytPlayer', {
         height: '200',
         width: '200',
@@ -2054,15 +2054,9 @@
               ytPlayer.unMute();
               ytPlayer.setVolume(parseFloat(document.getElementById('volumeSlider').value) * 100);
             }
-
             if (pendingYTVideoId && ytPlayer.loadVideoById) {
               ytPlayer.loadVideoById(pendingYTVideoId);
               pendingYTVideoId = null;
-            } else {
-              const currentT = playlist[currentTrackIndex];
-              if (currentT && currentT.ytId && ytPlayer.cueVideoById) {
-                ytPlayer.cueVideoById(currentT.ytId);
-              }
             }
           },
           'onStateChange': onYTPlayerStateChange
@@ -2101,7 +2095,7 @@
           const curr = ytPlayer.getCurrentTime() || 0;
           const dur = ytPlayer.getDuration() || 0;
 
-          // BỘ LỌC TỰ ĐỘNG BỎ QUA QUẢNG CÁO & PHÂN ĐOẠN TÀI TRỢ
+          // LỌC QC KHI PHÁT DỰ PHÒNG QUA IFRAME
           const currentTrack = playlist[currentTrackIndex];
           if (currentTrack && currentTrack.skipAds && currentTrack.skipAds.length > 0) {
             for (let seg of currentTrack.skipAds) {
@@ -2127,16 +2121,18 @@
 
     function initAudioGraph() {
       if (!soundContext) {
-        soundContext = new (window.AudioContext || window.webkitAudioContext)();
-        gainNode = soundContext.createGain();
-        audioSourceNode = soundContext.createMediaElementSource(audioElement);
-        audioSourceNode.connect(gainNode);
-        gainNode.connect(soundContext.destination);
+        try {
+          soundContext = new (window.AudioContext || window.webkitAudioContext)();
+          gainNode = soundContext.createGain();
+          audioSourceNode = soundContext.createMediaElementSource(audioElement);
+          audioSourceNode.connect(gainNode);
+          gainNode.connect(soundContext.destination);
 
-        const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
-        gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
+          const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
+          gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
+        } catch(e){}
       }
-      if (soundContext.state === 'suspended') {
+      if (soundContext && soundContext.state === 'suspended') {
         soundContext.resume();
       }
     }
@@ -2160,7 +2156,6 @@
       currentLyricIdx = 0;
 
       if (!track.lyrics || track.lyrics.length === 0) return;
-
       lyricElem.innerText = track.lyrics[0];
 
       lyricInterval = setInterval(() => {
@@ -2176,6 +2171,7 @@
       }, 4500);
     }
 
+    // ĐIỀU KHIỂN TAI NGHE & MÀN HÌNH KHÓA TRÊN MOBILE
     function updateMediaSession() {
       if ('mediaSession' in navigator) {
         const track = playlist[currentTrackIndex];
@@ -2201,29 +2197,24 @@
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
 
         navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
-            const curr = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(Math.max(curr - (details.seekOffset || 10), 0), true);
-          } else {
+          if (audioElement.duration) {
             audioElement.currentTime = Math.max(audioElement.currentTime - (details.seekOffset || 10), 0);
+          } else if (ytPlayer && ytPlayer.getCurrentTime) {
+            ytPlayer.seekTo(Math.max(ytPlayer.getCurrentTime() - (details.seekOffset || 10), 0), true);
           }
         });
         navigator.mediaSession.setActionHandler('seekforward', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.getCurrentTime) {
-            const curr = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(Math.min(curr + (details.seekOffset || 10), ytPlayer.getDuration()), true);
-          } else {
-            audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration || 0);
+          if (audioElement.duration) {
+            audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration);
+          } else if (ytPlayer && ytPlayer.getCurrentTime) {
+            ytPlayer.seekTo(Math.min(ytPlayer.getCurrentTime() + (details.seekOffset || 10), ytPlayer.getDuration()), true);
           }
         });
         navigator.mediaSession.setActionHandler('seekto', (details) => {
-          const track = playlist[currentTrackIndex];
-          if (track.ytId && ytPlayer && ytPlayer.seekTo) {
-            ytPlayer.seekTo(details.seekTime, true);
-          } else {
+          if (audioElement.duration) {
             audioElement.currentTime = details.seekTime;
+          } else if (ytPlayer && ytPlayer.seekTo) {
+            ytPlayer.seekTo(details.seekTime, true);
           }
         });
       }
@@ -2279,22 +2270,8 @@
         try { ytPlayer.stopVideo(); } catch(e){}
       }
 
-      if (track.ytId) {
-        if (autoPlay) {
-          if (ytPlayer && isYTReady && ytPlayer.loadVideoById) {
-            ytPlayer.loadVideoById(track.ytId);
-            isPlaying = true;
-            document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
-            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
-          } else {
-            pendingYTVideoId = track.ytId;
-          }
-        } else {
-          if (ytPlayer && isYTReady && ytPlayer.cueVideoById) {
-            ytPlayer.cueVideoById(track.ytId);
-          }
-        }
-      } else {
+      // ƯU TIÊN PHÁT QUA THẺ AUDIO (HỖ TRỢ CHẠY NỀN MOBILE)
+      if (track.src) {
         audioElement.src = track.src;
         audioElement.load();
 
@@ -2312,6 +2289,22 @@
             syncVisualEffects();
           });
         }
+      } else if (track.ytId) {
+        // DỰ PHÒNG NẾU KHÔNG CÓ AUDIO DIRECT STREAM
+        if (autoPlay) {
+          if (ytPlayer && isYTReady && ytPlayer.loadVideoById) {
+            ytPlayer.loadVideoById(track.ytId);
+            isPlaying = true;
+            document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+          } else {
+            pendingYTVideoId = track.ytId;
+          }
+        } else {
+          if (ytPlayer && isYTReady && ytPlayer.cueVideoById) {
+            ytPlayer.cueVideoById(track.ytId);
+          }
+        }
       }
     }
 
@@ -2319,27 +2312,7 @@
       const track = playlist[currentTrackIndex];
       const miniPlayIcon = document.getElementById('miniPlayIcon');
 
-      if (track.ytId) {
-        if (!ytPlayer || !isYTReady) {
-          loadTrack(currentTrackIndex, true);
-          return;
-        }
-
-        const state = (ytPlayer.getPlayerState) ? ytPlayer.getPlayerState() : -1;
-        if (state === YT.PlayerState.PLAYING) {
-          ytPlayer.pauseVideo();
-          isPlaying = false;
-          miniPlayIcon.className = "fa-solid fa-play";
-        } else if (state === YT.PlayerState.PAUSED) {
-          ytPlayer.playVideo();
-          isPlaying = true;
-          miniPlayIcon.className = "fa-solid fa-pause";
-        } else {
-          ytPlayer.loadVideoById(track.ytId);
-          isPlaying = true;
-          miniPlayIcon.className = "fa-solid fa-pause";
-        }
-      } else {
+      if (track.src) {
         initAudioGraph();
         if (isPlaying) {
           audioElement.pause();
@@ -2354,6 +2327,21 @@
             if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
             syncVisualEffects();
           }).catch(() => {});
+        }
+      } else if (track.ytId) {
+        if (!ytPlayer || !isYTReady) {
+          loadTrack(currentTrackIndex, true);
+          return;
+        }
+        const state = (ytPlayer.getPlayerState) ? ytPlayer.getPlayerState() : -1;
+        if (state === YT.PlayerState.PLAYING) {
+          ytPlayer.pauseVideo();
+          isPlaying = false;
+          miniPlayIcon.className = "fa-solid fa-play";
+        } else {
+          ytPlayer.playVideo();
+          isPlaying = true;
+          miniPlayIcon.className = "fa-solid fa-pause";
         }
       }
     }
@@ -2427,13 +2415,12 @@
       const bg = document.getElementById('miniProgressBarBg');
       const rect = bg.getBoundingClientRect();
       const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-      const track = playlist[currentTrackIndex];
 
-      if (track.ytId && ytPlayer && ytPlayer.getDuration) {
+      if (audioElement.duration) {
+        audioElement.currentTime = percent * audioElement.duration;
+      } else if (ytPlayer && ytPlayer.getDuration) {
         const dur = ytPlayer.getDuration();
         if (dur) ytPlayer.seekTo(percent * dur, true);
-      } else if (audioElement.duration) {
-        audioElement.currentTime = percent * audioElement.duration;
       }
     }
 
@@ -2448,12 +2435,27 @@
       }
     }
 
+    // TỰ ĐỘNG BỎ QUA QUẢNG CÁO TRÊN LUỒNG AUDIO CHẠY NỀN
     audioElement.addEventListener('timeupdate', () => {
       if (audioElement.duration) {
-        const percent = (audioElement.currentTime / audioElement.duration) * 100;
+        const curr = audioElement.currentTime;
+        const dur = audioElement.duration;
+
+        const currentTrack = playlist[currentTrackIndex];
+        if (currentTrack && currentTrack.skipAds && currentTrack.skipAds.length > 0) {
+          for (let seg of currentTrack.skipAds) {
+            if (curr >= seg[0] && curr < seg[1] - 0.5) {
+              audioElement.currentTime = seg[1];
+              showToast("⏩ Đã tự động bỏ qua đoạn quảng cáo!");
+              break;
+            }
+          }
+        }
+
+        const percent = (curr / dur) * 100;
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
-        document.getElementById('currentTime').innerText = formatTime(audioElement.currentTime);
-        updatePositionState(audioElement.currentTime, audioElement.duration);
+        document.getElementById('currentTime').innerText = formatTime(curr);
+        updatePositionState(curr, dur);
       }
     });
 
@@ -2471,7 +2473,7 @@
     });
 
     audioElement.addEventListener('pause', () => {
-      if (isPlaying && !playlist[currentTrackIndex].ytId) {
+      if (isPlaying) {
         isPlaying = false;
         document.getElementById('miniPlayIcon').className = "fa-solid fa-play";
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
@@ -2480,12 +2482,10 @@
     });
 
     audioElement.addEventListener('play', () => {
-      if (!playlist[currentTrackIndex].ytId) {
-        isPlaying = true;
-        document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
-        syncVisualEffects();
-      }
+      isPlaying = true;
+      document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+      syncVisualEffects();
     });
 
     audioElement.addEventListener('ended', () => {
@@ -2532,9 +2532,9 @@
         const item = document.createElement('div');
         item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
         
-        const ytBadge = track.ytId ? `<i class="fa-brands fa-youtube" style="color: #fe2c55; margin-right: 4px;"></i>` : "";
+        const ytBadge = track.isCustom ? `<i class="fa-brands fa-youtube" style="color: #fe2c55; margin-right: 4px;"></i>` : "";
         
-        const actionButtonHtml = track.ytId ? `
+        const actionButtonHtml = track.isCustom ? `
           <button type="button" class="btn-delete-track" onclick="deleteCustomTrack(event, ${index})" title="Xóa bài này">
             <i class="fa-solid fa-trash-can"></i>
           </button>
@@ -2555,7 +2555,7 @@
       const trackToDelete = playlist[index];
       
       let customTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-      customTracks = customTracks.filter(t => t.ytId !== trackToDelete.ytId);
+      customTracks = customTracks.filter(t => (t.ytId && t.ytId !== trackToDelete.ytId) || (t.title !== trackToDelete.title));
       localStorage.setItem('sagiri_custom_tracks', JSON.stringify(customTracks));
 
       playlist.splice(index, 1);
@@ -2623,6 +2623,7 @@
       return null;
     }
 
+    // TẢI AUDIO STREAM ĐỂ CHẠY NỀN & LỌC QUẢNG CÁO
     async function addCustomTrackFromYT() {
       const input = document.getElementById('ytUrlInput');
       const url = input.value.trim();
@@ -2633,12 +2634,13 @@
         return;
       }
 
-      showToast("⏳ Đang tải bài hát và lọc QC...");
+      showToast("⏳ Đang thiết lập chạy nền & lọc QC...");
 
       try {
         const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
         const data = await res.json();
 
+        // 1. LẤY DANH SÁCH MỐC QUẢNG CÁO TỪ SPONSORBLOCK
         let skipSegments = [];
         try {
           const sbRes = await fetch(`https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=["sponsor","selfpromo","interaction"]`);
@@ -2648,20 +2650,33 @@
           }
         } catch (err) {}
 
+        // 2. LẤY LUỒNG AUDIO TRỰC TIẾP ĐỂ CHẠY NỀN (KHÔNG BỊ TẮT KHI KHÓA MÀN HÌNH)
+        let audioDirectUrl = null;
+        try {
+          const streamRes = await fetch(`https://pipedapi.kavin.rocks/streams/${videoId}`);
+          if (streamRes.ok) {
+            const streamData = await streamRes.json();
+            if (streamData.audioStreams && streamData.audioStreams.length > 0) {
+              audioDirectUrl = streamData.audioStreams[0].url;
+            }
+          }
+        } catch (e) {}
+
         const newTrack = {
           title: data.title || "YouTube Track",
           artist: data.author_name || "YouTube Audio",
           album: "YouTube Music",
           artwork: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           ytId: videoId,
+          src: audioDirectUrl || null, // Nếu có link stream -> chạy nền HTML5 Audio native
           isCustom: true,
           skipAds: skipSegments,
           color1: "#fe2c55",
           color2: "#25f4ee",
           lyrics: [
-            "♫ Đang phát từ luồng YouTube Audio (Đã bật lọc QC)...",
+            "♫ Đang phát từ luồng chạy nền (Đã lọc QC)...",
             `Tác giả: ${data.author_name || "YouTube"}`,
-            "♫ Thưởng thức âm nhạc trọn vẹn!"
+            "♫ Tắt màn hình vẫn tiếp tục nghe mượt mà!"
           ]
         };
 
@@ -2672,7 +2687,7 @@
         playlist.push(newTrack);
         renderPlaylist();
         input.value = "";
-        showToast("🌸 Đã thêm bài hát & bật lọc QC thành công!");
+        showToast("🌸 Đã bật chế độ phát nền & lọc QC!");
 
         selectTrack(playlist.length - 1);
       } catch (e) {
