@@ -881,10 +881,13 @@
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG (CÓ THÊM PHÍM TẢI LẠI TRANG) -->
   <div class="top-left-actions">
     <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
       <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
+    </button>
+    <button type="button" class="btn-top-pill" onclick="reloadPageClean()" title="Tải lại trang">
+      <i class="fa-solid fa-rotate-right" id="reloadIcon"></i>
     </button>
     <button type="button" class="btn-top-pill" onclick="nativeSharePage()" title="Chia sẻ trang">
       <i class="fa-solid fa-share-nodes"></i>
@@ -1333,6 +1336,17 @@
       } else {
         copyToClipboard(window.location.href, "🌸 Đã sao chép liên kết trang!");
       }
+    }
+
+    // TẢI LẠI TRANG SẠCH (XÓA BỎ CACHE CŨ)
+    function reloadPageClean() {
+      const icon = document.getElementById('reloadIcon');
+      if (icon) icon.classList.add('fa-spin');
+      showToast("🔄 Đang làm mới toàn bộ trang...");
+      setTimeout(() => {
+        const cleanUrl = window.location.href.split('?')[0] + '?reload=' + Date.now();
+        window.location.replace(cleanUrl);
+      }, 500);
     }
 
     /* ============================================================
@@ -2606,12 +2620,10 @@
       for (let file of files) {
         if (!file.name.toLowerCase().endsWith('.mp3')) continue;
 
-        // Chuẩn hóa tên file không dấu/ký tự đặc biệt
         const fileExt = file.name.split('.').pop();
         const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9]/g, "_");
         const filePath = `${Date.now()}_${cleanName}.${fileExt}`;
 
-        // Đẩy lên Storage
         const { data, error } = await supabaseClient.storage
           .from('sagiri-music')
           .upload(filePath, file, { cacheControl: '3600', upsert: true });
@@ -2621,7 +2633,6 @@
           continue;
         }
 
-        // Lấy public URL
         const { data: { publicUrl } } = supabaseClient.storage
           .from('sagiri-music')
           .getPublicUrl(filePath);
@@ -2714,7 +2725,6 @@
       } catch (err) {}
     }
 
-    // XỬ LÝ LINK YOUTUBE
     function deleteCustomTrack(event, index) {
       if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
