@@ -813,7 +813,6 @@
     .donate-input-group { text-align: left; }
     .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
     
-    /* Cố định cỡ font >= 16px chống iOS auto-zoom khi focus */
     .donate-input { 
       width: 100%; 
       padding: 12px; 
@@ -973,7 +972,7 @@
           <!-- KHỐI NHẬP VÀ THÊM LINK YOUTUBE -->
           <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
             <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
+              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube (Tự động lọc QC)
             </div>
             <div style="display: flex; gap: 6px;">
               <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
@@ -1516,7 +1515,6 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Giảm tần suất lắng nghe cảm biến chuyển động (Throttling) để chống hao pin
     let lastOrientationUpdate = 0;
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
@@ -2102,6 +2100,19 @@
         if (ytPlayer && isPlaying && ytPlayer.getCurrentTime) {
           const curr = ytPlayer.getCurrentTime() || 0;
           const dur = ytPlayer.getDuration() || 0;
+
+          // BỘ LỌC TỰ ĐỘNG BỎ QUA QUẢNG CÁO & PHÂN ĐOẠN TÀI TRỢ
+          const currentTrack = playlist[currentTrackIndex];
+          if (currentTrack && currentTrack.skipAds && currentTrack.skipAds.length > 0) {
+            for (let seg of currentTrack.skipAds) {
+              if (curr >= seg[0] && curr < seg[1] - 0.5) {
+                ytPlayer.seekTo(seg[1], true);
+                showToast("⏩ Đã tự động bỏ qua đoạn quảng cáo!");
+                break;
+              }
+            }
+          }
+
           if (dur > 0) {
             const percent = (curr / dur) * 100;
             document.getElementById('miniProgressBarFill').style.width = percent + '%';
@@ -2622,11 +2633,20 @@
         return;
       }
 
-      showToast("⏳ Đang tải bài hát...");
+      showToast("⏳ Đang tải bài hát và lọc QC...");
 
       try {
         const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
         const data = await res.json();
+
+        let skipSegments = [];
+        try {
+          const sbRes = await fetch(`https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=["sponsor","selfpromo","interaction"]`);
+          if (sbRes.ok) {
+            const sbData = await sbRes.json();
+            skipSegments = sbData.map(item => item.segment);
+          }
+        } catch (err) {}
 
         const newTrack = {
           title: data.title || "YouTube Track",
@@ -2635,12 +2655,13 @@
           artwork: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           ytId: videoId,
           isCustom: true,
+          skipAds: skipSegments,
           color1: "#fe2c55",
           color2: "#25f4ee",
           lyrics: [
-            "♫ Đang phát từ luồng YouTube Audio...",
+            "♫ Đang phát từ luồng YouTube Audio (Đã bật lọc QC)...",
             `Tác giả: ${data.author_name || "YouTube"}`,
-            "♫ Thưởng thức âm nhạc yêu thích của bạn!"
+            "♫ Thưởng thức âm nhạc trọn vẹn!"
           ]
         };
 
@@ -2651,7 +2672,7 @@
         playlist.push(newTrack);
         renderPlaylist();
         input.value = "";
-        showToast("🌸 Đã thêm bài hát thành công!");
+        showToast("🌸 Đã thêm bài hát & bật lọc QC thành công!");
 
         selectTrack(playlist.length - 1);
       } catch (e) {
