@@ -195,6 +195,18 @@
       z-index: 5;
     }
 
+    #visualizerCanvas {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0.75;
+      transition: opacity 0.5s ease;
+    }
+
     @keyframes tiktokGradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -813,7 +825,6 @@
     .donate-input-group { text-align: left; }
     .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
     
-    /* Cố định cỡ font >= 16px chống iOS auto-zoom khi focus */
     .donate-input { 
       width: 100%; 
       padding: 12px; 
@@ -869,8 +880,9 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS HOA ANH ĐÀO -->
+  <!-- CANVAS HOA ANH ĐÀO & CANVAS SÓNG NHẠC NEON -->
   <canvas id="sakuraCanvas"></canvas>
+  <canvas id="visualizerCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
     <div class="card">
@@ -1215,7 +1227,7 @@
     </div>
   </div>
 
-  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE: KHÔNG BỊ TRÌNH DUYỆT CHẶN PHÁT -->
+  <!-- CONTAINER YOUTUBE TỐI ƯU CHO CẢ PC & MOBILE -->
   <div style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; clip-path: inset(100%); pointer-events: none; z-index: -1;">
     <div id="ytPlayer"></div>
   </div>
@@ -1294,7 +1306,7 @@
     }
 
     /* ============================================================
-       2. ÂM THANH BUBBLE POP & HAPTIC TỐI ƯU CẢM ỨNG MOBILE
+       2. ÂM THANH BUBBLE POP & HAPTIC
        ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 20) {
@@ -1512,11 +1524,10 @@
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      resizeVisualizer();
     }
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
 
-    // Giảm tần suất lắng nghe cảm biến chuyển động (Throttling) để chống hao pin
     let lastOrientationUpdate = 0;
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
@@ -1667,6 +1678,88 @@
         requestAnimationFrame(animateSakura);
       }
     });
+
+    /* ============================================================
+       7.1. AUDIO CONTEXT CANVAS VISUALIZER (SÓNG NHẠC NEON TƯƠNG TÁC)
+       ============================================================ */
+    const vCanvas = document.getElementById('visualizerCanvas');
+    const vCtx = vCanvas.getContext('2d');
+    let analyserNode = null;
+    let dataArray = null;
+    let visualizerAnimId = null;
+
+    function resizeVisualizer() {
+      vCanvas.width = window.innerWidth;
+      vCanvas.height = 120;
+    }
+    resizeVisualizer();
+
+    function drawAudioVisualizer() {
+      visualizerAnimId = requestAnimationFrame(drawAudioVisualizer);
+
+      vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
+
+      if (!isPlaying || isMuted) return;
+
+      const track = playlist[currentTrackIndex];
+      const color1 = track.color1 || '#25f4ee';
+      const color2 = track.color2 || '#fe2c55';
+
+      const barWidth = Math.max(3, (vCanvas.width / 64) - 2);
+      const numBars = Math.floor(vCanvas.width / (barWidth + 2));
+
+      // Nguồn MP3: Dùng Analyser thật từ Web Audio API
+      if (!track.ytId && analyserNode) {
+        analyserNode.getByteFrequencyData(dataArray);
+
+        for (let i = 0; i < numBars; i++) {
+          const dataIdx = Math.floor((i / numBars) * (dataArray.length / 2));
+          const val = dataArray[dataIdx] || 0;
+          const barHeight = (val / 255) * (vCanvas.height - 15) + 3;
+
+          const x = i * (barWidth + 2);
+          const y = vCanvas.height - barHeight;
+
+          const grad = vCtx.createLinearGradient(0, y, 0, vCanvas.height);
+          grad.addColorStop(0, color2);
+          grad.addColorStop(1, color1);
+
+          vCtx.fillStyle = grad;
+          vCtx.shadowBlur = 8;
+          vCtx.shadowColor = color1;
+
+          vCtx.beginPath();
+          vCtx.roundRect(x, y, barWidth, barHeight, [3, 3, 0, 0]);
+          vCtx.fill();
+        }
+      } 
+      // Nguồn YouTube: Mô phỏng nhịp điệu (Synthetic Beat Wave) mượt mà
+      else if (track.ytId) {
+        const time = performance.now() * 0.003;
+        for (let i = 0; i < numBars; i++) {
+          const wave1 = Math.sin(time + i * 0.2);
+          const wave2 = Math.cos(time * 0.7 - i * 0.1);
+          const syntheticVal = (wave1 + wave2 + 2) / 4;
+          const barHeight = syntheticVal * (vCanvas.height - 25) + 4;
+
+          const x = i * (barWidth + 2);
+          const y = vCanvas.height - barHeight;
+
+          const grad = vCtx.createLinearGradient(0, y, 0, vCanvas.height);
+          grad.addColorStop(0, color2);
+          grad.addColorStop(1, color1);
+
+          vCtx.fillStyle = grad;
+          vCtx.shadowBlur = 8;
+          vCtx.shadowColor = color2;
+
+          vCtx.beginPath();
+          vCtx.roundRect(x, y, barWidth, barHeight, [3, 3, 0, 0]);
+          vCtx.fill();
+        }
+      }
+    }
+    requestAnimationFrame(drawAudioVisualizer);
 
     /* ============================================================
        8. CLICK TRÁI TIM
@@ -2118,8 +2211,14 @@
       if (!soundContext) {
         soundContext = new (window.AudioContext || window.webkitAudioContext)();
         gainNode = soundContext.createGain();
+        
+        analyserNode = soundContext.createAnalyser();
+        analyserNode.fftSize = 128;
+        dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+
         audioSourceNode = soundContext.createMediaElementSource(audioElement);
-        audioSourceNode.connect(gainNode);
+        audioSourceNode.connect(analyserNode);
+        analyserNode.connect(gainNode);
         gainNode.connect(soundContext.destination);
 
         const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
