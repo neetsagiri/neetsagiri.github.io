@@ -34,8 +34,6 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22><text y=%2224%22 font-size=%2224%22>🌸</text></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- SUPABASE JS CLIENT -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --neon-color-1: #25f4ee;
@@ -714,7 +712,7 @@
     }
     .music-player-panel.active { display: block; }
 
-    /* HỘP NẠP FILE MP3 VÀO SUPABASE */
+    /* HỘP NẠP FILE MP3 CỤC BỘ (INDEXEDDB) */
     .file-upload-box {
       margin-bottom: 12px;
       padding: 14px;
@@ -881,7 +879,7 @@
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG (CÓ THÊM PHÍM TẢI LẠI TRANG) -->
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
   <div class="top-left-actions">
     <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
       <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
@@ -1001,17 +999,17 @@
         </button>
 
         <div id="musicPanel" class="music-player-panel">
-          <!-- 1. KHỐI NUỐT VÀ ĐỒNG BỘ MP3 LÊN CLOUD SUPABASE -->
+          <!-- KHỐI NẠP FILE MP3 ĐÃ ĐƯỢC SỬA LẠI CHỮ -->
           <div class="file-upload-box">
             <input type="file" id="localMp3Input" accept="audio/*" style="display: none;" onchange="handleDirectMp3Upload(event)" multiple />
             <label for="localMp3Input" class="file-upload-label">
-              <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.6rem; color: var(--neon-color-1);"></i>
-              <span style="color: var(--neon-color-1);">NẠP FILE MP3 VÀO WEB (ĐỒNG BỘ TOÀN CẦU)</span>
-              <span style="font-size: 0.72rem; color: #bbb;">Tải từ máy này • Tự động hiện trên máy khác • Chạy nền 100%</span>
+              <i class="fa-solid fa-music" style="font-size: 1.6rem; color: var(--neon-color-1);"></i>
+              <span style="color: var(--neon-color-1);">TẢI LÊN BÀI HÁT YÊU THÍCH 💕</span>
+              <span style="font-size: 0.72rem; color: #bbb;">Chạm để chọn file MP3 từ thiết bị</span>
             </label>
           </div>
 
-          <!-- 2. KHỐI DÁN LINK YOUTUBE -->
+          <!-- KHỐI DÁN LINK YOUTUBE -->
           <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
             <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
               <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
@@ -1264,11 +1262,58 @@
 
   <script>
     /* ============================================================
-       0. CẤU HÌNH SUPABASE ĐỒNG BỘ TOÀN CẦU
+       0. CƠ SỞ DỮ LIỆU INDEXEDDB (LƯU MP3 TRÊN TỪNG THIẾT BỊ)
        ============================================================ */
-    const SUPABASE_URL = "https://owljrutzqmyhdfkphrty.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93bGpydXR6cW15aGRma3BocnR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMzQyODYsImV4cCI6MjEwNDYxMDI4Nn0.GbdvfxEREmrl93GoKUBCYgUKhrfnZ4i1O3kTybLKrGw";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const DB_NAME = "SagiriMusicDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "audioTracks";
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveMp3ToIndexedDB(trackObj) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.put(trackObj);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function getAllMp3FromIndexedDB() {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function removeMp3FromIndexedDB(id) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.delete(id);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
 
     /* ============================================================
        1. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
@@ -1338,15 +1383,14 @@
       }
     }
 
-    // TẢI LẠI TRANG SẠCH (XÓA BỎ CACHE CŨ)
     function reloadPageClean() {
       const icon = document.getElementById('reloadIcon');
       if (icon) icon.classList.add('fa-spin');
-      showToast("🔄 Đang làm mới toàn bộ trang...");
+      showToast("🔄 Đang làm mới trang sạch sẽ...");
       setTimeout(() => {
         const cleanUrl = window.location.href.split('?')[0] + '?reload=' + Date.now();
         window.location.replace(cleanUrl);
-      }, 500);
+      }, 400);
     }
 
     /* ============================================================
@@ -1515,7 +1559,7 @@
     }
 
     /* ============================================================
-       7. VẼ HOA ANH ĐÀO (3D FLIP, PARALLAX DEPTH & HIỆU SUẤT CAO)
+       7. VẼ HOA ANH ĐÀO (3D FLIP, PARALLAX DEPTH)
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -1962,7 +2006,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, NATIVE AUDIO & ĐỒNG BỘ SUPABASE CLOUD
+       12. PLAYLIST, NATIVE AUDIO & INDEXEDDB CỤC BỘ
        ============================================================ */
     const playlist = [
       { 
@@ -2080,7 +2124,6 @@
     let currentLyricIdx = 0;
     let ytProgressTimer = null;
 
-    // AUDIO NATIVE HTML5 - CHẠY NỀN VÀ MÀN HÌNH KHÓA 100%
     const audioElement = new Audio();
     audioElement.preload = "auto";
     audioElement.crossOrigin = "anonymous";
@@ -2584,10 +2627,10 @@
         let badgeIcon = "";
         let actionBtn = `<i class="fa-solid fa-play" style="font-size: 0.72rem; opacity: 0.5;"></i>`;
 
-        if (track.isCloud) {
-          badgeIcon = `<i class="fa-solid fa-cloud" style="color: var(--neon-color-1); margin-right: 5px;"></i>`;
+        if (track.isLocal) {
+          badgeIcon = `<i class="fa-solid fa-file-audio" style="color: var(--neon-color-1); margin-right: 5px;"></i>`;
           actionBtn = `
-            <button type="button" class="btn-delete-track" onclick="deleteCloudTrack(event, ${index})" title="Xóa file khỏi Cloud">
+            <button type="button" class="btn-delete-track" onclick="deleteLocalTrack(event, ${index})" title="Xóa file này">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           `;
@@ -2610,67 +2653,58 @@
       });
     }
 
-    // TẢI FILE MP3 LÊN SUPABASE CLOUD
+    // XỬ LÝ NẠP FILE MP3 CỤC BỘ VÀO INDEXEDDB
     async function handleDirectMp3Upload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
 
-      showToast("⏳ Đang đẩy nhạc lên Cloud Supabase...");
+      showToast("⏳ Đang lưu file MP3 vào bộ nhớ máy...");
 
       for (let file of files) {
-        if (!file.name.toLowerCase().endsWith('.mp3')) continue;
+        if (!file.type.includes('audio') && !file.name.toLowerCase().endsWith('.mp3')) continue;
 
-        const fileExt = file.name.split('.').pop();
-        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9]/g, "_");
-        const filePath = `${Date.now()}_${cleanName}.${fileExt}`;
+        const trackId = "local_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+        const cleanTitle = file.name.replace(/\.[^/.]+$/, "");
 
-        const { data, error } = await supabaseClient.storage
-          .from('sagiri-music')
-          .upload(filePath, file, { cacheControl: '3600', upsert: true });
-
-        if (error) {
-          showToast("⚠️ Lỗi upload: " + error.message);
-          continue;
-        }
-
-        const { data: { publicUrl } } = supabaseClient.storage
-          .from('sagiri-music')
-          .getPublicUrl(filePath);
-
-        const newTrack = {
-          fileName: filePath,
-          title: file.name.replace(/\.[^/.]+$/, ""),
-          artist: "Cloud Sync 💕",
-          album: "Sagiri Cloud Music",
-          src: publicUrl,
-          isCloud: true,
+        const trackRecord = {
+          id: trackId,
+          title: cleanTitle,
+          artist: "Nhạc của bạn 💕",
+          album: "Bộ nhớ thiết bị",
+          blob: file,
           color1: "#25f4ee",
           color2: "#ff3366",
+          isLocal: true,
           lyrics: [
-            "♫ Bài hát chia sẻ toàn cầu trên đám mây...",
-            "♫ Bất kỳ máy nào mở web cũng nghe được!",
-            "♫ Tắt màn hình vẫn tiếp tục phát mượt mà!"
+            "♫ Bài hát lưu trữ trực tiếp trên thiết bị...",
+            "♫ Phát nền mượt mà khi khóa màn hình!",
+            "♫ Hoàn toàn không quảng cáo!"
           ]
         };
 
-        playlist.push(newTrack);
+        await saveMp3ToIndexedDB(trackRecord);
+
+        trackRecord.src = URL.createObjectURL(file);
+        playlist.push(trackRecord);
       }
 
       renderPlaylist();
-      showToast("🌸 Đã đồng bộ lên tất cả các thiết bị!");
+      showToast("🌸 Đã lưu MP3 vào máy thành công!");
       selectTrack(playlist.length - 1);
       event.target.value = "";
     }
 
-    // XÓA FILE KHỎI SUPABASE CLOUD
-    async function deleteCloudTrack(event, index) {
+    // XÓA FILE MP3 KHỎI INDEXEDDB
+    async function deleteLocalTrack(event, index) {
       if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
+      
+      if (trackToDelete.id) {
+        await removeMp3FromIndexedDB(trackToDelete.id);
+      }
 
-      if (trackToDelete.fileName) {
-        await supabaseClient.storage
-          .from('sagiri-music')
-          .remove([trackToDelete.fileName]);
+      if (trackToDelete.src && trackToDelete.src.startsWith('blob:')) {
+        URL.revokeObjectURL(trackToDelete.src);
       }
 
       playlist.splice(index, 1);
@@ -2688,41 +2722,7 @@
       }
 
       renderPlaylist();
-      showToast("🗑️ Đã xóa file khỏi đám mây!");
-    }
-
-    // TỰ ĐỘNG TẢI DANH SÁCH BÀI TỪ SUPABASE KHI MỞ TRANG
-    async function loadTracksFromCloud() {
-      try {
-        const { data, error } = await supabaseClient.storage
-          .from('sagiri-music')
-          .list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } });
-
-        if (data && data.length > 0) {
-          data.forEach(file => {
-            if (file.name.toLowerCase().endsWith('.mp3')) {
-              const { data: { publicUrl } } = supabaseClient.storage
-                .from('sagiri-music')
-                .getPublicUrl(file.name);
-
-              const rawTitle = file.name.replace(/^\d+_/, '').replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
-
-              playlist.push({
-                fileName: file.name,
-                title: rawTitle,
-                artist: "Cloud Sync 💕",
-                album: "Sagiri Cloud Music",
-                src: publicUrl,
-                isCloud: true,
-                color1: "#25f4ee",
-                color2: "#ff3366",
-                lyrics: ["♫ Đang phát bài hát từ đám mây toàn cầu..."]
-              });
-            }
-          });
-          renderPlaylist();
-        }
-      } catch (err) {}
+      showToast("🗑️ Đã xóa file MP3 khỏi máy!");
     }
 
     function deleteCustomTrack(event, index) {
@@ -2841,6 +2841,23 @@
       }
     }
 
+    // TẢI TẤT CẢ FILE MP3 ĐÃ LƯU TRONG INDEXEDDB KHI MỞ TRANG
+    async function initSavedLocalTracks() {
+      try {
+        const savedTracks = await getAllMp3FromIndexedDB();
+        savedTracks.forEach(t => {
+          t.src = URL.createObjectURL(t.blob);
+          playlist.push(t);
+        });
+        renderPlaylist();
+        if (currentTrackIndex >= playlist.length) currentTrackIndex = 0;
+        loadTrack(currentTrackIndex, false);
+      } catch (err) {
+        renderPlaylist();
+        loadTrack(currentTrackIndex, false);
+      }
+    }
+
     function toggleMusicPanel() {
       const panel = document.getElementById('musicPanel');
       const chevron = document.getElementById('music-chevron');
@@ -2907,11 +2924,8 @@
     document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
     document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
 
-    // KHỞI ĐỘNG VÀ ĐỒNG BỘ TOÀN CẦU TỪ CLOUD
-    loadTracksFromCloud().then(() => {
-      updateTrackInfo();
-      loadTrack(currentTrackIndex, false);
-    });
+    // KÍCH HOẠT DỮ LIỆU BAN ĐẦU
+    initSavedLocalTracks();
 
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
@@ -2919,4 +2933,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
