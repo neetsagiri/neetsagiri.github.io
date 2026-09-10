@@ -4,10 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Góc nhỏ của Sagiri 💕</title>
+
   <!-- PWA & MOBILE META -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Sagiri Bio">
+  <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Sagiri%20Profile%20Bio%22%2C%22short_name%22%3A%22SagiriBio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23010101%22%2C%22theme_color%22%3A%22%2325f4ee%22%7D">
 
   <!-- OPEN GRAPH / SOCIAL CARD -->
@@ -47,6 +49,10 @@
       touch-action: manipulation;
     }
 
+    html, body {
+      overscroll-behavior-y: none;
+    }
+
     .card-border-wrapper, .mini-player-container, .neon-ring-wrapper::before, .game-card-wrapper::before {
       will-change: transform;
       transform: translateZ(0);
@@ -73,10 +79,11 @@
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 80px) 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 90px) 16px;
       background: linear-gradient(-45deg, #010101, #0a1122, #00f2fe, #fe2c55, #000000);
       background-size: 400% 400%;
       animation: tiktokGradient 12s ease infinite;
@@ -119,7 +126,7 @@
       z-index: 1000000;
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
     }
     .toast-container.show {
       transform: translateX(-50%) translateY(0);
@@ -153,7 +160,7 @@
       transition: all 0.25s ease;
     }
     .btn-top-pill:active {
-      transform: scale(0.95);
+      transform: scale(0.92);
       background: rgba(37, 244, 238, 0.25);
     }
 
@@ -261,7 +268,7 @@
       transition: transform 0.15s;
       z-index: 10;
     }
-    .heart-like-btn:active { transform: scale(0.92); }
+    .heart-like-btn:active { transform: scale(0.9); }
 
     .cinnamoroll-avatar-box {
       position: relative;
@@ -475,7 +482,7 @@
       -webkit-backdrop-filter: blur(8px);
       color: #ffffff;
     }
-    .game-btn:active { background: rgba(26, 26, 34, 0.95); }
+    .game-btn:active { background: rgba(26, 26, 34, 0.95); transform: scale(0.98); }
 
     .game-icon-img {
       width: 48px;
@@ -509,7 +516,7 @@
       transition: transform 0.15s ease, background 0.15s ease;
     }
     .btn-link:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
       filter: brightness(1.2);
     }
 
@@ -600,7 +607,6 @@
       z-index: 1;
     }
 
-    /* THANH GẠT VUỐT TIỆN LỢI TRÊN MOBILE */
     .swipe-indicator-bar {
       width: 38px;
       height: 4px;
@@ -612,10 +618,9 @@
     .progress-row { display: flex; align-items: center; gap: 8px; }
     .time-display { font-size: 0.68rem; color: #999; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-    /* MỞ RỘNG VÙNG CHẠM THANH TUA CHO MOBILE */
     .mini-progress-bg {
       flex: 1;
-      height: 18px;
+      height: 22px;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -687,15 +692,15 @@
     .mini-lyric-box { font-size: 0.68rem; color: var(--neon-color-1); font-style: italic; position: absolute; width: 100%; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.3s ease; }
 
     .mini-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .mini-btn { background: transparent; border: none; color: #ccc; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; cursor: pointer; }
+    .mini-btn { background: transparent; border: none; color: #ccc; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; cursor: pointer; }
     .mini-btn:active { transform: scale(0.9); }
     .volume-box { display: flex; align-items: center; position: relative; }
     .volume-slider { -webkit-appearance: none; width: 38px; height: 3px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; outline: none; cursor: pointer; margin-left: 2px; }
-    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--neon-color-1); cursor: pointer; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--neon-color-1); cursor: pointer; }
 
     .mini-btn-play {
       background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1));
-      border: none; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 1.05rem;
+      border: none; width: 42px; height: 42px; border-radius: 50%; color: #fff; font-size: 1.05rem;
       display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(254, 44, 85, 0.6);
     }
     .mini-btn-play:active { transform: scale(0.92); }
@@ -746,8 +751,8 @@
       background: rgba(254, 44, 85, 0.18);
       border: 1px solid rgba(254, 44, 85, 0.45);
       color: #fe2c55;
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -760,7 +765,7 @@
     .btn-delete-track:active {
       background: #fe2c55;
       color: #ffffff;
-      transform: scale(0.92);
+      transform: scale(0.9);
     }
 
     .click-heart {
@@ -802,15 +807,26 @@
     .info-val { font-size: 0.95rem; font-weight: 700; color: var(--neon-color-1); word-break: break-all; }
     .btn-copy-mini { padding: 6px 14px; font-size: 0.75rem; background: rgba(254, 44, 85, 0.22); border: 1px solid rgba(254, 44, 85, 0.45); color: #fe2c55; border-radius: 8px; cursor: pointer; font-weight: 600; }
     .btn-copy-mini:active { transform: scale(0.92); }
-    .btn-view-account-photo { width: 100%; padding: 11px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 14px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-view-account-photo { width: 100%; padding: 12px 0; background: rgba(37, 244, 238, 0.12); border: 1.5px solid #25f4ee; border-radius: 14px; color: #25f4ee; font-weight: 600; font-size: 0.88rem; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .account-photo-img { width: 100%; max-height: 50vh; object-fit: contain; border-radius: 14px; background: #0d0d12; margin: 8px 0 14px; }
     .donate-form { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .donate-input-group { text-align: left; }
     .donate-input-label { font-size: 0.75rem; color: #a0a0a0; margin-bottom: 4px; display: block; }
-    .donate-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.9rem; outline: none; }
+    
+    /* Cố định cỡ font >= 16px chống iOS auto-zoom khi focus */
+    .donate-input { 
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 10px; 
+      background: rgba(0, 0, 0, 0.4); 
+      border: 1px solid rgba(255, 255, 255, 0.16); 
+      color: #ffffff; 
+      font-size: 16px !important; 
+      outline: none; 
+    }
     .quick-amount-buttons { display: flex; gap: 6px; margin-top: 6px; }
-    .amount-tag { flex: 1; padding: 7px 0; font-size: 0.72rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border-radius: 8px; cursor: pointer; }
-    .btn-done-submit { width: 100%; margin-top: 8px; padding: 12px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
+    .amount-tag { flex: 1; padding: 8px 0; font-size: 0.75rem; font-weight: 600; color: #ddd; background: rgba(255, 255, 255, 0.08); border-radius: 8px; cursor: pointer; }
+    .btn-done-submit { width: 100%; margin-top: 8px; padding: 13px 0; background: linear-gradient(135deg, var(--neon-color-2), var(--neon-color-1)); border: none; border-radius: 12px; color: #ffffff; font-weight: 700; cursor: pointer; }
     #qrResultScreen { display: none; }
     .thankyou-box { background: rgba(254, 44, 85, 0.12); border: 1px solid rgba(254, 44, 85, 0.35); padding: 10px 14px; border-radius: 14px; margin-bottom: 12px; }
     .thankyou-text { color: #ff3366; font-weight: 700; font-size: 0.88rem; }
@@ -820,9 +836,9 @@
     .qr-info-summary { font-size: 0.8rem; color: #aaa; margin-bottom: 10px; }
     .qr-info-summary strong { color: var(--neon-color-1); }
     .bank-quick-copy { display: flex; gap: 8px; margin-bottom: 12px; }
-    .btn-copy-bank { flex: 1; padding: 8px 0; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-copy-bank { flex: 1; padding: 9px 0; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .btn-copy-bank:active { background: rgba(37, 244, 238, 0.2); border-color: var(--neon-color-1); color: var(--neon-color-1); }
-    .btn-modal-action { width: 100%; padding: 11px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
+    .btn-modal-action { width: 100%; padding: 12px 0; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 6px; }
     .btn-edit-back { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ddd; }
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
@@ -960,7 +976,7 @@
               <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
             </div>
             <div style="display: flex; gap: 6px;">
-              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." style="font-size: 0.8rem; padding: 8px 10px;" />
+              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
               <button type="button" class="btn-copy-bank" onclick="addCustomTrackFromYT()" style="width: auto; padding: 0 14px; white-space: nowrap; background: rgba(37,244,238,0.2); border-color: var(--neon-color-1); color: var(--neon-color-1);">
                 <i class="fa-solid fa-plus"></i> Thêm
               </button>
@@ -1187,7 +1203,7 @@
           </div>
           <div class="donate-input-group">
             <label class="donate-input-label"><i class="fa-solid fa-pen-nib"></i> Lời nhắn gửi gắm:</label>
-            <textarea id="guestMsg" class="donate-input" style="height: 80px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
+            <textarea id="guestMsg" class="donate-input" style="height: 90px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
           </div>
           <button type="button" class="btn-done-submit" onclick="submitGuestbook()">
             <i class="fa-solid fa-paper-plane"></i> Gửi Ngay
@@ -1478,7 +1494,6 @@
       }
     }
 
-    // Tự động tối ưu giảm tải khi điện thoại dưới 20% pin
     if ('getBattery' in navigator) {
       navigator.getBattery().then(battery => {
         function checkBattery() {
@@ -1501,10 +1516,16 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    // Giảm tần suất lắng nghe cảm biến chuyển động (Throttling) để chống hao pin
+    let lastOrientationUpdate = 0;
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
-        if (e.gamma !== null) {
-          deviceWindX = (e.gamma / 45) * 1.2;
+        const now = performance.now();
+        if (now - lastOrientationUpdate > 100) {
+          lastOrientationUpdate = now;
+          if (e.gamma !== null) {
+            deviceWindX = (e.gamma / 45) * 1.2;
+          }
         }
       }, true);
     }
@@ -2493,7 +2514,6 @@
       inlineMuteIcon.className = "fa-solid fa-volume-xmark";
     }
 
-    /* RENDER PLAYLIST */
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
       container.innerHTML = "";
@@ -2639,7 +2659,7 @@
       }
     }
 
-    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE (VUỐT NGANG ĐỔI BÀI, VUỐT DỌC THU GỌN) */
+    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchStartY = 0;
@@ -2661,16 +2681,13 @@
       const diffX = touchEndX - touchStartX;
       const diffY = touchEndY - touchStartY;
 
-      // Nếu vuốt ngang > 50px: Đổi bài
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
         if (diffX < 0) {
           nextTrack();
         } else {
           prevTrack();
         }
-      }
-      // Nếu vuốt dọc lên trên > 40px: Thu gọn Mini Player
-      else if (diffY < -40 && Math.abs(diffX) < 40) {
+      } else if (diffY < -35 && Math.abs(diffX) < 40) {
         if (!miniContainer.classList.contains('collapsed')) {
           toggleMiniPlayerCollapse();
         }
