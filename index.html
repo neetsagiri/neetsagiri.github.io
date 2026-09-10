@@ -162,7 +162,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       color: #eaeaea;
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 20px;
       font-size: 0.78rem;
       font-weight: 600;
@@ -970,6 +970,9 @@
     <button type="button" class="btn-top-pill" onclick="nativeSharePage()" title="Chia sẻ trang">
       <i class="fa-solid fa-share-nodes"></i>
     </button>
+    <button type="button" class="btn-top-pill" onclick="reloadPage()" title="Tải lại trang">
+      <i class="fa-solid fa-rotate-right"></i>
+    </button>
   </div>
 
   <!-- ĐỒNG HỒ VIỆT NAM (GMT+7) -->
@@ -1389,7 +1392,7 @@
     }
 
     /* ============================================================
-       1. NATIVE WEB SHARE API
+       1. NATIVE WEB SHARE API & RELOAD
        ============================================================ */
     function nativeSharePage() {
       if (navigator.share) {
@@ -1401,6 +1404,13 @@
       } else {
         copyToClipboard(window.location.href, "🌸 Đã sao chép liên kết trang!");
       }
+    }
+
+    function reloadPage() {
+      showToast("🔄 Đang tải lại trang...");
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
     }
 
     /* ============================================================
