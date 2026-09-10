@@ -86,7 +86,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 95px) 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 40px) 16px calc(env(safe-area-inset-bottom, 20px) + 95px) 16px;
       background: radial-gradient(circle at 50% 20%, rgba(37, 244, 238, 0.08), transparent 45%),
                   radial-gradient(circle at 80% 80%, rgba(254, 44, 85, 0.08), transparent 45%),
                   linear-gradient(-45deg, #010101, #080d1a, #00363a, #240012, #000000);
@@ -147,30 +147,31 @@
       opacity: 1;
     }
 
+    /* Tối ưu hóa hiển thị gọn gàng trên mobile để không bị tràn màn hình */
     .top-left-actions {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 16px) + 12px);
-      left: calc(env(safe-area-inset-left, 16px) + 12px);
+      top: calc(env(safe-area-inset-top, 12px) + 8px);
+      left: calc(env(safe-area-inset-left, 10px) + 10px);
       z-index: 99999;
       display: flex;
-      gap: 8px;
+      gap: 5px;
     }
 
     .btn-top-pill {
-      background: rgba(14, 15, 22, 0.82);
+      background: rgba(14, 15, 22, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       color: #eaeaea;
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
+      padding: 6px 9px;
+      border-radius: 16px;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      gap: 4px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-top-pill:hover {
@@ -185,22 +186,22 @@
 
     .clock-badge-top {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 16px) + 12px);
-      right: calc(env(safe-area-inset-right, 16px) + 12px);
+      top: calc(env(safe-area-inset-top, 12px) + 8px);
+      right: calc(env(safe-area-inset-right, 10px) + 10px);
       z-index: 99999;
-      background: rgba(14, 15, 22, 0.82);
+      background: rgba(14, 15, 22, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
-      color: #eaeaea;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.78rem;
+      color: #ddd;
+      padding: 6px 10px;
+      border-radius: 16px;
+      font-size: 0.72rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      gap: 5px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       font-variant-numeric: tabular-nums;
     }
 
@@ -962,7 +963,7 @@
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
+  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG (Đã thu gọn để hiển thị hoàn hảo trên Mobile) -->
   <div class="top-left-actions">
     <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
       <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
@@ -1827,7 +1828,7 @@
       lq: {
         name: "Liên Quân Mobile",
         icon: "lq.png",
-        ingame: "ThahNam입니다",
+        ingame: "ThahNamです",
         uid: "5319141104092273",
         photo: "lq-account.jpg"
       }
@@ -2038,7 +2039,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID
+       12. PLAYLIST, MEDIA SESSION & TRÌNH PHÁT YOUTUBE HYBRID (SỬA LỖI PC AUDIO GRAPH)
        ============================================================ */
     const playlist = [
       { 
@@ -2246,23 +2247,28 @@
 
     function initAudioGraph() {
       if (!soundContext) {
-        soundContext = new (window.AudioContext || window.webkitAudioContext)();
-        gainNode = soundContext.createGain();
-        
-        analyserNode = soundContext.createAnalyser();
-        analyserNode.fftSize = 128;
-        analyserNode.smoothingTimeConstant = 0.8;
-        dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+        try {
+          soundContext = new (window.AudioContext || window.webkitAudioContext)();
+          gainNode = soundContext.createGain();
+          
+          analyserNode = soundContext.createAnalyser();
+          analyserNode.fftSize = 128;
+          analyserNode.smoothingTimeConstant = 0.8;
+          dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-        audioSourceNode = soundContext.createMediaElementSource(audioElement);
-        audioSourceNode.connect(analyserNode);
-        analyserNode.connect(gainNode);
-        gainNode.connect(soundContext.destination);
+          audioSourceNode = soundContext.createMediaElementSource(audioElement);
+          audioSourceNode.connect(analyserNode);
+          analyserNode.connect(gainNode);
+          gainNode.connect(soundContext.destination);
 
-        const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
-        gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
+          const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
+          gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
+        } catch (e) {
+          // Fallback an toàn nếu trình duyệt chặn createMediaElementSource
+          audioElement.onvolumechange = null;
+        }
       }
-      if (soundContext.state === 'suspended') {
+      if (soundContext && soundContext.state === 'suspended') {
         soundContext.resume();
       }
     }
