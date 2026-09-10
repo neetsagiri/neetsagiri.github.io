@@ -685,19 +685,18 @@
     .tool-icon-btn { background: transparent; border: none; color: #777; font-size: 0.85rem; cursor: pointer; }
     .tool-icon-btn.active { color: var(--neon-color-2); }
 
-    .playlist { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
+    .playlist { display: flex; flex-direction: column; gap: 6px; max-height: 230px; overflow-y: auto; padding-right: 4px; }
     .track-item { 
-      padding: 9px 12px; 
-      border-radius: 10px; 
+      padding: 8px 12px; 
+      border-radius: 12px; 
       font-size: 0.8rem; 
       color: #ddd; 
       background: rgba(255, 255, 255, 0.05); 
-      cursor: pointer; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      gap: 8px; 
-      transition: background 0.2s;
+      gap: 10px; 
+      transition: all 0.2s ease;
     }
     .track-item.playing { 
       background: rgba(254, 44, 85, 0.18); 
@@ -705,33 +704,35 @@
       border: 1px solid rgba(254, 44, 85, 0.35); 
       font-weight: 600; 
     }
-    .track-title-wrap {
+    .track-info-clickable {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex: 1;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      cursor: pointer;
     }
     .btn-delete-track {
-      background: rgba(254, 44, 85, 0.15);
-      border: 1px solid rgba(254, 44, 85, 0.4);
+      background: rgba(254, 44, 85, 0.18);
+      border: 1px solid rgba(254, 44, 85, 0.45);
       color: #fe2c55;
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       cursor: pointer;
       flex-shrink: 0;
       transition: all 0.2s ease;
     }
     .btn-delete-track:hover {
       background: #fe2c55;
-      color: #fff;
+      color: #ffffff;
+      transform: scale(1.08);
     }
 
     .click-heart {
@@ -1166,8 +1167,8 @@
     </div>
   </div>
 
-  <!-- PLAYER YOUTUBE NỀN (TỐI ƯU SIZE ĐỂ TRÁNH BỊ CHROME MOBILE CHẶN) -->
-  <div style="position: fixed; top: -1000px; left: -1000px; width: 200px; height: 200px; pointer-events: none; z-index: -999;">
+  <!-- CONTAINER YOUTUBE TRÁNH BỊ CHROME FREEZE NGẦM -->
+  <div style="position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -999;">
     <div id="ytPlayer"></div>
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -1933,9 +1934,12 @@
       }
     ];
 
-    // Nạp các bài hát YouTube cá nhân từ LocalStorage
+    // Nạp các bài hát YouTube từ LocalStorage (tự động gắn cờ isCustom)
     const savedCustomTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-    savedCustomTracks.forEach(t => playlist.push(t));
+    savedCustomTracks.forEach(t => {
+      t.isCustom = true;
+      playlist.push(t);
+    });
 
     let savedIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10);
     let currentTrackIndex = (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < playlist.length) ? savedIndex : 0;
@@ -1961,21 +1965,28 @@
     // Khởi tạo YouTube Iframe Player
     window.onYouTubeIframeAPIReady = function() {
       ytPlayer = new YT.Player('ytPlayer', {
-        height: '200',
-        width: '200',
+        height: '100%',
+        width: '100%',
         playerVars: {
           'autoplay': 0,
           'controls': 0,
           'playsinline': 1,
           'disablekb': 1,
           'fs': 0,
-          'rel': 0
+          'rel': 0,
+          'origin': window.location.origin
         },
         events: {
           'onReady': () => { 
             isYTReady = true;
             if (isMuted) ytPlayer.mute();
             else ytPlayer.setVolume(parseFloat(document.getElementById('volumeSlider').value) * 100);
+
+            // Nạp video sẵn nếu bài hiện tại sau khi F5 là YouTube
+            const track = playlist[currentTrackIndex];
+            if (track && track.ytId && ytPlayer.cueVideoById) {
+              ytPlayer.cueVideoById(track.ytId);
+            }
           },
           'onStateChange': onYTPlayerStateChange
         }
@@ -2172,7 +2183,7 @@
       document.getElementById('currentTime').innerText = "00:00";
       document.getElementById('miniProgressBarFill').style.width = '0%';
 
-      // Ngắt hoàn toàn cả 2 nguồn phát
+      // Dừng cả 2 nguồn phát
       audioElement.pause();
       audioElement.currentTime = 0;
       if (ytPlayer && isYTReady && ytPlayer.stopVideo) {
@@ -2180,27 +2191,29 @@
       }
 
       if (track.ytId) {
-        // Phát video YouTube chính xác qua ID
         if (autoPlay) {
-          if (ytPlayer && isYTReady) {
+          if (ytPlayer && isYTReady && ytPlayer.loadVideoById) {
             ytPlayer.loadVideoById(track.ytId);
             isPlaying = true;
             document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
             if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
           } else {
-            // Trường hợp Iframe API chưa sẵn sàng hoàn toàn
             const checkReady = setInterval(() => {
-              if (ytPlayer && isYTReady) {
+              if (ytPlayer && isYTReady && ytPlayer.loadVideoById) {
                 clearInterval(checkReady);
                 ytPlayer.loadVideoById(track.ytId);
                 isPlaying = true;
                 document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
               }
-            }, 200);
+            }, 100);
+          }
+        } else {
+          // Chuẩn bị sẵn video ngầm lúc mở trang
+          if (ytPlayer && isYTReady && ytPlayer.cueVideoById) {
+            ytPlayer.cueVideoById(track.ytId);
           }
         }
       } else {
-        // Phát file MP3
         audioElement.src = track.src;
         audioElement.load();
 
@@ -2226,14 +2239,23 @@
       const miniPlayIcon = document.getElementById('miniPlayIcon');
 
       if (track.ytId) {
-        if (!ytPlayer || !isYTReady) return;
+        if (!ytPlayer || !isYTReady) {
+          // Trường hợp API chưa sẵn sàng thì thử load lại
+          loadTrack(currentTrackIndex, true);
+          return;
+        }
+
         const state = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() : -1;
         if (state === YT.PlayerState.PLAYING) {
           ytPlayer.pauseVideo();
           isPlaying = false;
           miniPlayIcon.className = "fa-solid fa-play";
-        } else {
+        } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
           ytPlayer.playVideo();
+          isPlaying = true;
+          miniPlayIcon.className = "fa-solid fa-pause";
+        } else {
+          ytPlayer.loadVideoById(track.ytId);
           isPlaying = true;
           miniPlayIcon.className = "fa-solid fa-pause";
         }
@@ -2420,7 +2442,7 @@
       inlineMuteIcon.className = "fa-solid fa-volume-xmark";
     }
 
-    /* RENDER PLAYLIST CÓ NÚT XÓA BÀI YOUTUBE */
+    /* RENDER PLAYLIST: TẤT CẢ BÀI CÓ YTID ĐỀU HIỆN NÚT XÓA */
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
       container.innerHTML = "";
@@ -2430,37 +2452,33 @@
         
         const ytBadge = track.ytId ? `<i class="fa-brands fa-youtube" style="color: #fe2c55; margin-right: 4px;"></i>` : "";
         
-        // Chỉ hiện nút xóa cho các bài hát thêm từ YouTube
-        const deleteBtn = track.isCustom ? `
+        const actionButtonHtml = track.ytId ? `
           <button type="button" class="btn-delete-track" onclick="deleteCustomTrack(event, ${index})" title="Xóa bài này">
             <i class="fa-solid fa-trash-can"></i>
           </button>
-        ` : `<i class="fa-solid fa-play" style="font-size: 0.72rem; opacity: 0.6;"></i>`;
+        ` : `<i class="fa-solid fa-play" style="font-size: 0.72rem; opacity: 0.5;"></i>`;
 
         item.innerHTML = `
-          <div class="track-title-wrap" onclick="selectTrack(${index})">
+          <div class="track-info-clickable" onclick="selectTrack(${index})">
             <span>${index + 1}. ${ytBadge}${track.title}</span>
           </div>
-          ${deleteBtn}
+          ${actionButtonHtml}
         `;
         container.appendChild(item);
       });
     }
 
-    /* XÓA BÀI HÁT YOUTUBE KHỎI DANH SÁCH VÀ LOCALSTORAGE */
+    /* XÓA BÀI HÁT KHỎI DANH SÁCH & LOCALSTORAGE */
     function deleteCustomTrack(event, index) {
-      event.stopPropagation();
+      if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
       
-      // Xóa trong LocalStorage
       let customTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
       customTracks = customTracks.filter(t => t.ytId !== trackToDelete.ytId);
       localStorage.setItem('sagiri_custom_tracks', JSON.stringify(customTracks));
 
-      // Xóa trong danh sách phát hiện tại
       playlist.splice(index, 1);
 
-      // Nếu đang phát bài bị xóa thì chuyển bài tiếp theo
       if (currentTrackIndex === index) {
         if (playlist.length > 0) {
           currentTrackIndex = currentTrackIndex % playlist.length;
@@ -2475,7 +2493,7 @@
       }
 
       renderPlaylist();
-      showToast("🗑️ Đã xóa bài hát khỏi danh sách!");
+      showToast("🗑️ Đã xóa bài hát thành công!");
     }
 
     function toggleMusicPanel() {
@@ -2492,17 +2510,15 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    /* BỘ TÁCH ID YOUTUBE TOÀN NĂNG (XỬ LÝ MỌI LINK YOUTUBE CHÍNH XÁC 100%) */
+    /* BỘ TÁCH ID YOUTUBE TOÀN DIỆN */
     function extractYouTubeID(url) {
       if (!url) return null;
       url = url.trim();
 
-      // Trường hợp người dùng nhập trực tiếp ID 11 ký tự
       if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
         return url;
       }
 
-      // Xử lý tất cả các định dạng link YouTube (watch?v=, youtu.be, shorts, embed, v=)
       const patterns = [
         /(?:https?:\/\/)?(?:www\.|m\.|music\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
         /(?:https?:\/\/)?(?:www\.|m\.|music\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
@@ -2518,7 +2534,6 @@
         }
       }
 
-      // Fallback lấy tham số v từ URL chuẩn
       try {
         const parsed = new URL(url);
         const v = parsed.searchParams.get("v");
@@ -2550,7 +2565,7 @@
           album: "YouTube Music",
           artwork: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           ytId: videoId,
-          isCustom: true, // Đánh dấu để hiển thị nút xóa
+          isCustom: true,
           color1: "#fe2c55",
           color2: "#25f4ee",
           lyrics: [
@@ -2569,7 +2584,6 @@
         input.value = "";
         showToast("🌸 Đã thêm bài hát thành công!");
 
-        // Phát ngay lập tức đúng bài vừa nhập
         selectTrack(playlist.length - 1);
       } catch (e) {
         showToast("⚠️ Lỗi tải thông tin bài hát!");
