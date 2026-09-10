@@ -778,7 +778,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS TỐI ƯU HÓA CHO PC & MOBILE -->
+  <!-- CANVAS HOA ANH ĐÀO -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -904,7 +904,7 @@
     </div>
   </div>
 
-  <!-- THANH MUSIC VỚI WEB AUDIO API & MEDIA SESSION -->
+  <!-- THANH MINI PLAYER -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -1775,7 +1775,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST & MEDIA SESSION (ĐẦY ĐỦ NÚT & CHẠY NỀN KHÓA MÀN HÌNH)
+       12. PLAYLIST & MEDIA SESSION (NÂNG CẤP TOÀN DIỆN LUỒNG ÂM THANH)
        ============================================================ */
     const playlist = [
       { 
@@ -1879,10 +1879,16 @@
     let isRepeatOne = localStorage.getItem('sagiri_repeat') === 'true';
     let lyricInterval = null;
     let currentLyricIdx = 0;
+    let preloadedTrackIndex = null;
+    let retryTimeout = null;
 
     const audioElement = new Audio();
     audioElement.preload = "auto";
     audioElement.crossOrigin = "anonymous";
+
+    // Audio phụ để preload trước bài kế tiếp
+    const preloadAudio = new Audio();
+    preloadAudio.preload = "auto";
 
     let soundContext = null;
     let gainNode = null;
@@ -1896,12 +1902,21 @@
         audioSourceNode.connect(gainNode);
         gainNode.connect(soundContext.destination);
 
-        const vol = parseFloat(document.getElementById('volumeSlider').value);
-        gainNode.gain.setValueAtTime(isMuted ? 0 : vol, soundContext.currentTime);
+        const currentVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
+        gainNode.gain.setValueAtTime(currentVol, soundContext.currentTime);
       }
       if (soundContext.state === 'suspended') {
         soundContext.resume();
       }
+    }
+
+    /* HIỆU ỨNG LÀM MỜ ÂM LƯỢNG (FADE IN/OUT) */
+    function fadeAudioGain(targetVol, duration = 0.25) {
+      if (!gainNode || !soundContext) return;
+      const now = soundContext.currentTime;
+      gainNode.gain.cancelScheduledValues(now);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+      gainNode.gain.linearRampToValueAtTime(targetVol, now + duration);
     }
 
     function applyDynamicAccent(color1, color2) {
@@ -1959,7 +1974,6 @@
           ]
         });
 
-        // Bật đầy đủ các nút điều khiển
         navigator.mediaSession.setActionHandler('play', () => togglePlayPause());
         navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
@@ -2014,47 +2028,82 @@
       localStorage.setItem('sagiri_track_idx', currentTrackIndex);
       renderPlaylist();
       updateMediaSession();
+      preloadedTrackIndex = null;
+    }
+
+    /* TIỀN TẢI BÀI HÁT KẾ TIẾP KHI BÀI HIỆN TẠI ĐẠT >75% */
+    function checkAndPreloadNextTrack() {
+      if (audioElement.duration && (audioElement.currentTime / audioElement.duration) > 0.75) {
+        const nextIdx = (currentTrackIndex + 1) % playlist.length;
+        if (preloadedTrackIndex !== nextIdx) {
+          preloadedTrackIndex = nextIdx;
+          preloadAudio.src = playlist[nextIdx].src;
+        }
+      }
     }
 
     function loadTrack(index, autoPlay = false) {
-      currentTrackIndex = index;
-      updateTrackInfo();
-      audioElement.src = playlist[currentTrackIndex].src;
-      audioElement.load();
+      clearTimeout(retryTimeout);
+      const targetVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
 
-      if (autoPlay) {
-        initAudioGraph();
-        audioElement.play().then(() => {
-          isPlaying = true;
-          document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
-          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
-          syncVisualEffects();
-        }).catch(() => {
-          isPlaying = false;
-          document.getElementById('miniPlayIcon').className = "fa-solid fa-play";
-          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
-          syncVisualEffects();
-        });
+      if (isPlaying && soundContext) {
+        fadeAudioGain(0, 0.2);
+        setTimeout(() => {
+          proceedLoad();
+        }, 200);
+      } else {
+        proceedLoad();
+      }
+
+      function proceedLoad() {
+        currentTrackIndex = index;
+        updateTrackInfo();
+        audioElement.src = playlist[currentTrackIndex].src;
+        audioElement.load();
+
+        if (autoPlay) {
+          initAudioGraph();
+          gainNode.gain.setValueAtTime(0, soundContext.currentTime);
+          audioElement.play().then(() => {
+            isPlaying = true;
+            document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+            fadeAudioGain(targetVol, 0.3);
+            syncVisualEffects();
+          }).catch(() => {
+            isPlaying = false;
+            document.getElementById('miniPlayIcon').className = "fa-solid fa-play";
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+            syncVisualEffects();
+          });
+        }
       }
     }
 
     function togglePlayPause() {
       initAudioGraph();
       const miniPlayIcon = document.getElementById('miniPlayIcon');
+      const targetVol = isMuted ? 0 : parseFloat(document.getElementById('volumeSlider').value);
 
       if (isPlaying) {
-        audioElement.pause();
-        isPlaying = false;
-        miniPlayIcon.className = "fa-solid fa-play";
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+        fadeAudioGain(0, 0.25);
+        setTimeout(() => {
+          audioElement.pause();
+          isPlaying = false;
+          miniPlayIcon.className = "fa-solid fa-play";
+          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+          syncVisualEffects();
+        }, 250);
       } else {
+        gainNode.gain.setValueAtTime(0, soundContext.currentTime);
         audioElement.play().then(() => {
           isPlaying = true;
           miniPlayIcon.className = "fa-solid fa-pause";
           if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+          fadeAudioGain(targetVol, 0.3);
+          syncVisualEffects();
         }).catch(() => {});
       }
-      syncVisualEffects();
     }
 
     function selectTrack(index) {
@@ -2102,11 +2151,11 @@
         isMuted = false;
         inlineMuteIcon.className = "fa-solid fa-volume-high";
         const val = parseFloat(document.getElementById('volumeSlider').value);
-        if (gainNode) gainNode.gain.setValueAtTime(val, soundContext.currentTime);
+        fadeAudioGain(val, 0.2);
       } else {
         isMuted = true;
         inlineMuteIcon.className = "fa-solid fa-volume-xmark";
-        if (gainNode) gainNode.gain.setValueAtTime(0, soundContext.currentTime);
+        fadeAudioGain(0, 0.2);
       }
       localStorage.setItem('sagiri_muted', isMuted);
       syncVisualEffects();
@@ -2139,6 +2188,7 @@
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(audioElement.currentTime);
         updatePositionState();
+        checkAndPreloadNextTrack();
       }
     });
 
@@ -2155,12 +2205,21 @@
       updatePositionState();
     });
 
-    audioElement.addEventListener('play', () => {
-      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+    // Xử lý gián đoạn âm thanh từ hệ thống (cuộc gọi, video khác)
+    audioElement.addEventListener('pause', () => {
+      if (isPlaying) {
+        isPlaying = false;
+        document.getElementById('miniPlayIcon').className = "fa-solid fa-play";
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+        syncVisualEffects();
+      }
     });
 
-    audioElement.addEventListener('pause', () => {
-      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
+    audioElement.addEventListener('play', () => {
+      isPlaying = true;
+      document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+      syncVisualEffects();
     });
 
     audioElement.addEventListener('ended', () => {
@@ -2172,8 +2231,16 @@
       }
     });
 
+    // Tự động kết nối lại khi mạng gián đoạn
     audioElement.addEventListener('error', () => {
-      document.getElementById('miniSongTitle').innerText = "Lỗi tải tệp nhạc!";
+      document.getElementById('miniSongTitle').innerText = "Đang kết nối lại...";
+      clearTimeout(retryTimeout);
+      retryTimeout = setTimeout(() => {
+        const curr = audioElement.currentTime;
+        audioElement.load();
+        audioElement.currentTime = curr;
+        if (isPlaying) audioElement.play().catch(() => {});
+      }, 2000);
     });
 
     function toggleShuffle() {
