@@ -711,6 +711,31 @@
       border-radius: 18px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     }
     .music-player-panel.active { display: block; }
+
+    /* HỘP NUỐT FILE MP3 TRỰC TIẾP */
+    .file-upload-box {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(37, 244, 238, 0.05);
+      border: 1.5px dashed var(--neon-color-1);
+      border-radius: 14px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .file-upload-box:active {
+      background: rgba(37, 244, 238, 0.15);
+    }
+    .file-upload-label {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
     .playlist-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     .playlist-toolbar span { font-size: 0.74rem; color: #aaa; text-transform: uppercase; font-weight: 600; }
     .playlist-tools-group { display: flex; gap: 14px; }
@@ -969,17 +994,14 @@
         </button>
 
         <div id="musicPanel" class="music-player-panel">
-          <!-- KHỐI NHẬP LINK -->
-          <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
-            <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát (Phát nền & Lọc QC)
-            </div>
-            <div style="display: flex; gap: 6px;">
-              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
-              <button type="button" class="btn-copy-bank" onclick="addCustomTrackFromYT()" style="width: auto; padding: 0 14px; white-space: nowrap; background: rgba(37,244,238,0.2); border-color: var(--neon-color-1); color: var(--neon-color-1);">
-                <i class="fa-solid fa-plus"></i> Thêm
-              </button>
-            </div>
+          <!-- KHỐI NUỐT VÀ LƯU TRỰC TIẾP FILE MP3 VÀO MÁY -->
+          <div class="file-upload-box">
+            <input type="file" id="localMp3Input" accept="audio/*" style="display: none;" onchange="handleDirectMp3Upload(event)" multiple />
+            <label for="localMp3Input" class="file-upload-label">
+              <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.3rem; color: var(--neon-color-1);"></i>
+              <span>Nhấn để chọn nạp file MP3 vào web</span>
+              <span style="font-size: 0.68rem; color: #888;">Tự lưu vĩnh viễn trong máy • Không quảng cáo • Phát nền 100%</span>
+            </label>
           </div>
 
           <div class="playlist-toolbar">
@@ -1216,7 +1238,61 @@
 
   <script>
     /* ============================================================
-       0. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
+       0. CƠ SỞ DỮ LIỆU INDEXEDDB ĐỂ NUỐT VÀ LƯU MP3 TRONG MÁY
+       ============================================================ */
+    const DB_NAME = "SagiriMusicDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "audioTracks";
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveMp3ToIndexedDB(trackObj) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.put(trackObj);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function getAllMp3FromIndexedDB() {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function removeMp3FromIndexedDB(id) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.delete(id);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    /* ============================================================
+       1. THÔNG BÁO KHÁCH GHÉ THĂM & BỘ ĐẾM LƯỢT XEM
        ============================================================ */
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toDateString();
@@ -1271,9 +1347,6 @@
       });
     }
 
-    /* ============================================================
-       1. NATIVE WEB SHARE API
-       ============================================================ */
     function nativeSharePage() {
       if (navigator.share) {
         navigator.share({
@@ -1287,7 +1360,7 @@
     }
 
     /* ============================================================
-       2. ÂM THANH BUBBLE POP & HAPTIC TỐI ƯU CẢM ỨNG MOBILE
+       2. ÂM THANH BUBBLE POP & HAPTIC
        ============================================================ */
     let audioCtx = null;
     function triggerHaptic(ms = 20) {
@@ -1327,7 +1400,7 @@
     });
 
     /* ============================================================
-       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (GMT+7)
+       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM
        ============================================================ */
     function updateClockAndAmbient() {
       const now = new Date();
@@ -1665,7 +1738,7 @@
        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg')) return;
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg') || e.target.closest('.file-upload-box')) return;
       const heart = document.createElement('div');
       heart.className = 'click-heart';
       heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
@@ -1900,10 +1973,11 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, NATIVE BACKGROUND AUDIO & MULTI-MIRROR STREAM
+       12. PLAYLIST, NATIVE AUDIO & XỬ LÝ LƯU TRỮ FILE MP3
        ============================================================ */
     const playlist = [
       { 
+        id: "default_1",
         title: "Styx Helix", 
         artist: "MYTH & ROID", 
         album: "Re:Zero OST",
@@ -1920,6 +1994,7 @@
         ]
       },
       { 
+        id: "default_2",
         title: "An Unfinished Song", 
         artist: "Wuthering Waves OST", 
         album: "Resonance Collection",
@@ -1935,6 +2010,7 @@
         ]
       },
       { 
+        id: "default_3",
         title: "All Silent Souls Can Sing", 
         artist: "Wuthering Waves OST", 
         album: "Resonance Collection",
@@ -1950,6 +2026,7 @@
         ]
       },
       { 
+        id: "default_4",
         title: "Dancing Through Fantasies", 
         artist: "Wuthering Waves OST", 
         album: "Resonance Collection",
@@ -1965,6 +2042,7 @@
         ]
       },
       { 
+        id: "default_5",
         title: "With Glory I Shall Fall", 
         artist: "Wuthering Waves OST", 
         album: "Resonance Collection",
@@ -1980,6 +2058,7 @@
         ]
       },
       { 
+        id: "default_6",
         title: "Against the Tide", 
         artist: "Wuthering Waves OST", 
         album: "Resonance Collection",
@@ -1996,14 +2075,8 @@
       }
     ];
 
-    const savedCustomTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-    savedCustomTracks.forEach(t => {
-      t.isCustom = true;
-      playlist.push(t);
-    });
-
     let savedIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10);
-    let currentTrackIndex = (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < playlist.length) ? savedIndex : 0;
+    let currentTrackIndex = (!isNaN(savedIndex) && savedIndex >= 0) ? savedIndex : 0;
     let isPlaying = false;
     let isMuted = localStorage.getItem('sagiri_muted') === 'true';
     let isShuffle = localStorage.getItem('sagiri_shuffle') === 'true';
@@ -2011,7 +2084,7 @@
     let lyricInterval = null;
     let currentLyricIdx = 0;
 
-    // THẺ AUDIO NATIVE CHÍNH - DUY TRÌ PHÁT NỀN KHI THOÁT RA HOME HOẶC KHÓA MÀN HÌNH
+    // AUDIO NATIVE HTML5 - CHẠY NỀN VÀ MÀN HÌNH KHÓA 100%
     const audioElement = new Audio();
     audioElement.preload = "auto";
     audioElement.crossOrigin = "anonymous";
@@ -2056,7 +2129,7 @@
       const lyricElem = document.getElementById('miniLyricText');
       currentLyricIdx = 0;
 
-      if (!track.lyrics || track.lyrics.length === 0) return;
+      if (!track || !track.lyrics || track.lyrics.length === 0) return;
       lyricElem.innerText = track.lyrics[0];
 
       lyricInterval = setInterval(() => {
@@ -2072,9 +2145,8 @@
       }, 4500);
     }
 
-    // ĐIỀU KHIỂN TAI NGHE & MÀN HÌNH KHÓA TRÊN MOBILE
     function updateMediaSession() {
-      if ('mediaSession' in navigator) {
+      if ('mediaSession' in navigator && playlist[currentTrackIndex]) {
         const track = playlist[currentTrackIndex];
         const artUrl = new URL(track.artwork || 'avatar.jpg', window.location.href).href;
 
@@ -2129,6 +2201,7 @@
 
     function updateTrackInfo() {
       const track = playlist[currentTrackIndex];
+      if (!track) return;
       const titleElem = document.getElementById('miniSongTitle');
       titleElem.innerText = track.title;
       document.getElementById('miniArtistText').innerText = track.artist;
@@ -2150,7 +2223,8 @@
       updateMediaSession();
     }
 
-    async function loadTrack(index, autoPlay = false) {
+    function loadTrack(index, autoPlay = false) {
+      if (index < 0 || index >= playlist.length) return;
       currentTrackIndex = index;
       const track = playlist[currentTrackIndex];
       updateTrackInfo();
@@ -2161,18 +2235,7 @@
       audioElement.pause();
       audioElement.currentTime = 0;
 
-      // NẾU BÀI YOUTUBE CHƯA CÓ LINK STREAM HOẶC LINK CŨ HẾT HẠN (EXPIRED TOKEN), TỰ ĐỘNG TÌM LINK MỚI
-      if (track.isCustom && (!track.src || track.src.startsWith('blob:'))) {
-        showToast("⏳ Đang chuẩn bị luồng chạy ngầm...");
-        const streamUrl = await fetchAudioStreamWithFallback(track.ytId);
-        if (streamUrl) {
-          track.src = streamUrl;
-        } else {
-          showToast("⚠️ Máy chủ phát nhạc đang bận, vui lòng thử lại sau!");
-          return;
-        }
-      }
-
+      // Nạp nguồn nhạc (hỗ trợ cả đường dẫn URL và blob: từ file mp3 lưu trữ)
       audioElement.src = track.src;
       audioElement.load();
 
@@ -2286,23 +2349,10 @@
       }
     }
 
-    // TỰ ĐỘNG BỎ QUA QUẢNG CÁO TRÊN LUỒNG AUDIO NATIVE
     audioElement.addEventListener('timeupdate', () => {
       if (audioElement.duration) {
         const curr = audioElement.currentTime;
         const dur = audioElement.duration;
-
-        const currentTrack = playlist[currentTrackIndex];
-        if (currentTrack && currentTrack.skipAds && currentTrack.skipAds.length > 0) {
-          for (let seg of currentTrack.skipAds) {
-            if (curr >= seg[0] && curr < seg[1] - 0.5) {
-              audioElement.currentTime = seg[1];
-              showToast("⏩ Đã tự động bỏ qua đoạn quảng cáo!");
-              break;
-            }
-          }
-        }
-
         const percent = (curr / dur) * 100;
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(curr);
@@ -2380,17 +2430,17 @@
         const item = document.createElement('div');
         item.className = `track-item ${index === currentTrackIndex ? 'playing' : ''}`;
         
-        const ytBadge = track.isCustom ? `<i class="fa-brands fa-youtube" style="color: #fe2c55; margin-right: 4px;"></i>` : "";
+        const localBadge = track.isLocal ? `<i class="fa-solid fa-file-audio" style="color: var(--neon-color-1); margin-right: 5px;"></i>` : "";
         
-        const actionButtonHtml = track.isCustom ? `
-          <button type="button" class="btn-delete-track" onclick="deleteCustomTrack(event, ${index})" title="Xóa bài này">
+        const actionButtonHtml = track.isLocal ? `
+          <button type="button" class="btn-delete-track" onclick="deleteLocalTrack(event, ${index})" title="Xóa file này">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         ` : `<i class="fa-solid fa-play" style="font-size: 0.72rem; opacity: 0.5;"></i>`;
 
         item.innerHTML = `
           <div class="track-info-clickable" onclick="selectTrack(${index})">
-            <span>${index + 1}. ${ytBadge}${track.title}</span>
+            <span>${index + 1}. ${localBadge}${track.title}</span>
           </div>
           ${actionButtonHtml}
         `;
@@ -2398,13 +2448,60 @@
       });
     }
 
-    function deleteCustomTrack(event, index) {
+    // XỬ LÝ "NUỐT" FILE MP3 VÀO INDEXEDDB
+    async function handleDirectMp3Upload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      showToast("⏳ Đang nạp và lưu file MP3 vào máy...");
+
+      for (let file of files) {
+        if (!file.type.includes('audio') && !file.name.endsWith('.mp3')) continue;
+
+        const trackId = "local_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+        const cleanTitle = file.name.replace(/\.[^/.]+$/, "");
+
+        const trackRecord = {
+          id: trackId,
+          title: cleanTitle,
+          artist: "Nhạc của bạn 💕",
+          album: "Bộ nhớ máy",
+          blob: file, // Lưu file nhị phân vào IndexedDB
+          color1: "#25f4ee",
+          color2: "#ff3366",
+          isLocal: true,
+          lyrics: [
+            "♫ Bài hát tải lên từ thiết bị của bạn...",
+            "♫ Đã lưu trữ an toàn trong bộ nhớ máy!",
+            "♫ Thưởng thức âm nhạc không quảng cáo!"
+          ]
+        };
+
+        await saveMp3ToIndexedDB(trackRecord);
+
+        // Tạo blob url phát trực tiếp
+        trackRecord.src = URL.createObjectURL(file);
+        playlist.push(trackRecord);
+      }
+
+      renderPlaylist();
+      showToast("🌸 Đã nạp thành công file MP3!");
+      selectTrack(playlist.length - 1);
+      event.target.value = "";
+    }
+
+    // XÓA FILE MP3 KHỎI INDEXEDDB
+    async function deleteLocalTrack(event, index) {
       if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
       
-      let customTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-      customTracks = customTracks.filter(t => (t.ytId && t.ytId !== trackToDelete.ytId) || (t.title !== trackToDelete.title));
-      localStorage.setItem('sagiri_custom_tracks', JSON.stringify(customTracks));
+      if (trackToDelete.id) {
+        await removeMp3FromIndexedDB(trackToDelete.id);
+      }
+
+      if (trackToDelete.src && trackToDelete.src.startsWith('blob:')) {
+        URL.revokeObjectURL(trackToDelete.src);
+      }
 
       playlist.splice(index, 1);
 
@@ -2421,7 +2518,24 @@
       }
 
       renderPlaylist();
-      showToast("🗑️ Đã xóa bài hát thành công!");
+      showToast("🗑️ Đã xóa file MP3 khỏi máy!");
+    }
+
+    // KHỞI TẠO TẢI TOÀN BỘ FILE MP3 ĐÃ LƯU TỪ TRƯỚC
+    async function initSavedLocalTracks() {
+      try {
+        const savedTracks = await getAllMp3FromIndexedDB();
+        savedTracks.forEach(t => {
+          t.src = URL.createObjectURL(t.blob);
+          playlist.push(t);
+        });
+        renderPlaylist();
+        if (currentTrackIndex >= playlist.length) currentTrackIndex = 0;
+        loadTrack(currentTrackIndex, false);
+      } catch (err) {
+        renderPlaylist();
+        loadTrack(currentTrackIndex, false);
+      }
     }
 
     function toggleMusicPanel() {
@@ -2438,135 +2552,7 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    function extractYouTubeID(url) {
-      if (!url) return null;
-      url = url.trim();
-
-      if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
-        return url;
-      }
-
-      const patterns = [
-        /(?:https?:\/\/)?(?:www\.|m\.|music\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.|m\.|music\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/
-      ];
-
-      for (let regex of patterns) {
-        const match = url.match(regex);
-        if (match && match[1]) {
-          return match[1];
-        }
-      }
-
-      try {
-        const parsed = new URL(url);
-        const v = parsed.searchParams.get("v");
-        if (v && v.length === 11) return v;
-      } catch (e) {}
-
-      return null;
-    }
-
-    // MULTI-MIRROR ENGINE LẤY LINK STREAM AUDIO TRỰC TIẾP CHỐNG CHẶN CORS & NÉ PAUSE
-    async function fetchAudioStreamWithFallback(videoId) {
-      const apiEndpoints = [
-        `https://pipedapi.kavin.rocks/streams/${videoId}`,
-        `https://api.piped.privacy.com.de/streams/${videoId}`,
-        `https://pipedapi.tokhmi.xyz/streams/${videoId}`,
-        `https://invidious.nerdvpn.de/api/v1/videos/${videoId}`
-      ];
-
-      for (let endpoint of apiEndpoints) {
-        try {
-          const controller = new AbortController();
-          const id = setTimeout(() => controller.abort(), 3500);
-          const res = await fetch(endpoint, { signal: controller.signal });
-          clearTimeout(id);
-
-          if (res.ok) {
-            const data = await res.json();
-            // Xử lý Piped format
-            if (data.audioStreams && data.audioStreams.length > 0) {
-              const bestAudio = data.audioStreams.find(s => s.mimeType && s.mimeType.includes('mp4')) || data.audioStreams[0];
-              if (bestAudio && bestAudio.url) return bestAudio.url;
-            }
-            // Xử lý Invidious format
-            if (data.adaptiveFormats && data.adaptiveFormats.length > 0) {
-              const invAudio = data.adaptiveFormats.find(f => f.type && f.type.startsWith('audio/mp4')) || data.adaptiveFormats.find(f => f.type && f.type.startsWith('audio'));
-              if (invAudio && invAudio.url) return invAudio.url;
-            }
-          }
-        } catch (err) {}
-      }
-      return null;
-    }
-
-    async function addCustomTrackFromYT() {
-      const input = document.getElementById('ytUrlInput');
-      const url = input.value.trim();
-      const videoId = extractYouTubeID(url);
-
-      if (!videoId) {
-        showToast("⚠️ Link YouTube không hợp lệ!");
-        return;
-      }
-
-      showToast("⏳ Đang giải mã audio chạy ngầm & lọc QC...");
-
-      try {
-        const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
-        const data = await res.json();
-
-        // 1. LẤY MỐC QUẢNG CÁO TỪ SPONSORBLOCK
-        let skipSegments = [];
-        try {
-          const sbRes = await fetch(`https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=["sponsor","selfpromo","interaction"]`);
-          if (sbRes.ok) {
-            const sbData = await sbRes.json();
-            skipSegments = sbData.map(item => item.segment);
-          }
-        } catch (err) {}
-
-        // 2. LẤY LUỒNG AUDIO STREAM ĐỂ CHẠY NỀN
-        const audioStreamUrl = await fetchAudioStreamWithFallback(videoId);
-
-        const newTrack = {
-          title: data.title || "YouTube Track",
-          artist: data.author_name || "YouTube Audio",
-          album: "YouTube Music",
-          artwork: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-          ytId: videoId,
-          src: audioStreamUrl || "", 
-          isCustom: true,
-          skipAds: skipSegments,
-          color1: "#fe2c55",
-          color2: "#25f4ee",
-          lyrics: [
-            "♫ Luồng phát Audio Native độc lập...",
-            `Tác giả: ${data.author_name || "YouTube"}`,
-            "♫ Tắt màn hình hoặc chuyển tab vẫn nghe bình thường!"
-          ]
-        };
-
-        const currentCustom = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-        currentCustom.push(newTrack);
-        localStorage.setItem('sagiri_custom_tracks', JSON.stringify(currentCustom));
-
-        playlist.push(newTrack);
-        renderPlaylist();
-        input.value = "";
-        showToast("🌸 Đã thêm bài hát chạy ngầm thành công!");
-
-        selectTrack(playlist.length - 1);
-      } catch (e) {
-        showToast("⚠️ Không thể giải mã luồng audio lúc này!");
-      }
-    }
-
-    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TOÀN DIỆN CHO MOBILE */
+    /* ĐIỀU KHIỂN CẢM ỨNG MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchStartY = 0;
@@ -2618,9 +2604,8 @@
     document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
     document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
 
-    updateTrackInfo();
-    renderPlaylist();
-    loadTrack(currentTrackIndex, false);
+    // KÍCH HOẠT TẢI DỮ LIỆU MP3 TỪ INDEXEDDB LÊN PLAYLIST
+    initSavedLocalTracks();
 
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
