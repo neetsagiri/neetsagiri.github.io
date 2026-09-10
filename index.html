@@ -778,7 +778,7 @@
     <span id="liveClockText">00:00:00</span>
   </div>
 
-  <!-- CANVAS TỐI ƯU HÓA THÔNG MINH CHO PC & MOBILE -->
+  <!-- CANVAS TỐI ƯU HÓA CHO PC & MOBILE -->
   <canvas id="sakuraCanvas"></canvas>
 
   <div class="card-border-wrapper" id="profileCardToCapture">
@@ -904,7 +904,7 @@
     </div>
   </div>
 
-  <!-- THANH MINI PLAYER -->
+  <!-- THANH MUSIC VỚI WEB AUDIO API & MEDIA SESSION -->
   <div class="mini-player-container" id="miniPlayerContainer">
     <div class="mini-player-border-wrapper">
       <div class="mini-player-bar">
@@ -1678,7 +1678,7 @@
     }
 
     /* ============================================================
-       10. GUESTBOOK (GỬI THẲNG TRỰC TIẾP VỀ DISCORD WEBHOOK)
+       10. GUESTBOOK (DISCORD WEBHOOK)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
@@ -1775,12 +1775,14 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST & WEB AUDIO STREAMING (TỐI ƯU NHẸ RAM & KHÔNG DELAY)
+       12. PLAYLIST & MEDIA SESSION (ĐẦY ĐỦ NÚT & CHẠY NỀN KHÓA MÀN HÌNH)
        ============================================================ */
     const playlist = [
       { 
         title: "Styx Helix", 
-        artist: "Re:Zero OST", 
+        artist: "MYTH & ROID", 
+        album: "Re:Zero OST",
+        artwork: "avatar.jpg",
         src: "music1.mp3", 
         color1: "#bd00ff", 
         color2: "#fe2c55",
@@ -1795,6 +1797,8 @@
       { 
         title: "An Unfinished Song", 
         artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
         src: "music2.mp3", 
         color1: "#25f4ee", 
         color2: "#0077ff",
@@ -1808,6 +1812,8 @@
       { 
         title: "All Silent Souls Can Sing", 
         artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
         src: "music3.mp3", 
         color1: "#25f4ee", 
         color2: "#fe2c55",
@@ -1821,6 +1827,8 @@
       { 
         title: "Dancing Through Fantasies", 
         artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
         src: "music4.mp3", 
         color1: "#ff007f", 
         color2: "#ffaa00",
@@ -1834,6 +1842,8 @@
       { 
         title: "With Glory I Shall Fall", 
         artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
         src: "music5.mp3", 
         color1: "#00f2fe", 
         color2: "#9900ef",
@@ -1847,6 +1857,8 @@
       { 
         title: "Against the Tide", 
         artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
         src: "music6.mp3", 
         color1: "#25f4ee", 
         color2: "#ff3366",
@@ -1868,7 +1880,6 @@
     let lyricInterval = null;
     let currentLyricIdx = 0;
 
-    // Khởi tạo Audio element stream độc lập kết nối GainNode
     const audioElement = new Audio();
     audioElement.preload = "auto";
     audioElement.crossOrigin = "anonymous";
@@ -1928,6 +1939,63 @@
       }, 4500);
     }
 
+    /* ĐỒNG BỘ MEDIA SESSION RA MÀN HÌNH KHÓA VÀ THANH THÔNG BÁO */
+    function updateMediaSession() {
+      if ('mediaSession' in navigator) {
+        const track = playlist[currentTrackIndex];
+        const artUrl = new URL(track.artwork || 'avatar.jpg', window.location.href).href;
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.artist,
+          album: track.album || "Sagiri Bio Playlist 💕",
+          artwork: [
+            { src: artUrl, sizes: '96x96', type: 'image/jpeg' },
+            { src: artUrl, sizes: '128x128', type: 'image/jpeg' },
+            { src: artUrl, sizes: '192x192', type: 'image/jpeg' },
+            { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
+            { src: artUrl, sizes: '384x384', type: 'image/jpeg' },
+            { src: artUrl, sizes: '512x512', type: 'image/jpeg' }
+          ]
+        });
+
+        // Bật đầy đủ các nút điều khiển
+        navigator.mediaSession.setActionHandler('play', () => togglePlayPause());
+        navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+          audioElement.currentTime = Math.max(audioElement.currentTime - (details.seekOffset || 10), 0);
+          updatePositionState();
+        });
+        navigator.mediaSession.setActionHandler('seekforward', (details) => {
+          audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration || 0);
+          updatePositionState();
+        });
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+          if (details.fastSeek && 'fastSeek' in audioElement) {
+            audioElement.fastSeek(details.seekTime);
+            return;
+          }
+          audioElement.currentTime = details.seekTime;
+          updatePositionState();
+        });
+      }
+    }
+
+    function updatePositionState() {
+      if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+        if (audioElement.duration && !isNaN(audioElement.duration)) {
+          navigator.mediaSession.setPositionState({
+            duration: audioElement.duration,
+            playbackRate: audioElement.playbackRate,
+            position: audioElement.currentTime
+          });
+        }
+      }
+    }
+
     function updateTrackInfo() {
       const track = playlist[currentTrackIndex];
       const titleElem = document.getElementById('miniSongTitle');
@@ -1945,6 +2013,7 @@
 
       localStorage.setItem('sagiri_track_idx', currentTrackIndex);
       renderPlaylist();
+      updateMediaSession();
     }
 
     function loadTrack(index, autoPlay = false) {
@@ -1958,10 +2027,12 @@
         audioElement.play().then(() => {
           isPlaying = true;
           document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
+          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
           syncVisualEffects();
         }).catch(() => {
           isPlaying = false;
           document.getElementById('miniPlayIcon').className = "fa-solid fa-play";
+          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
           syncVisualEffects();
         });
       }
@@ -1975,10 +2046,12 @@
         audioElement.pause();
         isPlaying = false;
         miniPlayIcon.className = "fa-solid fa-play";
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
       } else {
         audioElement.play().then(() => {
           isPlaying = true;
           miniPlayIcon.className = "fa-solid fa-pause";
+          if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
         }).catch(() => {});
       }
       syncVisualEffects();
@@ -2045,6 +2118,7 @@
       const percent = (event.clientX - rect.left) / rect.width;
       if (audioElement.duration) {
         audioElement.currentTime = percent * audioElement.duration;
+        updatePositionState();
       }
     }
 
@@ -2059,12 +2133,12 @@
       }
     }
 
-    // Các sự kiện đồng bộ HTML5 Audio
     audioElement.addEventListener('timeupdate', () => {
       if (audioElement.duration) {
         const percent = (audioElement.currentTime / audioElement.duration) * 100;
         document.getElementById('miniProgressBarFill').style.width = percent + '%';
         document.getElementById('currentTime').innerText = formatTime(audioElement.currentTime);
+        updatePositionState();
       }
     });
 
@@ -2078,6 +2152,15 @@
 
     audioElement.addEventListener('loadedmetadata', () => {
       document.getElementById('totalDuration').innerText = formatTime(audioElement.duration);
+      updatePositionState();
+    });
+
+    audioElement.addEventListener('play', () => {
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
+    });
+
+    audioElement.addEventListener('pause', () => {
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
     });
 
     audioElement.addEventListener('ended', () => {
@@ -2143,17 +2226,6 @@
       container.classList.toggle('collapsed');
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
-
-    // Tự động dừng phát khi chuyển tab / khóa màn hình
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && isPlaying) {
-        audioElement.pause();
-        isPlaying = false;
-        const miniPlayIcon = document.getElementById('miniPlayIcon');
-        if (miniPlayIcon) miniPlayIcon.className = "fa-solid fa-play";
-        syncVisualEffects();
-      }
-    });
 
     /* VUỐT TRÊN MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
