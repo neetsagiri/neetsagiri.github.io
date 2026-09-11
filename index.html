@@ -99,7 +99,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(env(safe-area-inset-top, 20px) + 36px) 16px calc(env(safe-area-inset-bottom, 20px) + 90px) 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 54px) 16px calc(env(safe-area-inset-bottom, 20px) + 90px) 16px;
       background-size: 400% 400%;
       animation: tiktokGradient 12s ease infinite;
       overflow-x: hidden;
@@ -176,62 +176,82 @@
       opacity: 1;
     }
 
-    .top-left-actions {
+    /* THANH TOP BAR ĐỒNG BỘ TRÁNH CHÈN ÉP */
+    .top-header-bar {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 16px) + 12px);
-      left: calc(env(safe-area-inset-left, 16px) + 12px);
-      z-index: 99999;
+      top: calc(env(safe-area-inset-top, 16px) + 8px);
+      left: 0;
+      right: 0;
+      padding: 0 16px;
       display: flex;
-      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 99999;
+      pointer-events: none;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
-    .btn-top-pill {
+    .top-action-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .btn-top-item {
       background: rgba(18, 18, 24, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--neon-color-1);
-      color: var(--neon-color-1);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #eaeaea;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+      transition: all 0.22s ease;
+      padding: 0 12px;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      transition: all 0.25s ease;
     }
-    .btn-top-pill:active {
-      transform: scale(0.92);
-      background: rgba(37, 244, 238, 0.25);
+    .btn-top-item.icon-only {
+      width: 36px;
+      padding: 0;
+      font-size: 0.85rem;
     }
-    .btn-top-pill.active {
-      background: rgba(37, 244, 238, 0.25);
-      border-color: #fff;
-      color: #fff;
+    .btn-top-item:active {
+      transform: scale(0.9);
+      border-color: var(--neon-color-1);
+      color: var(--neon-color-1);
+      background: rgba(37, 244, 238, 0.15);
+    }
+    .btn-season-toggle {
+      border-color: var(--neon-color-1);
+      color: var(--neon-color-1);
     }
 
-    .clock-badge-top {
-      position: fixed;
-      top: calc(env(safe-area-inset-top, 16px) + 12px);
-      right: calc(env(safe-area-inset-right, 16px) + 12px);
-      z-index: 99999;
+    .clock-badge-item {
+      pointer-events: auto;
       background: rgba(18, 18, 24, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ddd;
-      padding: 8px 14px;
-      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #eee;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 18px;
       font-size: 0.78rem;
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
       font-variant-numeric: tabular-nums;
-      transition: border-color 0.3s ease;
+      flex-shrink: 0;
     }
 
     #seasonCanvas {
@@ -300,7 +320,6 @@
       z-index: 1;
     }
 
-    /* HIỆU ỨNG TUYẾT BÁM TRÊN ĐỈNH THẺ KHI MÙA ĐÔNG */
     .snow-accumulation-cap {
       position: absolute;
       top: 0;
@@ -1000,30 +1019,29 @@
     <span id="toastMsg">Đã sao chép!</span>
   </div>
 
-  <!-- NHÓM NÚT GÓC TRÁI TRÊN CÙNG -->
-  <div class="top-left-actions">
-    <button type="button" class="btn-top-pill" onclick="cycleSeason()" id="btnSeason" title="Đổi 4 mùa (Xuân, Hạ, Thu, Đông)">
-      <span id="seasonIcon">🌸</span> <span id="seasonText">Xuân</span>
-    </button>
-    <button type="button" class="btn-top-pill" onclick="toggleAmbience()" id="btnAmbience" title="Bật/Tắt âm thanh thiên nhiên 4 mùa">
-      <i class="fa-solid fa-volume-xmark" id="ambienceIcon"></i>
-    </button>
-    <button type="button" class="btn-top-pill" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
-      <i class="fa-solid fa-camera"></i> <span id="btnScreenshotText">Tải ảnh</span>
-    </button>
-    <button type="button" class="btn-top-pill" onclick="reloadPageClean()" title="Tải lại trang">
-      <i class="fa-solid fa-rotate-right" id="reloadIcon"></i>
-    </button>
-    <button type="button" class="btn-top-pill" onclick="nativeSharePage()" title="Chia sẻ trang">
-      <i class="fa-solid fa-share-nodes"></i>
-    </button>
-  </div>
+  <!-- THANH HEADER TOP BAR ĐÃ CẢI TIẾN TRÁNH TRÙNG LẶP -->
+  <header class="top-header-bar">
+    <div class="top-action-group">
+      <button type="button" class="btn-top-item btn-season-toggle" onclick="cycleSeason()" id="btnSeason" title="Đổi 4 mùa (Xuân, Hạ, Thu, Đông)">
+        <span id="seasonIcon">🌸</span> <span id="seasonText">Xuân</span>
+      </button>
+      <button type="button" class="btn-top-item icon-only" onclick="downloadCardProfileScreenshot()" id="btnScreenshot" title="Tải ảnh profile">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+      <button type="button" class="btn-top-item icon-only" onclick="reloadPageClean()" title="Tải lại trang">
+        <i class="fa-solid fa-rotate-right" id="reloadIcon"></i>
+      </button>
+      <button type="button" class="btn-top-item icon-only" onclick="nativeSharePage()" title="Chia sẻ trang">
+        <i class="fa-solid fa-share-nodes"></i>
+      </button>
+    </div>
 
-  <!-- ĐỒNG HỒ VIỆT NAM (GMT+7) CÓ BIỂU TƯỢNG MẶT TRỜI / MẶT TRĂNG -->
-  <div class="clock-badge-top" id="clockBadge">
-    <i class="fa-solid fa-moon" id="clockIcon" style="color: #25f4ee; transition: all 0.3s ease;"></i>
-    <span id="liveClockText">00:00:00</span>
-  </div>
+    <!-- ĐỒNG HỒ VIỆT NAM (GMT+7) CÓ BIỂU TƯỢNG MẶT TRỜI / MẶT TRĂNG -->
+    <div class="clock-badge-item" id="clockBadge">
+      <i class="fa-solid fa-moon" id="clockIcon" style="color: #25f4ee;"></i>
+      <span id="liveClockText">00:00:00</span>
+    </div>
+  </header>
 
   <!-- CANVAS 4 MÙA -->
   <canvas id="seasonCanvas"></canvas>
@@ -1474,160 +1492,12 @@
       
       updateCinnamorollAccessory(s.key);
       initSeasonParticles();
-
-      if (isAmbiencePlaying) {
-        restartSeasonalAmbience();
-      }
     }
 
     function cycleSeason() {
       currentSeasonIndex = (currentSeasonIndex + 1) % SEASONS.length;
       applySeason(currentSeasonIndex);
       showToast(`✨ Đã đổi sang Mùa ${SEASONS[currentSeasonIndex].name} ${SEASONS[currentSeasonIndex].icon}`);
-    }
-
-    /* ============================================================
-       ÂM THANH MÔI TRƯỜNG PROCEDURAL 4 MÙA (WEB AUDIO API)
-       ============================================================ */
-    let ambienceAudioCtx = null;
-    let isAmbiencePlaying = false;
-    let ambienceGain = null;
-    let ambienceIntervals = [];
-
-    function stopAmbienceAudio() {
-      ambienceIntervals.forEach(t => clearInterval(t));
-      ambienceIntervals = [];
-      if (ambienceAudioCtx && ambienceAudioCtx.state !== 'closed') {
-        try { ambienceAudioCtx.close(); } catch(e){}
-        ambienceAudioCtx = null;
-      }
-    }
-
-    function toggleAmbience() {
-      const btn = document.getElementById('btnAmbience');
-      const icon = document.getElementById('ambienceIcon');
-      if (isAmbiencePlaying) {
-        stopAmbienceAudio();
-        isAmbiencePlaying = false;
-        btn.classList.remove('active');
-        icon.className = "fa-solid fa-volume-xmark";
-        showToast("🔇 Đã tắt âm thanh thiên nhiên");
-      } else {
-        isAmbiencePlaying = true;
-        btn.classList.add('active');
-        icon.className = "fa-solid fa-volume-high";
-        restartSeasonalAmbience();
-        showToast(`🍃 Đang phát âm thanh Mùa ${SEASONS[currentSeasonIndex].name}`);
-      }
-    }
-
-    function restartSeasonalAmbience() {
-      stopAmbienceAudio();
-      const season = SEASONS[currentSeasonIndex].key;
-      ambienceAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      ambienceGain = ambienceAudioCtx.createGain();
-      ambienceGain.gain.setValueAtTime(0.18, ambienceAudioCtx.currentTime);
-      ambienceGain.connect(ambienceAudioCtx.destination);
-
-      if (season === 'spring') {
-        // Mùa xuân: Tiếng chim hót ríu rít tự nhiên ngẫu nhiên
-        const chirp = () => {
-          if (!isAmbiencePlaying || !ambienceAudioCtx) return;
-          const osc = ambienceAudioCtx.createOscillator();
-          const gain = ambienceAudioCtx.createGain();
-          const t = ambienceAudioCtx.currentTime;
-          osc.type = 'sine';
-          const baseFreq = 2200 + Math.random() * 800;
-          osc.frequency.setValueAtTime(baseFreq, t);
-          osc.frequency.exponentialRampToValueAtTime(baseFreq + 1200, t + 0.08);
-          osc.frequency.exponentialRampToValueAtTime(baseFreq - 400, t + 0.15);
-          gain.gain.setValueAtTime(0.08, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
-          osc.connect(gain);
-          gain.connect(ambienceGain);
-          osc.start(t);
-          osc.stop(t + 0.16);
-        };
-        const intId = setInterval(() => {
-          if (Math.random() > 0.3) {
-            chirp();
-            setTimeout(chirp, 140);
-          }
-        }, 2200);
-        ambienceIntervals.push(intId);
-      } 
-      else if (season === 'summer') {
-        // Mùa hạ: Tiếng sóng biển dập dềnh êm dịu (Pink Noise lọc thông thấp)
-        const bufferSize = ambienceAudioCtx.sampleRate * 2;
-        const noiseBuffer = ambienceAudioCtx.createBuffer(1, bufferSize, ambienceAudioCtx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99886 * b0 + white * 0.0555179;
-          b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
-          output[i] = (b0 + b1 + b2) * 0.12;
-        }
-        const whiteNoise = ambienceAudioCtx.createBufferSource();
-        whiteNoise.buffer = noiseBuffer;
-        whiteNoise.loop = true;
-        const filter = ambienceAudioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(320, ambienceAudioCtx.currentTime);
-
-        const lfo = ambienceAudioCtx.createOscillator();
-        lfo.frequency.setValueAtTime(0.12, ambienceAudioCtx.currentTime);
-        const lfoGain = ambienceAudioCtx.createGain();
-        lfoGain.gain.setValueAtTime(220, ambienceAudioCtx.currentTime);
-        lfo.connect(lfoGain);
-        lfoGain.connect(filter.frequency);
-
-        whiteNoise.connect(filter);
-        filter.connect(ambienceGain);
-        whiteNoise.start();
-        lfo.start();
-      }
-      else if (season === 'autumn') {
-        // Mùa thu: Tiếng mưa rơi tí tách (White Noise lọc bandpass)
-        const bufferSize = ambienceAudioCtx.sampleRate * 2;
-        const noiseBuffer = ambienceAudioCtx.createBuffer(1, bufferSize, ambienceAudioCtx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          output[i] = (Math.random() * 2 - 1) * 0.15;
-        }
-        const rainSource = ambienceAudioCtx.createBufferSource();
-        rainSource.buffer = noiseBuffer;
-        rainSource.loop = true;
-        const filter = ambienceAudioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = 1100;
-        filter.Q.value = 0.8;
-        rainSource.connect(filter);
-        filter.connect(ambienceGain);
-        rainSource.start();
-      }
-      else if (season === 'winter') {
-        // Mùa đông: Tiếng lửa bập bùng & gió rít khẽ
-        const pop = () => {
-          if (!isAmbiencePlaying || !ambienceAudioCtx) return;
-          const osc = ambienceAudioCtx.createOscillator();
-          const gain = ambienceAudioCtx.createGain();
-          const t = ambienceAudioCtx.currentTime;
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(140 + Math.random() * 80, t);
-          gain.gain.setValueAtTime(0.09, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-          osc.connect(gain);
-          gain.connect(ambienceGain);
-          osc.start(t);
-          osc.stop(t + 0.05);
-        };
-        const intId = setInterval(() => {
-          if (Math.random() > 0.4) pop();
-        }, 180);
-        ambienceIntervals.push(intId);
-      }
     }
 
     /* ============================================================
@@ -1752,7 +1622,7 @@
     });
 
     /* ============================================================
-       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM
+       3. ĐỒNG HỒ & CHẾ ĐỘ NGÀY / ĐÊM (MẶT TRỜI & MẶT TRĂNG)
        ============================================================ */
     function updateClockAndAmbient() {
       const now = new Date();
@@ -1779,7 +1649,7 @@
         document.body.classList.remove('day-mode');
         icon.className = "fa-solid fa-moon";
         icon.style.color = "var(--neon-color-1)";
-        badge.style.borderColor = "rgba(255, 255, 255, 0.15)";
+        badge.style.borderColor = "rgba(255, 255, 255, 0.16)";
       }
     }
     setInterval(updateClockAndAmbient, 1000);
@@ -1848,10 +1718,7 @@
        ============================================================ */
     function downloadCardProfileScreenshot() {
       const btn = document.getElementById('btnScreenshot');
-      const text = document.getElementById('btnScreenshotText');
       const cardElement = document.getElementById('profileCardToCapture');
-      const origText = text.innerText;
-      text.innerText = "Đang chụp...";
       btn.style.opacity = "0.5";
 
       document.body.classList.add('capturing');
@@ -1864,7 +1731,6 @@
       }).then(canvas => {
         document.body.classList.remove('capturing');
         btn.style.opacity = "1";
-        text.innerText = origText;
 
         const link = document.createElement('a');
         link.download = 'sagiri-card-profile.png';
@@ -1874,13 +1740,12 @@
       }).catch(err => {
         document.body.classList.remove('capturing');
         btn.style.opacity = "1";
-        text.innerText = origText;
         showToast("⚠️ Không thể chụp ảnh lúc này.");
       });
     }
 
     /* ============================================================
-       7. CANVAS HIỆU ỨNG 4 MÙA CHUYÊN SÂU
+       7. CANVAS HIỆU ỨNG 4 MÙA TỐI ƯU
        ============================================================ */
     const canvas = document.getElementById('seasonCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -1893,7 +1758,6 @@
     let isCanvasVisible = true;
     let isLowBatteryMode = false;
 
-    // Tương tác chạm chuột để xua đuổi đom đóm
     let pointerX = -9999;
     let pointerY = -9999;
     window.addEventListener('mousemove', (e) => { pointerX = e.clientX; pointerY = e.clientY; }, { passive: true });
@@ -1905,7 +1769,7 @@
     }, { passive: true });
 
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    const maxParticles = isMobileDevice ? 22 : 42;
+    const maxParticles = isMobileDevice ? 20 : 38;
 
     function resizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1946,20 +1810,16 @@
         this.history = [];
 
         if (this.type === 'spring') {
-          // Cánh hoa anh đào
           this.size = (Math.random() * 5 + 6) * this.z;
           this.speedY = (Math.random() * 0.8 + 0.6) * this.z;
           this.speedX = (Math.random() * 0.6 - 0.3) * this.z;
           this.opacity = Math.random() * 0.25 + 0.55;
         } else if (this.type === 'summer') {
-          // Đom đóm có vệt sáng (Light Trail)
           this.size = (Math.random() * 2 + 2) * this.z;
           this.speedY = (Math.random() * 0.6 - 0.3) * this.z;
           this.speedX = (Math.random() * 0.8 - 0.4) * this.z;
           this.opacity = Math.random() * 0.5 + 0.3;
-          this.glowFreq = Math.random() * 0.05 + 0.02;
         } else if (this.type === 'autumn') {
-          // Lá phong xoắn ốc 3D
           this.size = (Math.random() * 7 + 8) * this.z;
           this.speedY = (Math.random() * 1.1 + 0.8) * this.z;
           this.speedX = (Math.random() * 0.8 - 0.4) * this.z;
@@ -1967,7 +1827,6 @@
           this.spiralRadius = 15 + Math.random() * 20;
           this.spiralAngle = Math.random() * Math.PI * 2;
         } else if (this.type === 'winter') {
-          // Bông tuyết tinh thể lục giác
           this.size = (Math.random() * 4 + 4) * this.z;
           this.speedY = (Math.random() * 1.0 + 0.6) * this.z;
           this.speedX = (Math.random() * 0.5 - 0.25) * this.z;
@@ -1979,7 +1838,6 @@
         this.flip += this.flipSpeed;
 
         if (this.type === 'summer') {
-          // Né ngón tay hoặc chuột
           const dx = this.x - pointerX;
           const dy = this.y - pointerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1998,7 +1856,6 @@
 
           if (this.y < -30) this.y = window.innerHeight + 10;
         } else if (this.type === 'autumn') {
-          // Quỹ đạo xoắn ốc
           this.spiralAngle += 0.04;
           const spiralOffset = Math.sin(this.spiralAngle) * this.spiralRadius;
           this.x += this.speedX + deviceWindX + spiralOffset * 0.04;
@@ -2033,7 +1890,6 @@
           ctx.fill();
         } else if (this.type === 'summer') {
           ctx.restore();
-          // Vẽ vệt sáng đuôi đom đóm
           if (this.history.length > 1) {
             for (let i = 0; i < this.history.length - 1; i++) {
               ctx.beginPath();
@@ -2051,7 +1907,6 @@
           ctx.shadowColor = '#00ff88';
           ctx.fill();
         } else if (this.type === 'autumn') {
-          // Lá phong xoay trục Z
           const flipScale = Math.cos(this.flip);
           ctx.scale(flipScale, 1);
           ctx.beginPath();
@@ -2067,7 +1922,6 @@
           ctx.fillStyle = `rgba(255, 115, 34, ${this.opacity})`;
           ctx.fill();
         } else if (this.type === 'winter') {
-          // Bông tuyết tinh thể lục giác 6 cánh
           ctx.strokeStyle = `rgba(225, 245, 255, ${this.opacity})`;
           ctx.lineWidth = 1.3;
           for (let i = 0; i < 6; i++) {
