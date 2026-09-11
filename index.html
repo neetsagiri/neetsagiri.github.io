@@ -55,9 +55,24 @@
       overscroll-behavior-y: none;
     }
 
-    .card-border-wrapper, .mini-player-container, .neon-ring-wrapper::before, .game-card-wrapper::before {
-      will-change: transform;
+    /* ============================================================
+       GPU ACCELERATION & HARDWARE LAYERS TỐI ƯU HÓA ĐỘ MƯỢT
+       ============================================================ */
+    .card-border-wrapper, 
+    .mini-player-container, 
+    .neon-ring-wrapper::before, 
+    .game-card-wrapper::before,
+    .mini-vinyl-wrapper,
+    .cinnamoroll-character,
+    .modal-border-wrapper,
+    .toast-container {
+      will-change: transform, opacity;
       transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      perspective: 1000px;
+      -webkit-perspective: 1000px;
     }
 
     @media (pointer: fine) {
@@ -73,6 +88,7 @@
       font-size: 0.75rem;
       animation: dustFade 0.6s linear forwards;
       user-select: none;
+      will-change: transform, opacity;
     }
     @keyframes dustFade {
       0% { opacity: 1; transform: scale(1) translateY(0); }
@@ -113,7 +129,7 @@
       position: fixed;
       top: calc(env(safe-area-inset-top, 20px) + 12px);
       left: 50%;
-      transform: translateX(-50%) translateY(-100px);
+      transform: translateX(-50%) translateY(-100px) translateZ(0);
       background: rgba(18, 18, 26, 0.95);
       border: 1px solid var(--neon-color-1);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
@@ -131,7 +147,7 @@
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
     }
     .toast-container.show {
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(0) translateZ(0);
       opacity: 1;
     }
 
@@ -195,6 +211,7 @@
       height: 100%;
       pointer-events: none;
       z-index: 5;
+      will-change: contents;
     }
 
     @keyframes tiktokGradient {
@@ -320,7 +337,7 @@
       position: absolute;
       top: -34px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateZ(0);
       width: 140px;
       z-index: 5;
       pointer-events: none;
@@ -333,8 +350,8 @@
     .cinna-ear-right { transform-origin: 110px 48px; animation: earWaveRight 3s ease-in-out infinite; }
 
     @keyframes cinnaFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-5px); }
+      0%, 100% { transform: translateX(-50%) translateY(0) translateZ(0); }
+      50% { transform: translateX(-50%) translateY(-5px) translateZ(0); }
     }
     @keyframes earWaveLeft {
       0%, 100% { transform: rotate(0deg); }
@@ -569,7 +586,7 @@
     }
 
     .mini-player-container.collapsed {
-      transform: translateY(-115px);
+      transform: translateY(-115px) translateZ(0);
       opacity: 0;
       pointer-events: none;
     }
@@ -714,7 +731,6 @@
     }
     .music-player-panel.active { display: block; }
 
-    /* HỘP NẠP FILE MP3 VÀO SUPABASE CLOUD */
     .file-upload-box {
       margin-bottom: 12px;
       padding: 14px;
@@ -802,20 +818,56 @@
       transform: translate(-50%, -50%); animation: floatFade 0.7s ease-out forwards; font-size: 1.2rem; user-select: none;
     }
     @keyframes floatFade {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
-      100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2); }
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6) translateZ(0); }
+      100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2) translateZ(0); }
     }
 
+    /* MODAL TRANSITIONS & FADE / SLIDE HIỆU ỨNG MƯỢT MÀ */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999;
-      justify-content: center; align-items: center; padding: 16px;
+      display: flex;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      pointer-events: none;
+      opacity: 0;
+      will-change: opacity, backdrop-filter;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, opacity 0.3s ease;
     }
-    .modal-overlay.active { display: flex; }
+
+    .modal-overlay.active {
+      pointer-events: auto;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 1;
+    }
+
     .modal-border-wrapper {
-      position: relative; width: 100%; max-width: 360px; border-radius: 28px; padding: 3px; overflow: hidden;
-      display: flex; justify-content: center; align-items: center;
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      border-radius: 28px;
+      padding: 3px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translateY(30px) scale(0.95) translateZ(0);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
     }
+
+    .modal-overlay.active .modal-border-wrapper {
+      transform: translateY(0) scale(1) translateZ(0);
+      opacity: 1;
+    }
+
     .modal-border-wrapper::before {
       content: ""; position: absolute; width: 200%; height: 200%;
       background: conic-gradient(var(--neon-color-1), var(--neon-color-2), var(--neon-color-2));
@@ -872,7 +924,6 @@
 
     .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
 
-    /* DANH SÁCH GUESTBOOK MỚI */
     .guestbook-list {
       max-height: 140px;
       overflow-y: auto;
@@ -1350,7 +1401,7 @@
           document.body.appendChild(dust);
           setTimeout(() => dust.remove(), 600);
         }
-      });
+      }, { passive: true });
     }
 
     function nativeSharePage() {
@@ -1541,7 +1592,7 @@
     }
 
     /* ============================================================
-       7. VẼ HOA ANH ĐÀO (3D FLIP, PARALLAX DEPTH)
+       7. VẼ HOA ANH ĐÀO TỐI ƯU HÓA GPU & PARALLAX
        ============================================================ */
     const canvas = document.getElementById('sakuraCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -1692,20 +1743,6 @@
       ctx.stroke();
 
       ctx.restore();
-
-      const clusters = [
-        {x: 60 + sway, y: 30}, {x: 180 + sway*1.1, y: 110}, {x: 320 + sway*1.5, y: 145},
-        {x: window.innerWidth - 60 - swayR, y: 30}, {x: window.innerWidth - 180 - swayR*1.1, y: 110}, {x: window.innerWidth - 320 - swayR*1.5, y: 145}
-      ];
-
-      clusters.forEach(c => {
-        for (let k = 0; k < 4; k++) {
-          ctx.beginPath();
-          ctx.arc(c.x + (k * 6 - 10), c.y + (Math.sin(k + branchWindAngle) * 3), 7, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255, 165, 190, 0.85)";
-          ctx.fill();
-        }
-      });
     }
 
     function animateSakura(currentTime) {
@@ -1749,22 +1786,7 @@
     });
 
     /* ============================================================
-       8. CLICK TRÁI TIM
-       ============================================================ */
-    const sparkles = ['💕', '🌸', '✨', '💖'];
-    window.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg') || e.target.closest('.file-upload-box')) return;
-      const heart = document.createElement('div');
-      heart.className = 'click-heart';
-      heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
-      heart.style.left = e.clientX + 'px';
-      heart.style.top = e.clientY + 'px';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 700);
-    });
-
-    /* ============================================================
-       9. DỮ LIỆU GAME & MODAL
+       9. DỮ LIỆU GAME & MODAL (VỚI HIỆU ỨNG CHUYỂN CẢNH MƯỢT MÀ)
        ============================================================ */
     const gamesData = {
       ww: {
@@ -1793,11 +1815,16 @@
       modalImg.src = game.icon;
       document.getElementById("gameIngameText").innerText = game.ingame;
       document.getElementById("gameUidText").innerText = game.uid;
-      document.getElementById("gameModal").classList.add("active");
+      
+      const modal = document.getElementById("gameModal");
+      modal.style.display = "flex";
+      requestAnimationFrame(() => modal.classList.add("active"));
     }
 
     function closeGameModal() {
-      document.getElementById("gameModal").classList.remove("active");
+      const modal = document.getElementById("gameModal");
+      modal.classList.remove("active");
+      setTimeout(() => { if (!modal.classList.contains('active')) modal.style.display = "none"; }, 300);
     }
 
     function openAccountPhotoModal() {
@@ -1805,11 +1832,16 @@
       document.getElementById("accountPhotoTitle").innerText = "Tài khoản " + game.name;
       const photoImg = document.getElementById("accountPhotoDisplay");
       photoImg.src = game.photo;
-      document.getElementById("accountPhotoModal").classList.add("active");
+      
+      const modal = document.getElementById("accountPhotoModal");
+      modal.style.display = "flex";
+      requestAnimationFrame(() => modal.classList.add("active"));
     }
 
     function closeAccountPhotoModal() {
-      document.getElementById("accountPhotoModal").classList.remove("active");
+      const modal = document.getElementById("accountPhotoModal");
+      modal.classList.remove("active");
+      setTimeout(() => { if (!modal.classList.contains('active')) modal.style.display = "none"; }, 300);
     }
 
     function copyToClipboard(text, successMsg) {
@@ -1882,23 +1914,31 @@
     }
 
     function openQRModal() {
-      document.getElementById('qrModal').classList.add('active');
+      const modal = document.getElementById('qrModal');
+      modal.style.display = "flex";
+      requestAnimationFrame(() => modal.classList.add('active'));
       backToEditDonate();
     }
 
     function closeQRModal() {
-      document.getElementById('qrModal').classList.remove('active');
+      const modal = document.getElementById('qrModal');
+      modal.classList.remove('active');
+      setTimeout(() => { if (!modal.classList.contains('active')) modal.style.display = "none"; }, 300);
     }
 
     /* ============================================================
        10. GUESTBOOK (DISCORD WEBHOOK & SUPABASE CLOUD SYNC)
        ============================================================ */
     function openGuestbookModal() {
-      document.getElementById('guestbookModal').classList.add('active');
+      const modal = document.getElementById('guestbookModal');
+      modal.style.display = "flex";
+      requestAnimationFrame(() => modal.classList.add('active'));
       fetchGuestbookFromCloud();
     }
     function closeGuestbookModal() {
-      document.getElementById('guestbookModal').classList.remove('active');
+      const modal = document.getElementById('guestbookModal');
+      modal.classList.remove('active');
+      setTimeout(() => { if (!modal.classList.contains('active')) modal.style.display = "none"; }, 300);
     }
 
     async function fetchGuestbookFromCloud() {
