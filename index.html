@@ -416,13 +416,13 @@
       background: #1a1a24;
     }
 
-    /* HIỆU ỨNG CỬ ĐỘNG CHO CINNAMOROLL */
+    /* ĐIỀU CHỈNH VỊ TRÍ ĐỨNG CỦA CINNAMOROLL TRỰC QUAN & CÂN ĐỐI HƠN */
     .cinnamoroll-character {
       position: absolute;
-      top: -38px;
+      top: -46px;
       left: 50%;
       transform: translateX(-50%) translateZ(0);
-      width: 150px;
+      width: 154px;
       z-index: 5;
       pointer-events: none;
       animation: cinnaFloat 3s ease-in-out infinite;
@@ -1116,7 +1116,7 @@
           <img class="avatar" src="avatar.jpg" alt="Avatar Sagiri" />
         </div>
         
-        <!-- LINH VẬT CINNAMOROLL CHUẨN MẪU BÁM MÉP & CỬ ĐỘNG -->
+        <!-- LINH VẬT CINNAMOROLL ĐÃ CĂN CHỈNH VỊ TRÍ ĐỨNG TRỰC QUAN -->
         <div class="cinnamoroll-character">
           <svg viewBox="0 0 160 110" class="cinna-svg">
             <!-- Thân và Chân ngồi bám mép -->
@@ -1150,27 +1150,23 @@
               <path d="M 77 41 Q 80 46 83 41" fill="none" stroke="#28b7fa" stroke-width="2.2" stroke-linecap="round"/>
             </g>
 
-            <!-- PHỤ KIỆN THỜI TRANG 4 MÙA (CẢI TIẾN NƠ MÙA XUÂN XINH XẮN) -->
+            <!-- PHỤ KIỆN THỜI TRANG 4 MÙA (ĐÃ ĐIỀU CHỈNH VỊ TRÍ CHUẨN XÁC) -->
             <!-- 1. MÙA XUÂN: Nơ hồng và hoa anh đào tinh tế -->
             <g id="cinnaSpringAccessory" style="display: inline;">
-              <!-- Cánh nơ trái -->
               <path d="M 45 32 Q 38 24 45 22 Q 52 24 49 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
-              <!-- Cánh nơ phải -->
               <path d="M 55 32 Q 62 24 55 22 Q 48 24 51 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
-              <!-- Tâm nơ -->
               <circle cx="50" cy="27" r="2.2" fill="#ff4081"/>
-              <!-- Cụm hoa anh đào bên cạnh -->
               <circle cx="41" cy="27" r="3.2" fill="#ff80ab"/>
               <circle cx="41" cy="27" r="1.2" fill="#fff59d"/>
             </g>
 
-            <!-- 2. MÙA HẠ: Kính râm -->
+            <!-- 2. MÙA HẠ: Kính râm (Đã căn chuẩn khớp với vị trí mắt) -->
             <g id="cinnaSummerAccessory" style="display: none;">
-              <path d="M 62 38 C 62 34 76 34 76 38 C 76 43 62 43 62 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
-              <path d="M 84 38 C 84 34 98 34 98 38 C 98 43 84 43 84 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
-              <line x1="76" y1="36" x2="84" y2="36" stroke="#00ff88" stroke-width="2"/>
-              <line x1="62" y1="37" x2="56" y2="35" stroke="#00ff88" stroke-width="1.5"/>
-              <line x1="98" y1="37" x2="104" y2="35" stroke="#00ff88" stroke-width="1.5"/>
+              <path d="M 61 38 C 61 33 74 33 74 38 C 74 43 61 43 61 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+              <path d="M 86 38 C 86 33 99 33 99 38 C 99 43 86 43 86 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+              <line x1="74" y1="36" x2="86" y2="36" stroke="#00ff88" stroke-width="2"/>
+              <line x1="61" y1="37" x2="55" y2="35" stroke="#00ff88" stroke-width="1.5"/>
+              <line x1="99" y1="37" x2="105" y2="35" stroke="#00ff88" stroke-width="1.5"/>
             </g>
 
             <!-- 3. MÙA THU: Khăn quàng cổ len ấm áp -->
@@ -1182,11 +1178,11 @@
               <line x1="79" y1="80" x2="79" y2="84" stroke="#ff4500" stroke-width="1.5"/>
             </g>
 
-            <!-- 4. MÙA ĐÔNG: Mũ len trùm đầu có cục bông -->
+            <!-- 4. MÙA ĐÔNG: Mũ len trùm đầu có cục bông (Đã bám khít đỉnh đầu) -->
             <g id="cinnaWinterAccessory" style="display: none;">
-              <path d="M 58 35 Q 80 12 102 35 C 96 37 64 37 58 35 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-              <path d="M 58 35 Q 80 40 102 35 L 100 39 Q 80 44 60 39 Z" fill="#ffffff" stroke="#bae6fd" stroke-width="1"/>
-              <circle cx="80" cy="10" r="6" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
+              <path d="M 54 30 Q 80 4 106 30 C 100 33 60 33 54 30 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+              <path d="M 54 30 Q 80 35 106 30 L 104 34 Q 80 39 56 34 Z" fill="#ffffff" stroke="#bae6fd" stroke-width="1"/>
+              <circle cx="80" cy="3" r="5.5" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
             </g>
           </svg>
         </div>
