@@ -871,6 +871,25 @@
     .close-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #888; }
 
     .footer { margin-top: 24px; font-size: 0.78rem; color: #666666; }
+
+    /* DANH SÁCH GUESTBOOK MỚI */
+    .guestbook-list {
+      max-height: 140px;
+      overflow-y: auto;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .guestbook-item {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+    }
+    .guestbook-item strong { color: var(--neon-color-1); }
   </style>
 </head>
 <body>
@@ -1230,12 +1249,12 @@
     </div>
   </div>
 
-  <!-- POPUP 3: HỘP TIN NHẮN ẨN DANH (GUESTBOOK) -->
+  <!-- POPUP 3: HỘP TIN NHẮN ẨN DANH (GUESTBOOK) ĐÃ NÂNG CẤP -->
   <div id="guestbookModal" class="modal-overlay" onclick="closeGuestbookModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
         <h3 class="modal-title">Gửi Lời Nhắn Cho Sagiri 💌</h3>
-        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn sẽ được gửi thẳng qua Discord Webhook</p>
+        <p style="font-size: 0.78rem; color: #aaa; margin-bottom: 12px;">Lời nhắn hiện thị trực tiếp & gửi qua Discord Webhook</p>
 
         <div class="donate-form">
           <div class="donate-input-group">
@@ -1244,14 +1263,21 @@
           </div>
           <div class="donate-input-group">
             <label class="donate-input-label"><i class="fa-solid fa-pen-nib"></i> Lời nhắn gửi gắm:</label>
-            <textarea id="guestMsg" class="donate-input" style="height: 90px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
+            <textarea id="guestMsg" class="donate-input" style="height: 80px; resize: none;" placeholder="Viết vài dòng ngọt ngào gửi Sagiri..."></textarea>
           </div>
           <button type="button" class="btn-done-submit" onclick="submitGuestbook()">
             <i class="fa-solid fa-paper-plane"></i> Gửi Ngay
           </button>
         </div>
 
-        <button type="button" class="btn-modal-action close-btn" onclick="closeGuestbookModal()">Đóng lại</button>
+        <div style="margin-top: 14px; text-align: left; font-size: 0.78rem; color: #aaa; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
+          <span>💬 Lời nhắn gần đây:</span>
+          <div class="guestbook-list" id="guestbookListContainer">
+            <div style="color: #666; text-align: center; padding: 10px;">Đang tải lời nhắn...</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-modal-action close-btn" onclick="closeGuestbookModal()" style="margin-top: 10px;">Đóng lại</button>
       </div>
     </div>
   </div>
@@ -1306,6 +1332,7 @@
       }
 
       document.getElementById('visitorCount').innerText = views.toLocaleString();
+      fetchGuestbookFromCloud();
     });
 
     const dustIcons = ['✨', '🌸', '💫', '💖'];
@@ -1864,15 +1891,44 @@
     }
 
     /* ============================================================
-       10. GUESTBOOK (DISCORD WEBHOOK)
+       10. GUESTBOOK (DISCORD WEBHOOK & SUPABASE CLOUD SYNC)
        ============================================================ */
     function openGuestbookModal() {
       document.getElementById('guestbookModal').classList.add('active');
+      fetchGuestbookFromCloud();
     }
     function closeGuestbookModal() {
       document.getElementById('guestbookModal').classList.remove('active');
     }
-    function submitGuestbook() {
+
+    async function fetchGuestbookFromCloud() {
+      const container = document.getElementById('guestbookListContainer');
+      try {
+        const { data, error } = await supabaseClient
+          .from('guestbook')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (data && data.length > 0) {
+          container.innerHTML = data.map(item => `
+            <div class="guestbook-item">
+              <strong>${escapeHtml(item.name)}:</strong> ${escapeHtml(item.msg)}
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = `<div style="color: #666; text-align: center; padding: 6px;">Chưa có lời nhắn nào. Hãy là người đầu tiên! 💕</div>`;
+        }
+      } catch (e) {
+        container.innerHTML = `<div style="color: #666; text-align: center; padding: 6px;">Không thể tải danh sách.</div>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    async function submitGuestbook() {
       const name = document.getElementById('guestName').value.trim() || "Ẩn danh";
       const msg = document.getElementById('guestMsg').value.trim();
       if (!msg) {
@@ -1880,12 +1936,13 @@
         return;
       }
 
-      const oldMsgs = JSON.parse(localStorage.getItem('sagiri_guestbook') || '[]');
-      oldMsgs.push({ name, msg, time: new Date().toISOString() });
-      localStorage.setItem('sagiri_guestbook', JSON.stringify(oldMsgs));
+      showToast("⏳ Đang gửi lời nhắn...");
+
+      try {
+        await supabaseClient.from('guestbook').insert([{ name, msg }]);
+      } catch(e){}
 
       const discordWebhook = "https://discord.com/api/webhooks/1546332023017185330/d640_ILLOfR7IqRJNVNDRoqOvSxu9gUmb_qToxCMEcxRywVxx0Qqc1k4ozKKfmtRkOzf";
-      
       fetch(discordWebhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1903,7 +1960,7 @@
       }).catch(() => {});
 
       document.getElementById('guestMsg').value = "";
-      closeGuestbookModal();
+      fetchGuestbookFromCloud();
       showToast("💌 Lời nhắn đã được gửi thành công!");
     }
 
@@ -2253,28 +2310,6 @@
         navigator.mediaSession.setActionHandler('pause', () => togglePlayPause());
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
-
-        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-          if (audioElement.duration) {
-            audioElement.currentTime = Math.max(audioElement.currentTime - (details.seekOffset || 10), 0);
-          } else if (ytPlayer && ytPlayer.getCurrentTime) {
-            ytPlayer.seekTo(Math.max(ytPlayer.getCurrentTime() - (details.seekOffset || 10), 0), true);
-          }
-        });
-        navigator.mediaSession.setActionHandler('seekforward', (details) => {
-          if (audioElement.duration) {
-            audioElement.currentTime = Math.min(audioElement.currentTime + (details.seekOffset || 10), audioElement.duration);
-          } else if (ytPlayer && ytPlayer.getCurrentTime) {
-            ytPlayer.seekTo(Math.min(ytPlayer.getCurrentTime() + (details.seekOffset || 10), ytPlayer.getDuration()), true);
-          }
-        });
-        navigator.mediaSession.setActionHandler('seekto', (details) => {
-          if (audioElement.duration) {
-            audioElement.currentTime = details.seekTime;
-          } else if (ytPlayer && ytPlayer.seekTo) {
-            ytPlayer.seekTo(details.seekTime, true);
-          }
-        });
       }
     }
 
@@ -2608,7 +2643,6 @@
       });
     }
 
-    // TẢI FILE MP3 LÊN SUPABASE CLOUD ĐỂ ĐỒNG BỘ TOÀN CẦU
     async function handleDirectMp3Upload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
@@ -2660,7 +2694,6 @@
       event.target.value = "";
     }
 
-    // XÓA FILE KHỎI SUPABASE CLOUD
     async function deleteCloudTrack(event, index) {
       if (event) event.stopPropagation();
       const trackToDelete = playlist[index];
@@ -2689,7 +2722,6 @@
       showToast("🗑️ Đã xóa file khỏi đám mây!");
     }
 
-    // TỰ ĐỘNG TẢI DANH SÁCH BÀI TỪ SUPABASE KHI MỞ BẤT KỲ MÁY NÀO
     async function loadTracksFromCloud() {
       try {
         const { data, error } = await supabaseClient.storage
@@ -2853,7 +2885,6 @@
       chevron.className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
-    /* ĐIỀU KHIỂN CẢM ỨNG MOBILE */
     const miniContainer = document.getElementById('miniPlayerContainer');
     let touchStartX = 0;
     let touchStartY = 0;
@@ -2905,7 +2936,6 @@
     document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
     document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
 
-    // KÍCH HOẠT TẢI NHẠC TỪ CLOUD SUPABASE KHI KHỞI ĐỘNG
     loadTracksFromCloud().then(() => {
       updateTrackInfo();
       loadTrack(currentTrackIndex, false);
