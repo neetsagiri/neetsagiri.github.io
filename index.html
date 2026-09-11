@@ -373,7 +373,6 @@
       margin: 30px auto 14px auto;
     }
 
-    /* VIỀN XOAY AVATAR 2 MÀU THEO MÙA */
     .neon-ring-wrapper {
       position: absolute;
       inset: -5px;
@@ -417,33 +416,54 @@
       background: #1a1a24;
     }
 
+    /* HIỆU ỨNG CỬ ĐỘNG CHO CINNAMOROLL */
     .cinnamoroll-character {
       position: absolute;
-      top: -34px;
+      top: -38px;
       left: 50%;
       transform: translateX(-50%) translateZ(0);
-      width: 140px;
+      width: 150px;
       z-index: 5;
       pointer-events: none;
       animation: cinnaFloat 3s ease-in-out infinite;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+      transition: transform 0.2s ease;
+    }
+
+    .cinnamoroll-character:hover {
+      transform: translateX(-50%) scale(1.06) rotate(2deg) translateZ(0);
     }
 
     .cinna-svg { width: 100%; height: auto; overflow: visible; }
-    .cinna-ear-left { transform-origin: 50px 48px; animation: earWaveLeft 3s ease-in-out infinite; }
-    .cinna-ear-right { transform-origin: 110px 48px; animation: earWaveRight 3s ease-in-out infinite; }
+    
+    .cinna-head-group {
+      transform-origin: 80px 42px;
+      animation: headWobble 3s ease-in-out infinite;
+    }
+    .cinna-ear-left { 
+      transform-origin: 52px 35px; 
+      animation: earWaveLeft 3s ease-in-out infinite; 
+    }
+    .cinna-ear-right { 
+      transform-origin: 108px 35px; 
+      animation: earWaveRight 3s ease-in-out infinite; 
+    }
 
     @keyframes cinnaFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0) translateZ(0); }
-      50% { transform: translateX(-50%) translateY(-5px) translateZ(0); }
+      0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg) translateZ(0); }
+      50% { transform: translateX(-50%) translateY(-6px) rotate(-1.5deg) translateZ(0); }
+    }
+    @keyframes headWobble {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(2deg); }
     }
     @keyframes earWaveLeft {
       0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(-6deg); }
+      50% { transform: rotate(-8deg) translateY(-2px); }
     }
     @keyframes earWaveRight {
       0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(6deg); }
+      50% { transform: rotate(8deg) translateY(-2px); }
     }
 
     .live-status-pill {
@@ -1095,43 +1115,78 @@
         <div class="avatar-inner">
           <img class="avatar" src="avatar.jpg" alt="Avatar Sagiri" />
         </div>
+        
+        <!-- LINH VẬT CINNAMOROLL CHUẨN MẪU BÁM MÉP & CỬ ĐỘNG -->
         <div class="cinnamoroll-character">
-          <svg viewBox="0 0 160 95" class="cinna-svg">
-            <path class="cinna-ear cinna-ear-left" d="M 45 42 C 10 38, -5 55, 3 66 C 12 77, 36 68, 50 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
-            <path class="cinna-ear cinna-ear-right" d="M 115 42 C 150 38, 165 55, 157 66 C 148 77, 124 68, 110 56 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
-            <ellipse cx="80" cy="50" rx="35" ry="26" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
-            <ellipse cx="68" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
-            <ellipse cx="92" cy="48" rx="3.5" ry="4.5" fill="#28b7fa"/>
-            <ellipse cx="61" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
-            <ellipse cx="99" cy="54" rx="5" ry="3" fill="#ffb4c8"/>
-            <path d="M 75 54 Q 80 58 85 54" fill="none" stroke="#28b7fa" stroke-width="2.8" stroke-linecap="round"/>
-            <ellipse cx="69" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
-            <ellipse cx="91" cy="74" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+          <svg viewBox="0 0 160 110" class="cinna-svg">
+            <!-- Thân và Chân ngồi bám mép -->
+            <ellipse cx="80" cy="72" rx="16" ry="12" fill="#ffffff" stroke="#28b7fa" stroke-width="3"/>
+            <ellipse cx="68" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+            <ellipse cx="92" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
 
-            <!-- CÁC PHỤ KIỆN THEO MÙA CỦA CINNAMOROLL -->
+            <!-- Hai tay nhỏ ôm trước ngực -->
+            <ellipse cx="73" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
+            <ellipse cx="87" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
+
+            <!-- NHÓM ĐẦU & TAI CỬ ĐỘNG NGHỆ THUẬT -->
+            <g class="cinna-head-group">
+              <!-- Tai trái -->
+              <path class="cinna-ear-left" d="M 52 35 C 20 28, -5 45, 2 55 C 8 62, 25 55, 48 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+              <!-- Tai phải -->
+              <path class="cinna-ear-right" d="M 108 35 C 140 28, 165 45, 158 55 C 152 62, 135 55, 112 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+
+              <!-- Đầu to tròn đặc trưng -->
+              <ellipse cx="80" cy="42" rx="36" ry="24" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
+
+              <!-- Mắt chấm tròn xanh -->
+              <ellipse cx="67" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
+              <ellipse cx="93" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
+
+              <!-- Má hồng bầu dục -->
+              <ellipse cx="58" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
+              <ellipse cx="102" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
+
+              <!-- Miệng cười tinh tế đáng yêu -->
+              <path d="M 77 41 Q 80 46 83 41" fill="none" stroke="#28b7fa" stroke-width="2.2" stroke-linecap="round"/>
+            </g>
+
+            <!-- PHỤ KIỆN THỜI TRANG 4 MÙA (CẢI TIẾN NƠ MÙA XUÂN XINH XẮN) -->
+            <!-- 1. MÙA XUÂN: Nơ hồng và hoa anh đào tinh tế -->
             <g id="cinnaSpringAccessory" style="display: inline;">
-              <circle cx="50" cy="38" r="4.5" fill="#ff7eb3"/>
-              <circle cx="55" cy="35" r="4.5" fill="#ff7eb3"/>
-              <circle cx="60" cy="39" r="4.5" fill="#ff7eb3"/>
-              <circle cx="57" cy="44" r="4.5" fill="#ff7eb3"/>
-              <circle cx="51" cy="43" r="4.5" fill="#ff7eb3"/>
-              <circle cx="55" cy="40" r="3" fill="#fff59d"/>
+              <!-- Cánh nơ trái -->
+              <path d="M 45 32 Q 38 24 45 22 Q 52 24 49 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
+              <!-- Cánh nơ phải -->
+              <path d="M 55 32 Q 62 24 55 22 Q 48 24 51 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
+              <!-- Tâm nơ -->
+              <circle cx="50" cy="27" r="2.2" fill="#ff4081"/>
+              <!-- Cụm hoa anh đào bên cạnh -->
+              <circle cx="41" cy="27" r="3.2" fill="#ff80ab"/>
+              <circle cx="41" cy="27" r="1.2" fill="#fff59d"/>
             </g>
 
+            <!-- 2. MÙA HẠ: Kính râm -->
             <g id="cinnaSummerAccessory" style="display: none;">
-              <path d="M 60 44 Q 68 40 76 44 L 74 54 Q 67 56 62 52 Z" fill="#111" stroke="#00ff88" stroke-width="1.5"/>
-              <path d="M 84 44 Q 92 40 100 44 L 98 54 Q 93 56 86 52 Z" fill="#111" stroke="#00ff88" stroke-width="1.5"/>
-              <line x1="76" y1="44" x2="84" y2="44" stroke="#00ff88" stroke-width="2"/>
+              <path d="M 62 38 C 62 34 76 34 76 38 C 76 43 62 43 62 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+              <path d="M 84 38 C 84 34 98 34 98 38 C 98 43 84 43 84 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+              <line x1="76" y1="36" x2="84" y2="36" stroke="#00ff88" stroke-width="2"/>
+              <line x1="62" y1="37" x2="56" y2="35" stroke="#00ff88" stroke-width="1.5"/>
+              <line x1="98" y1="37" x2="104" y2="35" stroke="#00ff88" stroke-width="1.5"/>
             </g>
 
+            <!-- 3. MÙA THU: Khăn quàng cổ len ấm áp -->
             <g id="cinnaAutumnAccessory" style="display: none;">
-              <path d="M 62 70 Q 80 77 98 70 Q 94 78 80 80 Q 66 78 62 70 Z" fill="#ff4500" stroke="#ffbb00" stroke-width="1.8"/>
-              <path d="M 72 75 L 70 88 L 78 88 L 76 75 Z" fill="#ffbb00" stroke="#ff4500" stroke-width="1.2"/>
+              <path d="M 63 60 Q 80 69 97 60 C 97 69 88 74 80 74 C 72 74 63 69 63 60 Z" fill="#ff4500" stroke="#d84315" stroke-width="1.5"/>
+              <path d="M 73 66 L 71 80 L 79 80 L 77 66 Z" fill="#ffbb00" stroke="#ff4500" stroke-width="1.2"/>
+              <line x1="71" y1="80" x2="71" y2="84" stroke="#ff4500" stroke-width="1.5"/>
+              <line x1="75" y1="80" x2="75" y2="84" stroke="#ff4500" stroke-width="1.5"/>
+              <line x1="79" y1="80" x2="79" y2="84" stroke="#ff4500" stroke-width="1.5"/>
             </g>
 
+            <!-- 4. MÙA ĐÔNG: Mũ len trùm đầu có cục bông -->
             <g id="cinnaWinterAccessory" style="display: none;">
-              <path d="M 62 30 Q 80 14 98 30 Q 80 26 62 30 Z" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
-              <circle cx="80" cy="14" r="5" fill="#ffffff" stroke="#b0bec5" stroke-width="1"/>
+              <path d="M 58 35 Q 80 12 102 35 C 96 37 64 37 58 35 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+              <path d="M 58 35 Q 80 40 102 35 L 100 39 Q 80 44 60 39 Z" fill="#ffffff" stroke="#bae6fd" stroke-width="1"/>
+              <circle cx="80" cy="10" r="6" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
             </g>
           </svg>
         </div>
@@ -1769,7 +1824,7 @@
     }
 
     /* ============================================================
-       7. CANVAS HIỆU ỨNG 4 MÙA (LÁ PHONG 5 THÙY CHUYỂN SẮC MỀM MẠI)
+       7. CANVAS HIỆU ỨNG 4 MÙA
        ============================================================ */
     const canvas = document.getElementById('seasonCanvas');
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -2793,7 +2848,7 @@
         } else {
           audioElement.play().then(() => {
             isPlaying = true;
-            miniPlayIcon.className = "fa-solid fa-pause";
+            document.getElementById('miniPlayIcon').className = "fa-solid fa-pause";
             if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
             syncVisualEffects();
           }).catch(() => {});
