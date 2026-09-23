@@ -36,6 +36,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- SUPABASE JS CLIENT -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --neon-color-1: #25f4ee;
@@ -53,6 +54,7 @@
 
     html, body {
       overscroll-behavior-y: none;
+      background-color: #05050c;
     }
 
     /* GPU ACCELERATION & HARDWARE LAYERS */
@@ -93,7 +95,7 @@
       100% { opacity: 0; transform: scale(0.3) translateY(-15px); }
     }
 
-    /* VIDEO BACKGROUND NỀN & LỚP PHỦ MỜ TINH TẾ */
+    /* VIDEO BACKGROUND NỀN & LỚP PHỦ MỜ */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -104,6 +106,7 @@
       overflow: hidden;
       z-index: -2;
       pointer-events: none;
+      transition: opacity 1s ease;
     }
 
     .bg-video {
@@ -131,6 +134,24 @@
       padding: calc(env(safe-area-inset-top, 20px) + 54px) 16px calc(env(safe-area-inset-bottom, 20px) + 90px) 16px;
       overflow-x: hidden;
       position: relative;
+    }
+
+    /* KHUNG CHÍNH BIO WRAPPER (HỖ TRỢ THU NHỎ / PHÂN RÃ THÀNH HẠT) */
+    #bio-root-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease, filter 0.8s ease;
+      z-index: 20;
+    }
+
+    #bio-root-container.collapsing {
+      transform: scale(0.05) translateY(-30px);
+      opacity: 0;
+      filter: blur(14px) brightness(2.5);
+      pointer-events: none;
     }
 
     .toast-container {
@@ -173,6 +194,7 @@
       pointer-events: none;
       max-width: 480px;
       margin: 0 auto;
+      transition: opacity 0.5s ease;
     }
 
     .top-action-group {
@@ -248,9 +270,7 @@
       will-change: contents;
     }
 
-    /* ============================================================
-       VIỀN KHUNG PROFILE LIỀN MẠCH 100% (KHÔNG BỊ HỞ GÓC)
-       ============================================================ */
+    /* VIỀN KHUNG PROFILE LIỀN MẠCH */
     .card-border-wrapper {
       position: relative;
       width: 100%;
@@ -289,7 +309,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* CARD NỘI DUNG KÈM ẢNH NỀN card-bg.jpg */
+    /* CARD NỘI DUNG PROFILE */
     .card {
       position: relative;
       width: 100%;
@@ -634,6 +654,19 @@
     .btn-discord { background: rgba(88, 101, 242, 0.14); color: #7289da; border: 1.5px solid #5865F2; }
     .btn-yt-music { background: rgba(37, 244, 238, 0.12); color: #25f4ee; border: 1.5px solid #25f4ee; }
 
+    /* NÚT BẤT NGỜ GỬI BẢO BEI (KÍCH HOẠT HÓA HẠT VÀO CODE 2) */
+    .btn-heart-surprise {
+      background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(201, 24, 74, 0.35));
+      color: #ffccd5;
+      border: 1.5px solid #ff4d6d;
+      box-shadow: 0 0 16px rgba(255, 77, 109, 0.4);
+      animation: pulseSurprise 2s infinite ease-in-out;
+    }
+    @keyframes pulseSurprise {
+      0%, 100% { box-shadow: 0 0 14px rgba(255, 77, 109, 0.4); }
+      50% { box-shadow: 0 0 24px rgba(255, 77, 109, 0.85); border-color: #ff758f; }
+    }
+
     .mini-collapse-toggle {
       position: absolute;
       bottom: 0;
@@ -663,6 +696,7 @@
     }
     body.capturing .capture-watermark { display: block !important; }
 
+    /* THANH MINI PLAYER */
     .mini-player-container {
       position: relative;
       width: 100%;
@@ -680,7 +714,6 @@
       pointer-events: none;
     }
 
-    /* VIỀN THANH MINI PLAYER LIỀN MẠCH */
     .mini-player-border-wrapper {
       position: relative;
       width: 100%;
@@ -917,7 +950,7 @@
       100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2) translateZ(0); }
     }
 
-    /* MODAL TRANSITIONS */
+    /* MODAL TRANSITIONS (POPUP PROFILE) */
     .modal-overlay {
       display: flex;
       position: fixed;
@@ -1036,12 +1069,92 @@
       font-size: 0.75rem;
     }
     .guestbook-item strong { color: var(--neon-color-1); }
+
+    /* ============================================================
+       PHẦN CODE 2: GIAO DIỆN HẠT TRÁI TIM 3D & DẢI NGÂN HÀ
+       ============================================================ */
+    #heart-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      opacity: 0;
+      transition: opacity 1.6s ease;
+      z-index: 100000;
+      background: radial-gradient(circle at 50% 35%, #2a0219 0%, #0c020d 55%, #030005 100%);
+      overflow: hidden;
+    }
+
+    #heartCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    .heart-actions-bottom {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 120000;
+      width: 92%;
+      max-width: 440px;
+      justify-content: center;
+    }
+
+    .heart-btn-action {
+      background: rgba(255, 42, 109, 0.28);
+      border: 1.5px solid rgba(255, 140, 160, 0.7);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 8px 30px rgba(255, 42, 109, 0.4);
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .heart-btn-action:active {
+      transform: scale(0.94);
+      background: rgba(255, 42, 109, 0.48);
+    }
+    .heart-btn-action.btn-back-bio {
+      background: rgba(18, 18, 24, 0.75);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ĐOM ĐÓM BAY NỀN TRÁI TIM */
+    .bg-firefly {
+      position: absolute;
+      background: radial-gradient(circle, #ffccd5 0%, #ff4d6d 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.8));
+      animation: floatFirefly 5.5s infinite ease-in-out;
+      z-index: 100001;
+    }
+    @keyframes floatFirefly {
+      0%, 100% { transform: translateY(0) scale(0.9); opacity: 0.2; }
+      50% { transform: translateY(-28px) scale(1.35); opacity: 0.85; }
+    }
   </style>
 </head>
 <body class="season-spring night-mode">
 
-  <!-- VIDEO BACKGROUND TẢI TRỰC TIẾP TỪ GITHUB REPO (bg-meteor.mp4) -->
-  <div class="bg-video-container">
+  <!-- VIDEO BACKGROUND -->
+  <div class="bg-video-container" id="bgVideoContainer">
     <video class="bg-video" autoplay loop muted playsinline>
       <source src="bg-meteor.mp4" type="video/mp4" />
     </video>
@@ -1055,7 +1168,7 @@
   </div>
 
   <!-- THANH HEADER TOP BAR -->
-  <header class="top-header-bar">
+  <header class="top-header-bar" id="topHeaderBar">
     <div class="top-action-group">
       <button type="button" class="btn-top-item btn-season-toggle" onclick="cycleSeason()" id="btnSeason" title="Đổi 4 mùa (Xuân, Hạ, Thu, Đông)">
         <span id="seasonIcon">🌸</span> <span id="seasonText">Xuân</span>
@@ -1081,264 +1194,255 @@
   <!-- CANVAS 4 MÙA -->
   <canvas id="seasonCanvas"></canvas>
 
-  <div class="card-border-wrapper" id="profileCardToCapture">
-    <div class="snow-accumulation-cap"></div>
+  <!-- KHUNG GIAO DIỆN PROFILE CHÍNH -->
+  <div id="bio-root-container">
+    <div class="card-border-wrapper" id="profileCardToCapture">
+      <div class="snow-accumulation-cap"></div>
 
-    <div class="card">
-      <button type="button" class="heart-like-btn" onclick="sendHeart(event)" title="Gửi tim cho Sagiri">
-        <i class="fa-solid fa-heart"></i> <span id="heartCount">128</span>
-      </button>
+      <div class="card">
+        <button type="button" class="heart-like-btn" onclick="sendHeart(event)" title="Gửi tim cho Sagiri">
+          <i class="fa-solid fa-heart"></i> <span id="heartCount">128</span>
+        </button>
 
-      <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
-        <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
-      </button>
+        <button type="button" class="mini-collapse-toggle" onclick="toggleMiniPlayerCollapse()" title="Thu gọn / Mở rộng">
+          <i class="fa-solid fa-chevron-down" id="collapseChevron"></i>
+        </button>
 
-      <div class="cinnamoroll-avatar-box">
-        <div class="neon-ring-wrapper"></div>
-        <div class="avatar-inner">
-          <img class="avatar" src="avatar.jpg" alt="Avatar Sagiri" />
-        </div>
-        
-        <!-- LINH VẬT CINNAMOROLL ĐÃ CĂN CHỈNH VỊ TRÍ ĐỨNG TRỰC QUAN -->
-        <div class="cinnamoroll-character">
-          <svg viewBox="0 0 160 110" class="cinna-svg">
-            <!-- Thân và Chân ngồi bám mép -->
-            <ellipse cx="80" cy="72" rx="16" ry="12" fill="#ffffff" stroke="#28b7fa" stroke-width="3"/>
-            <ellipse cx="68" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
-            <ellipse cx="92" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
-
-            <!-- Hai tay nhỏ ôm trước ngực -->
-            <ellipse cx="73" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
-            <ellipse cx="87" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
-
-            <!-- NHÓM ĐẦU & TAI CỬ ĐỘNG NGHỆ THUẬT -->
-            <g class="cinna-head-group">
-              <!-- Tai trái -->
-              <path class="cinna-ear-left" d="M 52 35 C 20 28, -5 45, 2 55 C 8 62, 25 55, 48 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
-              <!-- Tai phải -->
-              <path class="cinna-ear-right" d="M 108 35 C 140 28, 165 45, 158 55 C 152 62, 135 55, 112 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
-
-              <!-- Đầu to tròn đặc trưng -->
-              <ellipse cx="80" cy="42" rx="36" ry="24" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
-
-              <!-- Mắt chấm tròn xanh -->
-              <ellipse cx="67" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
-              <ellipse cx="93" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
-
-              <!-- Má hồng bầu dục -->
-              <ellipse cx="58" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
-              <ellipse cx="102" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
-
-              <!-- Miệng cười tinh tế đáng yêu -->
-              <path d="M 77 41 Q 80 46 83 41" fill="none" stroke="#28b7fa" stroke-width="2.2" stroke-linecap="round"/>
-            </g>
-
-            <!-- PHỤ KIỆN THỜI TRANG 4 MÙA (CĂN CHỈNH CHUẨN XÁC) -->
-            <!-- 1. MÙA XUÂN: Nơ hồng và hoa anh đào tinh tế -->
-            <g id="cinnaSpringAccessory" style="display: inline;">
-              <path d="M 45 32 Q 38 24 45 22 Q 52 24 49 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
-              <path d="M 55 32 Q 62 24 55 22 Q 48 24 51 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
-              <circle cx="50" cy="27" r="2.2" fill="#ff4081"/>
-              <circle cx="41" cy="27" r="3.2" fill="#ff80ab"/>
-              <circle cx="41" cy="27" r="1.2" fill="#fff59d"/>
-            </g>
-
-            <!-- 2. MÙA HẠ: Kính râm -->
-            <g id="cinnaSummerAccessory" style="display: none;">
-              <path d="M 61 38 C 61 33 74 33 74 38 C 74 43 61 43 61 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
-              <path d="M 86 38 C 86 33 99 33 99 38 C 99 43 86 43 86 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
-              <line x1="74" y1="36" x2="86" y2="36" stroke="#00ff88" stroke-width="2"/>
-              <line x1="61" y1="37" x2="55" y2="35" stroke="#00ff88" stroke-width="1.5"/>
-              <line x1="99" y1="37" x2="105" y2="35" stroke="#00ff88" stroke-width="1.5"/>
-            </g>
-
-            <!-- 3. MÙA THU: Khăn quàng cổ len ấm áp -->
-            <g id="cinnaAutumnAccessory" style="display: none;">
-              <path d="M 63 60 Q 80 69 97 60 C 97 69 88 74 80 74 C 72 74 63 69 63 60 Z" fill="#ff4500" stroke="#d84315" stroke-width="1.5"/>
-              <path d="M 73 66 L 71 80 L 79 80 L 77 66 Z" fill="#ffbb00" stroke="#ff4500" stroke-width="1.2"/>
-              <line x1="71" y1="80" x2="71" y2="84" stroke="#ff4500" stroke-width="1.5"/>
-              <line x1="75" y1="80" x2="75" y2="84" stroke="#ff4500" stroke-width="1.5"/>
-              <line x1="79" y1="80" x2="79" y2="84" stroke="#ff4500" stroke-width="1.5"/>
-            </g>
-
-            <!-- 4. MÙA ĐÔNG: Mũ len trùm đầu có cục bông -->
-            <g id="cinnaWinterAccessory" style="display: none;">
-              <path d="M 54 30 Q 80 4 106 30 C 100 33 60 33 54 30 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-              <path d="M 54 30 Q 80 35 106 30 L 104 34 Q 80 39 56 34 Z" fill="#ffffff" stroke="#bae6fd" stroke-width="1"/>
-              <circle cx="80" cy="3" r="5.5" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-      <div>
-        <div class="live-status-pill">
-          <span class="status-dot"></span>
-          <span id="liveStatusText">Đang cày Wuthering Waves ⚔️</span>
-        </div>
-      </div>
-
-      <h1 class="name">
-        <span class="name-text">Sagiri Chan</span> 
-        <span class="heart-icon">💕</span>
-      </h1>
-      <p class="handle">@_sagiri0502</p>
-
-      <div class="visitor-badge">
-        <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">0</strong>
-      </div>
-
-      <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
-
-      <div class="section-title">
-        <i class="fa-solid fa-gamepad"></i> Game yêu thích
-      </div>
-      <div class="games-grid">
-        <button type="button" onclick="openGameModal('ww')" class="game-card-wrapper">
-          <div class="game-btn">
-            <img class="game-icon-img" src="ww.png" alt="Wuthering Waves" />
-            <span class="game-name">Wuthering Waves</span>
-            <span class="game-action">Xem UID & Ingame ▶</span>
+        <div class="cinnamoroll-avatar-box">
+          <div class="neon-ring-wrapper"></div>
+          <div class="avatar-inner">
+            <img class="avatar" src="avatar.jpg" alt="Avatar Sagiri" />
           </div>
-        </button>
+          
+          <!-- LINH VẬT CINNAMOROLL CÙNG PHỤ KIỆN 4 MÙA -->
+          <div class="cinnamoroll-character">
+            <svg viewBox="0 0 160 110" class="cinna-svg">
+              <ellipse cx="80" cy="72" rx="16" ry="12" fill="#ffffff" stroke="#28b7fa" stroke-width="3"/>
+              <ellipse cx="68" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
+              <ellipse cx="92" cy="82" rx="6" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.5"/>
 
-        <button type="button" onclick="openGameModal('lq')" class="game-card-wrapper">
-          <div class="game-btn">
-            <img class="game-icon-img" src="lq.png" alt="Liên Quân Mobile" />
-            <span class="game-name">Liên Quân Mobile</span>
-            <span class="game-action">Xem UID & Ingame ▶</span>
+              <ellipse cx="73" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
+              <ellipse cx="87" cy="70" rx="4" ry="5" fill="#ffffff" stroke="#28b7fa" stroke-width="2.2"/>
+
+              <g class="cinna-head-group">
+                <path class="cinna-ear-left" d="M 52 35 C 20 28, -5 45, 2 55 C 8 62, 25 55, 48 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+                <path class="cinna-ear-right" d="M 108 35 C 140 28, 165 45, 158 55 C 152 62, 135 55, 112 45 Z" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5" stroke-linejoin="round"/>
+
+                <ellipse cx="80" cy="42" rx="36" ry="24" fill="#ffffff" stroke="#28b7fa" stroke-width="3.5"/>
+                <ellipse cx="67" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
+                <ellipse cx="93" cy="40" rx="3.2" ry="4" fill="#28b7fa"/>
+                <ellipse cx="58" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
+                <ellipse cx="102" cy="46" rx="5" ry="3" fill="#ffb4c8"/>
+                <path d="M 77 41 Q 80 46 83 41" fill="none" stroke="#28b7fa" stroke-width="2.2" stroke-linecap="round"/>
+              </g>
+
+              <!-- Phụ kiện thời trang 4 mùa -->
+              <g id="cinnaSpringAccessory" style="display: inline;">
+                <path d="M 45 32 Q 38 24 45 22 Q 52 24 49 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
+                <path d="M 55 32 Q 62 24 55 22 Q 48 24 51 31 Z" fill="#ff7eb3" stroke="#d81b60" stroke-width="1.2"/>
+                <circle cx="50" cy="27" r="2.2" fill="#ff4081"/>
+                <circle cx="41" cy="27" r="3.2" fill="#ff80ab"/>
+                <circle cx="41" cy="27" r="1.2" fill="#fff59d"/>
+              </g>
+              <g id="cinnaSummerAccessory" style="display: none;">
+                <path d="M 61 38 C 61 33 74 33 74 38 C 74 43 61 43 61 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+                <path d="M 86 38 C 86 33 99 33 99 38 C 99 43 86 43 86 38 Z" fill="#111" stroke="#00ff88" stroke-width="1.6"/>
+                <line x1="74" y1="36" x2="86" y2="36" stroke="#00ff88" stroke-width="2"/>
+                <line x1="61" y1="37" x2="55" y2="35" stroke="#00ff88" stroke-width="1.5"/>
+                <line x1="99" y1="37" x2="105" y2="35" stroke="#00ff88" stroke-width="1.5"/>
+              </g>
+              <g id="cinnaAutumnAccessory" style="display: none;">
+                <path d="M 63 60 Q 80 69 97 60 C 97 69 88 74 80 74 C 72 74 63 69 63 60 Z" fill="#ff4500" stroke="#d84315" stroke-width="1.5"/>
+                <path d="M 73 66 L 71 80 L 79 80 L 77 66 Z" fill="#ffbb00" stroke="#ff4500" stroke-width="1.2"/>
+                <line x1="71" y1="80" x2="71" y2="84" stroke="#ff4500" stroke-width="1.5"/>
+                <line x1="75" y1="80" x2="75" y2="84" stroke="#ff4500" stroke-width="1.5"/>
+                <line x1="79" y1="80" x2="79" y2="84" stroke="#ff4500" stroke-width="1.5"/>
+              </g>
+              <g id="cinnaWinterAccessory" style="display: none;">
+                <path d="M 54 30 Q 80 4 106 30 C 100 33 60 33 54 30 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                <path d="M 54 30 Q 80 35 106 30 L 104 34 Q 80 39 56 34 Z" fill="#ffffff" stroke="#bae6fd" stroke-width="1"/>
+                <circle cx="80" cy="3" r="5.5" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5"/>
+              </g>
+            </svg>
           </div>
-        </button>
-      </div>
+        </div>
 
-      <div class="section-title" style="margin-top: 16px;">
-        <i class="fa-solid fa-link"></i> Liên kết
-      </div>
-      <div class="links">
-        <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
-          <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
-        </a>
-
-        <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
-          <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
-        </button>
-
-        <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
-          <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
-        </button>
-
-        <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
-          <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
-        </a>
-
-        <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
-          <i class="fa-solid fa-circle-play"></i> Danh sách bài hát yêu thích 💕
-          <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
-        </button>
-
-        <div id="musicPanel" class="music-player-panel">
-          <div class="file-upload-box">
-            <input type="file" id="localMp3Input" accept="audio/*" style="display: none;" onchange="handleDirectMp3Upload(event)" multiple />
-            <label for="localMp3Input" class="file-upload-label">
-              <i class="fa-solid fa-music" style="font-size: 1.6rem; color: var(--neon-color-1);"></i>
-              <span style="color: var(--neon-color-1);">TẢI LÊN BÀI HÁT YÊU THÍCH 💕</span>
-              <span style="font-size: 0.72rem; color: #bbb;">Chạm để chọn file MP3 từ thiết bị</span>
-            </label>
+        <div>
+          <div class="live-status-pill">
+            <span class="status-dot"></span>
+            <span id="liveStatusText">Đang cày Wuthering Waves ⚔️</span>
           </div>
+        </div>
 
-          <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
-            <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
+        <h1 class="name">
+          <span class="name-text">Sagiri Chan</span> 
+          <span class="heart-icon">💕</span>
+        </h1>
+        <p class="handle">@_sagiri0502</p>
+
+        <div class="visitor-badge">
+          <i class="fa-solid fa-eye"></i> Lượt ghé thăm: <strong id="visitorCount">0</strong>
+        </div>
+
+        <p class="bio">✨ Chào mừng bạn đến với góc nhỏ của Sagiri Chan💕</p>
+
+        <!-- NÚT BẤT NGỜ GỬI BẢO BEI (PHÂN RÃ HẠT -> TRÁI TIM 3D) -->
+        <div style="margin-bottom: 14px;">
+          <button type="button" class="btn-link btn-heart-surprise" onclick="triggerDissolveToHeart()">
+            <i class="fa-solid fa-envelope-open-text"></i> Mở món quà bất ngờ gửi Bảo Bei 💕
+          </button>
+        </div>
+
+        <div class="section-title">
+          <i class="fa-solid fa-gamepad"></i> Game yêu thích
+        </div>
+        <div class="games-grid">
+          <button type="button" onclick="openGameModal('ww')" class="game-card-wrapper">
+            <div class="game-btn">
+              <img class="game-icon-img" src="ww.png" alt="Wuthering Waves" />
+              <span class="game-name">Wuthering Waves</span>
+              <span class="game-action">Xem UID & Ingame ▶</span>
             </div>
-            <div style="display: flex; gap: 6px;">
-              <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
-              <button type="button" class="btn-copy-bank" onclick="addCustomTrackFromYT()" style="width: auto; padding: 0 14px; white-space: nowrap; background: rgba(37,244,238,0.2); border-color: var(--neon-color-1); color: var(--neon-color-1);">
-                <i class="fa-solid fa-plus"></i> Thêm
-              </button>
-            </div>
-          </div>
+          </button>
 
-          <div class="playlist-toolbar">
-            <span>Danh sách bài hát</span>
-            <div class="playlist-tools-group">
-              <button type="button" class="tool-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="Phát ngẫu nhiên">
-                <i class="fa-solid fa-shuffle"></i>
-              </button>
-              <button type="button" class="tool-icon-btn" id="repeatBtn" onclick="toggleRepeat()" title="Lặp lại 1 bài">
-                <i class="fa-solid fa-repeat"></i>
-              </button>
+          <button type="button" onclick="openGameModal('lq')" class="game-card-wrapper">
+            <div class="game-btn">
+              <img class="game-icon-img" src="lq.png" alt="Liên Quân Mobile" />
+              <span class="game-name">Liên Quân Mobile</span>
+              <span class="game-action">Xem UID & Ingame ▶</span>
             </div>
-          </div>
-          <div class="playlist" id="playlistContainer"></div>
+          </button>
         </div>
-      </div>
 
-      <div class="footer">
-        © @_sagiri0502 • All rights reserved
-      </div>
+        <div class="section-title" style="margin-top: 16px;">
+          <i class="fa-solid fa-link"></i> Liên kết
+        </div>
+        <div class="links">
+          <a href="https://www.tiktok.com/@_sagiri0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-tiktok">
+            <i class="fa-brands fa-tiktok"></i> Ghé thăm kênh TikTok
+          </a>
 
-      <div class="capture-watermark">
-        🌸 Captured from @_sagiri0502 Bio Page
+          <button type="button" class="btn-link btn-donate" onclick="openQRModal()">
+            <i class="fa-solid fa-qrcode"></i> Donate Trà Sữa
+          </button>
+
+          <button type="button" class="btn-link btn-guestbook" onclick="openGuestbookModal()">
+            <i class="fa-solid fa-envelope-open-text"></i> Gửi tin nhắn ẩn danh 💌
+          </button>
+
+          <a href="https://discord.com/users/sagirichan_0502" target="_blank" rel="noopener noreferrer" class="btn-link btn-discord" id="discordBtn" onclick="copyDiscordUsername(event)">
+            <i class="fa-brands fa-discord"></i> <span id="discordBtnText">Discord: sagirichan_0502</span>
+          </a>
+
+          <button type="button" class="btn-link btn-yt-music" onclick="toggleMusicPanel()">
+            <i class="fa-solid fa-circle-play"></i> Danh sách bài hát yêu thích 💕
+            <i id="music-chevron" class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+          </button>
+
+          <div id="musicPanel" class="music-player-panel">
+            <div class="file-upload-box">
+              <input type="file" id="localMp3Input" accept="audio/*" style="display: none;" onchange="handleDirectMp3Upload(event)" multiple />
+              <label for="localMp3Input" class="file-upload-label">
+                <i class="fa-solid fa-music" style="font-size: 1.6rem; color: var(--neon-color-1);"></i>
+                <span style="color: var(--neon-color-1);">TẢI LÊN BÀI HÁT YÊU THÍCH 💕</span>
+                <span style="font-size: 0.72rem; color: #bbb;">Chạm để chọn file MP3 từ thiết bị</span>
+              </label>
+            </div>
+
+            <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.15);">
+              <div style="font-size: 0.75rem; color: var(--neon-color-1); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-brands fa-youtube" style="color: #fe2c55;"></i> Thêm bài hát từ link YouTube
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <input type="text" id="ytUrlInput" class="donate-input" placeholder="Dán link (youtube, shorts, music)..." />
+                <button type="button" class="btn-copy-bank" onclick="addCustomTrackFromYT()" style="width: auto; padding: 0 14px; white-space: nowrap; background: rgba(37,244,238,0.2); border-color: var(--neon-color-1); color: var(--neon-color-1);">
+                  <i class="fa-solid fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+
+            <div class="playlist-toolbar">
+              <span>Danh sách bài hát</span>
+              <div class="playlist-tools-group">
+                <button type="button" class="tool-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="Phát ngẫu nhiên">
+                  <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <button type="button" class="tool-icon-btn" id="repeatBtn" onclick="toggleRepeat()" title="Lặp lại 1 bài">
+                  <i class="fa-solid fa-repeat"></i>
+                </button>
+              </div>
+            </div>
+            <div class="playlist" id="playlistContainer"></div>
+          </div>
+        </div>
+
+        <div class="footer">
+          © @_sagiri0502 • All rights reserved
+        </div>
+
+        <div class="capture-watermark">
+          🌸 Captured from @_sagiri0502 Bio Page
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- THANH MINI PLAYER -->
-  <div class="mini-player-container" id="miniPlayerContainer">
-    <div class="mini-player-border-wrapper">
-      <div class="mini-player-bar" id="miniPlayerBar">
-        <div class="swipe-indicator-bar"></div>
-        <div class="progress-row">
-          <span class="time-display" id="currentTime">00:00</span>
-          <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
-            <div class="mini-progress-track">
-              <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
-              <div class="mini-progress-fill" id="miniProgressBarFill"></div>
-            </div>
-          </div>
-          <span class="time-display" id="totalDuration">00:00</span>
-        </div>
-
-        <div class="mini-player-content">
-          <div class="mini-vinyl-wrapper">
-            <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" alt="Vinyl" />
-          </div>
-
-          <div class="mini-song-info">
-            <div class="title-equalizer-row">
-              <div class="marquee-wrapper">
-                <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
-              </div>
-              <div class="sound-equalizer">
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
+    <!-- THANH MINI PLAYER -->
+    <div class="mini-player-container" id="miniPlayerContainer">
+      <div class="mini-player-border-wrapper">
+        <div class="mini-player-bar" id="miniPlayerBar">
+          <div class="swipe-indicator-bar"></div>
+          <div class="progress-row">
+            <span class="time-display" id="currentTime">00:00</span>
+            <div class="mini-progress-bg" id="miniProgressBarBg" onclick="seekTrack(event)">
+              <div class="mini-progress-track">
+                <div class="mini-progress-buffer" id="miniProgressBarBuffer"></div>
+                <div class="mini-progress-fill" id="miniProgressBarFill"></div>
               </div>
             </div>
-            <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
-            
-            <div class="mini-lyric-container">
-              <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
-            </div>
+            <span class="time-display" id="totalDuration">00:00</span>
           </div>
 
-          <div class="mini-controls">
-            <div class="volume-box">
-              <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh (Phím M)">
-                <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
+          <div class="mini-player-content">
+            <div class="mini-vinyl-wrapper">
+              <img id="miniVinylAvatar" class="mini-vinyl-avatar" src="avatar.jpg" alt="Vinyl" />
+            </div>
+
+            <div class="mini-song-info">
+              <div class="title-equalizer-row">
+                <div class="marquee-wrapper">
+                  <div class="mini-song-title" id="miniSongTitle">Đang tải nhạc...</div>
+                </div>
+                <div class="sound-equalizer">
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                </div>
+              </div>
+              <div class="mini-artist" id="miniArtistText">Wuthering Waves OST</div>
+              
+              <div class="mini-lyric-container">
+                <div class="mini-lyric-box" id="miniLyricText">♫ Giai điệu nhẹ nhàng vang lên...</div>
+              </div>
+            </div>
+
+            <div class="mini-controls">
+              <div class="volume-box">
+                <button type="button" class="mini-btn" id="inlineMuteBtn" onclick="toggleGlobalMute(event)" title="Bật/Tắt âm thanh (Phím M)">
+                  <i class="fa-solid fa-volume-high" id="inlineMuteIcon"></i>
+                </button>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" title="Âm lượng" />
+              </div>
+              <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước (Mũi tên trái)">
+                <i class="fa-solid fa-backward-step"></i>
               </button>
-              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" title="Âm lượng" />
+              <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng (Phím Space)">
+                <i class="fa-solid fa-play" id="miniPlayIcon"></i>
+              </button>
+              <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp (Mũi tên phải)">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
             </div>
-            <button type="button" class="mini-btn" onclick="prevTrack()" title="Bài trước (Mũi tên trái)">
-              <i class="fa-solid fa-backward-step"></i>
-            </button>
-            <button type="button" class="mini-btn mini-btn-play" id="miniPlayPauseBtn" onclick="togglePlayPause()" title="Phát / Dừng (Phím Space)">
-              <i class="fa-solid fa-play" id="miniPlayIcon"></i>
-            </button>
-            <button type="button" class="mini-btn" onclick="nextTrack()" title="Bài tiếp (Mũi tên phải)">
-              <i class="fa-solid fa-forward-step"></i>
-            </button>
           </div>
         </div>
       </div>
@@ -1464,7 +1568,7 @@
     </div>
   </div>
 
-  <!-- POPUP 3: HỘP TIN NHẮN ẨN DANH (GUESTBOOK) -->
+  <!-- POPUP 3: GUESTBOOK TIN NHẮN ẨN DANH -->
   <div id="guestbookModal" class="modal-overlay" onclick="closeGuestbookModal(event)">
     <div class="modal-border-wrapper" onclick="event.stopPropagation()">
       <div class="modal-content">
@@ -1502,6 +1606,27 @@
     <div id="ytPlayer"></div>
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
+
+  <!-- ============================================================
+       PHẦN KHUNG CẢNH 3D TRÁI TIM & NGÂN HÀ (CODE 2)
+       ============================================================ -->
+  <div id="heart-wrapper">
+    <div id="firefliesContainer"></div>
+    <canvas id="heartCanvas"></canvas>
+
+    <div class="heart-actions-bottom">
+      <button type="button" class="heart-btn-action btn-back-bio" onclick="returnToBioPage()">
+        <i class="fa-solid fa-arrow-left"></i> Quay lại Profile
+      </button>
+      <button type="button" class="heart-btn-action" id="morphBtn" onclick="toggleMorph(event)">
+        Biến thành dải ngân hà 🌌
+      </button>
+    </div>
+  </div>
+
+  <!-- ÂM THANH NỀN CHO CODE 2 -->
+  <audio id="heart-bg-music" src="audio.mp3" preload="auto" loop></audio>
+  <audio id="galaxy-music" src="audio1.mp3" preload="auto" loop></audio>
 
   <script>
     /* ============================================================
@@ -2136,7 +2261,7 @@
        ============================================================ */
     const sparkles = ['💕', '🌸', '✨', '💖'];
     window.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg') || e.target.closest('.file-upload-box')) return;
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.mini-progress-bg') || e.target.closest('.file-upload-box') || e.target.closest('#heart-wrapper')) return;
       const heart = document.createElement('div');
       heart.className = 'click-heart';
       heart.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
@@ -2419,7 +2544,7 @@
     initDiscordPresence();
 
     /* ============================================================
-       12. PLAYLIST, NATIVE AUDIO & ĐỒNG BỘ SUPABASE CLOUD
+       12. PLAYLIST, NATIVE AUDIO & TRÌNH PHÁT NHẠC BIO
        ============================================================ */
     const playlist = [
       { 
@@ -3339,6 +3464,707 @@
     function copyDiscordUsername(event) {
       const username = "sagirichan_0502";
       copyToClipboard(username, "🌸 Đã chép Discord: " + username);
+    }
+
+    /* ============================================================
+       13. CHUYỂN CẢNH PHÂN RÃ HẠT & RENDER CODE 2 (TRÁI TIM & NGÂN HÀ)
+       ============================================================ */
+    const heartAudio = document.getElementById('heart-bg-music');
+    const galaxyAudio = document.getElementById('galaxy-music');
+    let heartAnimId = null;
+    let toggleMorph = null;
+
+    const ringTexts = [
+      "Anh yêu Bảo Bei 💕",
+      "I Love You, Bảo Bei ✨",
+      "我爱你, Bảo Bei 💕",
+      "사랑해, Bảo Bei ✨",
+      "愛してる, Bảo Bei 💕",
+      "Je t'aime, Bảo Bei ✨",
+      "Te amo, Bảo Bei 💕",
+      "Bé iuu Bảo Bei Nhất 💕"
+    ];
+
+    // Tạo đom đóm cho Code 2
+    const fireflyContainer = document.getElementById('firefliesContainer');
+    for (let i = 0; i < 28; i++) {
+      const fly = document.createElement('div');
+      fly.className = 'bg-firefly';
+      const sz = Math.random() * 3.5 + 2;
+      fly.style.width = sz + 'px';
+      fly.style.height = sz + 'px';
+      fly.style.left = Math.random() * 100 + 'vw';
+      fly.style.top = Math.random() * 100 + 'vh';
+      fly.style.animationDelay = Math.random() * 5.5 + 's';
+      fireflyContainer.appendChild(fly);
+    }
+
+    /* KÍCH HOẠT HIỆU ỨNG: PHÂN RÃ TRANG CÁ NHÂN -> GHÉP HẠT TRÁI TIM */
+    function triggerDissolveToHeart() {
+      // Dừng nhạc trang Bio nếu đang phát
+      if (isPlaying) {
+        togglePlayPause();
+      }
+
+      showToast("✨ Tình cảm đang kết tinh thành hàng ngàn mảnh sáng...");
+
+      const bioRoot = document.getElementById('bio-root-container');
+      const topHeader = document.getElementById('topHeaderBar');
+      const heartWrap = document.getElementById('heart-wrapper');
+      const videoBg = document.getElementById('bgVideoContainer');
+
+      // Kích hoạt animation thu nhỏ & vỡ vụn giao diện
+      bioRoot.classList.add('collapsing');
+      topHeader.style.opacity = '0';
+      topHeader.style.pointerEvents = 'none';
+      if (videoBg) videoBg.style.opacity = '0.15';
+
+      // Phát bài hát tình cảm (audio.mp3)
+      heartAudio.currentTime = 0;
+      heartAudio.play().catch(() => {});
+
+      setTimeout(() => {
+        bioRoot.style.display = 'none';
+        heartWrap.style.display = 'block';
+        requestAnimationFrame(() => {
+          heartWrap.style.opacity = '1';
+        });
+
+        // Khởi động Canvas Trái Tim 3D
+        initCrispHeartCanvas();
+      }, 950);
+    }
+
+    /* QUAY LẠI TRANG CÁ NHÂN */
+    function returnToBioPage() {
+      heartAudio.pause();
+      galaxyAudio.pause();
+
+      const heartWrap = document.getElementById('heart-wrapper');
+      const bioRoot = document.getElementById('bio-root-container');
+      const topHeader = document.getElementById('topHeaderBar');
+      const videoBg = document.getElementById('bgVideoContainer');
+
+      heartWrap.style.opacity = '0';
+      if (heartAnimId) cancelAnimationFrame(heartAnimId);
+
+      setTimeout(() => {
+        heartWrap.style.display = 'none';
+        bioRoot.style.display = 'flex';
+        bioRoot.classList.remove('collapsing');
+        topHeader.style.opacity = '1';
+        topHeader.style.pointerEvents = 'auto';
+        if (videoBg) videoBg.style.opacity = '1';
+      }, 800);
+    }
+
+    /* HỆ THỐNG CANVAS TRÁI TIM & NGÂN HÀ 3D */
+    function initCrispHeartCanvas() {
+      const hCanvas = document.getElementById('heartCanvas');
+      const hCtx = hCanvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      let width = 0;
+      let height = 0;
+
+      const cameraZ = 280;
+      let time = 0;
+      let frame = 0;
+      let textAngleOffset = 0;
+
+      function resizeHeart() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        hCanvas.width = width * dpr;
+        hCanvas.height = height * dpr;
+        hCanvas.style.width = width + 'px';
+        hCanvas.style.height = height + 'px';
+        hCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resizeHeart();
+
+      const stars = [];
+      for (let i = 0; i < 90; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.5 + 0.5,
+          twinkleSpeed: 0.02 + Math.random() * 0.035,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      const shootingStars = [];
+      function spawnShootingStar() {
+        shootingStars.push({
+          x: Math.random() * width * 0.9 + width * 0.05,
+          y: Math.random() * (height * 0.35),
+          len: Math.random() * 95 + 45,
+          speed: Math.random() * 1.2 + 1.3,
+          angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.15,
+          opacity: 1
+        });
+      }
+
+      function heartCurve(t) {
+        return {
+          x: 16 * Math.pow(Math.sin(t), 3),
+          y: -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+        };
+      }
+
+      const TOTAL_HEART = 2000;
+      const STRIDE = 10;
+      const data = new Float32Array(TOTAL_HEART * STRIDE);
+      
+      const galRadius = new Float32Array(TOTAL_HEART);
+      const galBaseAngle = new Float32Array(TOTAL_HEART);
+      const galHeight = new Float32Array(TOTAL_HEART);
+      const galOrbitalSpeed = new Float32Array(TOTAL_HEART);
+      const galCurrentAngle = new Float32Array(TOTAL_HEART);
+
+      const galaxyHearts = [];
+      const heartSymbols = ['💖', '💕', '✨', '♥', '💗', '🌸'];
+      for (let i = 0; i < 36; i++) {
+        const arm = i % 3;
+        const r = 4.5 + Math.pow(Math.random(), 0.8) * 20.5;
+        const baseAngle = (arm * Math.PI * 2) / 3 + 1.85 * Math.log(r * 0.36 + 1) + (Math.random() - 0.5) * 0.55;
+        galaxyHearts.push({
+          symbol: heartSymbols[Math.floor(Math.random() * heartSymbols.length)],
+          r: r,
+          angle: baseAngle,
+          height: (Math.random() - 0.5) * 2.5,
+          speed: 0.007 / Math.sqrt(r * 0.35 + 1.1),
+          baseSize: Math.random() * 8 + 12,
+          twinklePhase: Math.random() * Math.PI * 2
+        });
+      }
+
+      const dispX = new Float32Array(TOTAL_HEART);
+      const dispY = new Float32Array(TOTAL_HEART);
+      const dispZ = new Float32Array(TOTAL_HEART);
+      const velDispX = new Float32Array(TOTAL_HEART);
+      const velDispY = new Float32Array(TOTAL_HEART);
+      const velDispZ = new Float32Array(TOTAL_HEART);
+
+      const centerYOffset = -2.5;
+
+      function generateGalaxyPoints() {
+        const arms = 3;
+        const maxRadius = 26.0;
+
+        for (let i = 0; i < TOTAL_HEART; i++) {
+          const isCoreBulge = i < 500;
+          let r, finalAngle, heightY;
+
+          if (isCoreBulge) {
+            r = Math.pow(Math.random(), 1.5) * 5.8;
+            finalAngle = Math.random() * Math.PI * 2;
+            const coreVerticalScale = Math.sqrt(Math.max(0, 1 - Math.pow(r / 5.8, 2))) * 2.6;
+            heightY = (Math.random() - 0.5) * coreVerticalScale;
+          } else {
+            const armIndex = i % arms;
+            const armOffset = (armIndex * Math.PI * 2) / arms;
+
+            const normDist = Math.pow(Math.random(), 0.82);
+            r = 3.2 + normDist * (maxRadius - 3.2);
+
+            const spiralAngle = armOffset + 1.85 * Math.log(r * 0.36 + 1);
+            const armScatter = (Math.random() - 0.5) * (0.7 + (r / maxRadius) * 1.5);
+            finalAngle = spiralAngle + armScatter;
+
+            const discThickness = Math.max(0.4, (1 - r / maxRadius) * 2.2);
+            heightY = (Math.random() - 0.5) * discThickness;
+          }
+
+          galRadius[i] = r;
+          galBaseAngle[i] = finalAngle;
+          galCurrentAngle[i] = finalAngle;
+          galHeight[i] = heightY;
+          galOrbitalSpeed[i] = 0.0075 / (Math.sqrt(r * 0.32 + 1.2));
+        }
+      }
+
+      generateGalaxyPoints();
+
+      // CẤU HÌNH ĐIỂM XUẤT PHÁT: BAY TỪ TRUNG TÂM RA ĐỂ TỰ ĐỘNG HỘI TỤ THÀNH TRÁI TIM
+      for (let i = 0; i < TOTAL_HEART; i++) {
+        const idx = i * STRIDE;
+        const t = Math.PI * 2 * Math.random();
+        const pt = heartCurve(t);
+
+        const isBorder = i < 680;
+        const r = isBorder ? (0.86 + Math.random() * 0.14) : Math.pow(Math.random(), 0.55);
+
+        const heartThickness = Math.sqrt(Math.max(0, 1 - r * r)) * 9.5;
+        const z3d = (Math.random() * 2 - 1) * heartThickness;
+
+        const finalX = pt.x * r;
+        const finalY = (pt.y - centerYOffset) * r + centerYOffset;
+
+        const size = isBorder ? (Math.random() * 0.45 + 1.45) : (Math.random() * 0.55 + 1.2);
+        const colorType = isBorder ? 0 : 1;
+
+        // Vị trí các hạt phát tán từ trung tâm trang web ban đầu
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.max(width, height) * (0.4 + Math.random() * 0.5);
+
+        data[idx + 0] = finalX;
+        data[idx + 1] = finalY;
+        data[idx + 2] = z3d;
+        data[idx + 3] = width / 2 + Math.cos(angle) * dist;
+        data[idx + 4] = height / 2 + Math.sin(angle) * dist;
+        data[idx + 5] = size;
+        data[idx + 6] = colorType;
+        data[idx + 7] = 0; // Tiến trình hội tụ
+        data[idx + 8] = 0.009 + Math.random() * 0.008; // Tốc độ ghép hạt
+        data[idx + 9] = Math.random() * 40;
+      }
+
+      let rotY = 0, rotX = 0;
+      let velY = 0, velX = 0;
+      let lastPointerX = 0, lastPointerY = 0;
+
+      let isGalaxyMode = false;
+      let morphProgress = 0;
+      let smoothMorph = 0;
+
+      const activeTouches = new Map();
+
+      function triggerMultiTouchDisperse(touchesMap) {
+        const curScale = Math.min(width, height) / (38 - smoothMorph * 12);
+        const curCenterY = height * (0.35 * (1 - smoothMorph) + 0.46 * smoothMorph);
+        const curCenterX = width / 2;
+        const radius = 95;
+
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+
+        for (let i = 0; i < TOTAL_HEART; i++) {
+          const idx = i * STRIDE;
+          const rCur = galRadius[i];
+          const curAng = galCurrentAngle[i];
+
+          const gx = Math.cos(curAng) * rCur;
+          const gy = galHeight[i];
+          const gz = Math.sin(curAng) * rCur;
+
+          const origX = data[idx + 0] * (1 - smoothMorph) + gx * smoothMorph;
+          const origY = data[idx + 1] * (1 - smoothMorph) + gy * smoothMorph;
+          const origZ = data[idx + 2] * (1 - smoothMorph) + gz * smoothMorph;
+
+          const x1 = origX * cosY + origZ * sinY;
+          const z1 = -origX * sinY + origZ * cosY;
+          const y2 = origY * cosX - z1 * sinX;
+          const z2 = origY * sinX + z1 * cosX;
+
+          const perspective = cameraZ / Math.max(40, (cameraZ + z2 * 1.8));
+          const px = curCenterX + x1 * curScale * perspective;
+          const py = curCenterY + y2 * curScale * perspective;
+
+          for (const [id, tObj] of touchesMap.entries()) {
+            const dx = px - tObj.x;
+            const dy = py - tObj.y;
+            const d = Math.hypot(dx, dy);
+
+            if (d < radius) {
+              const factor = 1 - d / radius;
+              const force = Math.sin(factor * Math.PI * 0.5) * 0.65;
+              const ang = Math.atan2(dy, dx);
+              velDispX[i] += Math.cos(ang) * force;
+              velDispY[i] += Math.sin(ang) * force;
+              velDispZ[i] += (Math.random() - 0.5) * force * 0.35;
+            }
+          }
+        }
+      }
+
+      hCanvas.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          activeTouches.set(t.identifier, { x: t.clientX, y: t.clientY });
+        }
+        if (e.touches.length > 0) {
+          lastPointerX = e.touches[0].clientX;
+          lastPointerY = e.touches[0].clientY;
+          velY = 0;
+          velX = 0;
+        }
+        triggerMultiTouchDisperse(activeTouches);
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length > 0) {
+          const dx = e.touches[0].clientX - lastPointerX;
+          const dy = e.touches[0].clientY - lastPointerY;
+          velY = dx * 0.0045;
+          velX = -dy * 0.0045;
+          rotY += velY;
+          rotX += velX;
+          rotX = Math.max(-0.85, Math.min(0.85, rotX));
+          lastPointerX = e.touches[0].clientX;
+          lastPointerY = e.touches[0].clientY;
+        }
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (activeTouches.has(t.identifier)) {
+            activeTouches.set(t.identifier, { x: t.clientX, y: t.clientY });
+          }
+        }
+        triggerMultiTouchDisperse(activeTouches);
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          activeTouches.delete(e.changedTouches[i].identifier);
+        }
+        if (e.touches.length === 0) {
+          isDragging = false;
+        }
+      }, { passive: true });
+
+      let isDragging = false;
+      hCanvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastPointerX = e.clientX;
+        lastPointerY = e.clientY;
+        velY = 0;
+        velX = 0;
+        const singleTouch = new Map([[1, { x: e.clientX, y: e.clientY }]]);
+        triggerMultiTouchDisperse(singleTouch);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const dx = e.clientX - lastPointerX;
+          const dy = e.clientY - lastPointerY;
+          velY = dx * 0.0045;
+          velX = -dy * 0.0045;
+          rotY += velY;
+          rotX += velX;
+          rotX = Math.max(-0.85, Math.min(0.85, rotX));
+          lastPointerX = e.clientX;
+          lastPointerY = e.clientY;
+          const singleTouch = new Map([[1, { x: e.clientX, y: e.clientY }]]);
+          triggerMultiTouchDisperse(singleTouch);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      toggleMorph = function(e) {
+        if (e) e.stopPropagation();
+        isGalaxyMode = !isGalaxyMode;
+
+        const btn = document.getElementById('morphBtn');
+        btn.innerText = isGalaxyMode ? "Trở về trái tim 💕" : "Biến thành dải ngân hà 🌌";
+
+        if (isGalaxyMode) {
+          heartAudio.pause();
+          galaxyAudio.currentTime = 0;
+          galaxyAudio.play().catch(() => {});
+        } else {
+          galaxyAudio.pause();
+          heartAudio.play().catch(() => {});
+        }
+      };
+
+      function renderCrispHeart() {
+        hCtx.clearRect(0, 0, width, height);
+
+        time += 0.02;
+        frame++;
+        textAngleOffset += 0.0016;
+
+        if (Math.random() < 0.008) {
+          spawnShootingStar();
+        }
+
+        if (!isDragging) {
+          if (isGalaxyMode) {
+            rotY += (0.62 - rotY) * 0.012;
+            rotX += (-0.68 - rotX) * 0.012;
+            velY = 0;
+            velX = 0;
+          } else {
+            rotY += (0 - rotY) * 0.022;
+            rotX += (0 - rotX) * 0.022;
+            velY = 0;
+            velX = 0;
+          }
+        }
+
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+
+        const targetMorph = isGalaxyMode ? 1 : 0;
+        morphProgress += (targetMorph - morphProgress) * 0.008;
+        smoothMorph = morphProgress * morphProgress * (3 - 2 * morphProgress);
+
+        const centerX = width / 2;
+        const centerY = height * (0.35 * (1 - smoothMorph) + 0.46 * smoothMorph);
+        const ringCenterY = height * 0.63;
+        const ringRadiusX = Math.min(width * 0.42, 180);
+        const ringRadiusY = ringRadiusX * 0.34;
+        const scale = Math.min(width, height) / (38 - smoothMorph * 12);
+
+        const coreR = (130 + smoothMorph * 110);
+        const gradCore = hCtx.createRadialGradient(centerX, centerY, 4, centerX, centerY, coreR);
+        gradCore.addColorStop(0, smoothMorph > 0.5 ? 'rgba(255, 77, 109, 0.55)' : 'rgba(255, 42, 109, 0.38)');
+        gradCore.addColorStop(0.22, smoothMorph > 0.5 ? 'rgba(224, 30, 90, 0.35)' : 'rgba(255, 77, 109, 0.1)');
+        gradCore.addColorStop(0.55, smoothMorph > 0.5 ? 'rgba(140, 10, 65, 0.18)' : 'rgba(0, 0, 0, 0)');
+        gradCore.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        hCtx.fillStyle = gradCore;
+        hCtx.beginPath();
+        hCtx.arc(centerX, centerY, coreR, 0, Math.PI * 2);
+        hCtx.fill();
+
+        if (smoothMorph > 0.05) {
+          hCtx.save();
+          hCtx.globalCompositeOperation = 'screen';
+          const nebulaSteps = 16;
+          for (let n = 0; n < nebulaSteps; n++) {
+            const nebDist = 3.8 + (n / nebulaSteps) * 20.0;
+            const arm = n % 3;
+            const baseA = (arm * (Math.PI * 2 / 3)) + 1.85 * Math.log(nebDist * 0.36 + 1) + (time * 0.12 * (4.5 / nebDist));
+            
+            const nx = Math.cos(baseA) * nebDist;
+            const nz = Math.sin(baseA) * nebDist;
+            const ny = Math.sin(time + n) * 0.7;
+
+            const x1 = nx * cosY + nz * sinY;
+            const z1 = -nx * sinY + nz * cosY;
+            const y2 = ny * cosX - z1 * sinX;
+            const z2 = ny * sinX + z1 * cosX;
+
+            const persp = cameraZ / Math.max(40, (cameraZ + z2 * 1.8));
+            const px = centerX + x1 * scale * persp;
+            const py = centerY + y2 * scale * persp;
+            const nebRadius = Math.max(2, (30 + n * 2.4) * persp * smoothMorph);
+
+            const gradNeb = hCtx.createRadialGradient(px, py, 0, px, py, nebRadius);
+            gradNeb.addColorStop(0, n % 2 === 0 ? 'rgba(255, 77, 109, 0.22)' : 'rgba(215, 25, 80, 0.18)');
+            gradNeb.addColorStop(0.55, 'rgba(140, 10, 65, 0.07)');
+            gradNeb.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            hCtx.fillStyle = gradNeb;
+            hCtx.beginPath();
+            hCtx.arc(px, py, nebRadius, 0, Math.PI * 2);
+            hCtx.fill();
+          }
+          hCtx.restore();
+        }
+
+        if (smoothMorph > 0.08) {
+          for (let i = 0; i < galaxyHearts.length; i++) {
+            const gh = galaxyHearts[i];
+            gh.angle += gh.speed;
+
+            const ghR = gh.r;
+            const ghX = Math.cos(gh.angle) * ghR;
+            const ghZ = Math.sin(gh.angle) * ghR;
+            const ghY = gh.height + Math.sin(time * 1.6 + gh.twinklePhase) * 0.3;
+
+            const x1 = ghX * cosY + ghZ * sinY;
+            const z1 = -ghX * sinY + ghZ * cosY;
+            const y2 = ghY * cosX - z1 * sinX;
+            const z2 = ghY * sinX + z1 * cosX;
+
+            const persp = cameraZ / Math.max(40, (cameraZ + z2 * 1.8));
+            const px = centerX + x1 * scale * persp;
+            const py = centerY + y2 * scale * persp;
+
+            const hSize = Math.max(6, gh.baseSize * persp * (0.85 + 0.15 * Math.sin(time * 2.2 + gh.twinklePhase)));
+            hCtx.save();
+            hCtx.font = `${Math.round(hSize)}px -apple-system, BlinkMacSystemFont, sans-serif`;
+            hCtx.textAlign = 'center';
+            hCtx.textBaseline = 'middle';
+            hCtx.globalAlpha = Math.min(1, Math.max(0, smoothMorph * (0.6 + 0.4 * Math.sin(time * 2 + gh.twinklePhase)) * (persp * 0.9)));
+            hCtx.shadowBlur = 8;
+            hCtx.shadowColor = '#ff2a6d';
+            hCtx.fillText(gh.symbol, px, py);
+            hCtx.restore();
+          }
+        }
+
+        hCtx.fillStyle = '#ff85a1';
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const tw = (Math.sin(time * 25 * s.twinkleSpeed + s.phase) + 1) / 2;
+          hCtx.globalAlpha = 0.2 + 0.65 * tw;
+          hCtx.fillRect(s.x, s.y, s.size, s.size);
+        }
+
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          const ss = shootingStars[i];
+          ss.x += Math.cos(ss.angle) * ss.speed;
+          ss.y += Math.sin(ss.angle) * ss.speed;
+          ss.opacity -= 0.0035;
+
+          if (ss.opacity <= 0) {
+            shootingStars.splice(i, 1);
+            continue;
+          }
+
+          const tailX = ss.x - Math.cos(ss.angle) * ss.len;
+          const tailY = ss.y - Math.sin(ss.angle) * ss.len;
+
+          const gradSS = hCtx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+          gradSS.addColorStop(0, 'rgba(255, 117, 140, 0)');
+          gradSS.addColorStop(1, `rgba(255, 160, 185, ${ss.opacity * 0.85})`);
+
+          hCtx.beginPath();
+          hCtx.moveTo(tailX, tailY);
+          hCtx.lineTo(ss.x, ss.y);
+          hCtx.strokeStyle = gradSS;
+          hCtx.lineWidth = 1.6;
+          hCtx.stroke();
+        }
+
+        const pathDeepBack = new Path2D();
+        const pathMidBack = new Path2D();
+        const pathMidFront = new Path2D();
+        const pathHighFront = new Path2D();
+
+        for (let i = 0; i < TOTAL_HEART; i++) {
+          const idx = i * STRIDE;
+
+          if (frame > data[idx + 9] && data[idx + 7] < 1) {
+            data[idx + 7] += data[idx + 8];
+            if (data[idx + 7] > 1) data[idx + 7] = 1;
+          }
+
+          const progress = data[idx + 7];
+          const ease = 1 - Math.pow(1 - progress, 4);
+
+          galCurrentAngle[i] += galOrbitalSpeed[i];
+          const rCur = galRadius[i];
+          const curAng = galCurrentAngle[i];
+
+          const pPhase = i * 0.37;
+          const naturalDriftX = (Math.sin(time * 1.3 + pPhase) * 0.38 + Math.cos(time * 0.7 + pPhase * 1.2) * 0.22);
+          const naturalDriftY = (Math.cos(time * 1.3 + pPhase * 0.9) * 0.38 + Math.sin(time * 0.8 + pPhase * 1.1) * 0.22);
+          const naturalDriftZ = Math.sin(time * 0.95 + pPhase * 1.4) * 0.48;
+
+          const galDriftY = Math.sin(time * 1.2 + curAng * 2 + i * 0.08) * 0.32;
+          const galDriftR = Math.cos(time * 0.9 + curAng * 3 + i * 0.04) * 0.24;
+
+          const effectiveR = rCur + galDriftR * smoothMorph;
+          const gx = Math.cos(curAng) * effectiveR;
+          const gy = galHeight[i] + galDriftY;
+          const gz = Math.sin(curAng) * effectiveR;
+
+          dispX[i] += velDispX[i];
+          dispY[i] += velDispY[i];
+          dispZ[i] += velDispZ[i];
+          velDispX[i] = (velDispX[i] - dispX[i] * 0.025) * 0.905;
+          velDispY[i] = (velDispY[i] - dispY[i] * 0.025) * 0.905;
+          velDispZ[i] = (velDispZ[i] - dispZ[i] * 0.025) * 0.905;
+
+          const origX = (data[idx + 0] + naturalDriftX) * (1 - smoothMorph) + gx * smoothMorph;
+          const origY = (data[idx + 1] + naturalDriftY) * (1 - smoothMorph) + gy * smoothMorph;
+          const origZ = (data[idx + 2] + naturalDriftZ) * (1 - smoothMorph) + gz * smoothMorph;
+
+          const currX = data[idx + 3];
+          const currY = data[idx + 4];
+          const pSize = data[idx + 5];
+
+          const finalOrigX = origX + dispX[i];
+          const finalOrigY = origY + dispY[i];
+          const finalOrigZ = origZ + dispZ[i];
+
+          const x1 = finalOrigX * cosY + finalOrigZ * sinY;
+          const z1 = -finalOrigX * sinY + finalOrigZ * cosY;
+          const y2 = finalOrigY * cosX - z1 * sinX;
+          const z2 = finalOrigY * sinX + z1 * cosX;
+
+          const perspective = cameraZ / Math.max(40, (cameraZ + z2 * 1.8));
+          const targetX = centerX + x1 * scale * perspective;
+          const targetY = centerY + y2 * scale * perspective;
+
+          const drawX = currX + (targetX - currX) * ease;
+          const drawY = currY + (targetY - currY) * ease;
+          
+          const r = (pSize * (1 + smoothMorph * 0.35)) * perspective * (0.65 + 0.35 * ease);
+
+          if (z2 < -3.5) {
+            pathDeepBack.moveTo(drawX + r, drawY);
+            pathDeepBack.arc(drawX, drawY, r, 0, Math.PI * 2);
+          } else if (z2 < 0) {
+            pathMidBack.moveTo(drawX + r, drawY);
+            pathMidBack.arc(drawX, drawY, r, 0, Math.PI * 2);
+          } else if (z2 < 3.5) {
+            pathMidFront.moveTo(drawX + r, drawY);
+            pathMidFront.arc(drawX, drawY, r, 0, Math.PI * 2);
+          } else {
+            pathHighFront.moveTo(drawX + r, drawY);
+            pathHighFront.arc(drawX, drawY, r, 0, Math.PI * 2);
+          }
+        }
+
+        hCtx.fillStyle = smoothMorph > 0.4 ? '#680524' : '#800828';
+        hCtx.globalAlpha = smoothMorph > 0.4 ? 0.65 : 0.55;
+        hCtx.fill(pathDeepBack);
+
+        hCtx.fillStyle = smoothMorph > 0.4 ? '#b81442' : '#b81442';
+        hCtx.globalAlpha = smoothMorph > 0.4 ? 0.84 : 0.75;
+        hCtx.fill(pathMidBack);
+
+        hCtx.fillStyle = smoothMorph > 0.4 ? '#ff3366' : '#ff2a6d';
+        hCtx.globalAlpha = 0.96;
+        hCtx.fill(pathMidFront);
+
+        hCtx.fillStyle = smoothMorph > 0.4 ? '#ffa3b5' : '#ff597f';
+        hCtx.globalAlpha = 0.98;
+        hCtx.fill(pathHighFront);
+
+        const ringAlphaFade = Math.max(0, 1 - smoothMorph * 1.5);
+        if (ringAlphaFade > 0.01) {
+          const textCount = ringTexts.length;
+          const sortedTexts = [];
+
+          for (let i = 0; i < textCount; i++) {
+            const angle = textAngleOffset + (i * 2 * Math.PI) / textCount;
+            const sinA = Math.sin(angle);
+            const cosA = Math.cos(angle);
+
+            sortedTexts.push({
+              text: ringTexts[i],
+              x: centerX + cosA * ringRadiusX,
+              y: ringCenterY + sinA * ringRadiusY,
+              z: (sinA + 1) / 2
+            });
+          }
+
+          sortedTexts.sort((a, b) => a.z - b.z);
+
+          hCtx.textAlign = 'center';
+          hCtx.textBaseline = 'middle';
+          hCtx.font = 'bold 15px -apple-system, BlinkMacSystemFont, sans-serif';
+
+          for (let i = 0; i < sortedTexts.length; i++) {
+            const item = sortedTexts[i];
+            const textScale = 0.75 + item.z * 0.45;
+
+            hCtx.save();
+            hCtx.translate(item.x, item.y);
+            hCtx.scale(textScale, textScale);
+            hCtx.globalAlpha = (0.35 + 0.65 * item.z) * ringAlphaFade;
+            hCtx.fillStyle = item.z > 0.65 ? '#ffa8ba' : '#ff758f';
+            hCtx.fillText(item.text, 0, 0);
+            hCtx.restore();
+          }
+        }
+
+        hCtx.globalAlpha = 1;
+        heartAnimId = requestAnimationFrame(renderCrispHeart);
+      }
+
+      if (heartAnimId) cancelAnimationFrame(heartAnimId);
+      renderCrispHeart();
     }
   </script>
 </body>
