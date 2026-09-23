@@ -52,7 +52,7 @@
       touch-action: manipulation;
     }
 
-    /* ĐẢM BẢO HTML VÀ BODY HOÀN TOÀN TRONG SUỐT ĐỂ HIỆN VIDEO BACKGROUND */
+    /* ĐẢM BẢO NỀN TRONG SUỐT ĐỂ HIỆN VIDEO NỀN */
     html, body {
       overscroll-behavior-y: none;
       background: transparent !important;
@@ -138,7 +138,7 @@
       position: relative;
     }
 
-    /* KHUNG BIO PROFILE: HIỆU ỨNG PHÂN RÃ HẠT */
+    /* KHUNG BIO PROFILE */
     #bio-root-container {
       width: 100%;
       max-width: 480px;
@@ -261,6 +261,7 @@
       flex-shrink: 0;
     }
 
+    /* ĐẶT Z-INDEX = 25 ĐỂ CÁNH HOA BAY TRÊN KHUNG PROFILE */
     #seasonCanvas {
       position: fixed;
       top: 0;
@@ -268,7 +269,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 5;
+      z-index: 25;
       will-change: contents;
     }
 
@@ -1086,6 +1087,7 @@
       z-index: 100000;
       background: radial-gradient(circle at 50% 35%, rgba(42, 2, 25, 0.96) 0%, rgba(12, 2, 13, 0.98) 55%, #030005 100%);
       overflow: hidden;
+      touch-action: none;
     }
 
     #heartCanvas {
@@ -1093,6 +1095,7 @@
       height: 100%;
       display: block;
       touch-action: none;
+      pointer-events: auto;
     }
 
     .heart-actions-bottom {
@@ -1191,7 +1194,7 @@
     </div>
   </header>
 
-  <!-- CANVAS 4 MÙA -->
+  <!-- CANVAS 4 MÙA (Z-INDEX: 25 ĐẢM BẢO CÁNH HOA BAY TRÊN MẶT PROFILE) -->
   <canvas id="seasonCanvas"></canvas>
 
   <!-- KHUNG GIAO DIỆN PROFILE CHÍNH -->
@@ -1643,7 +1646,7 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93bGpydXR6cW15aGRma3BocnR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMzQyODYsImV4cCI6MjEwNDYxMDI4Nn0.GbdvfxEREmrl93GoKUBCYgUKhrfnZ4i1O3kTybLKrGw";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    /* HỆ THỐNG 4 MÙA */
+    /* HỆ THỐNG 4 MÙA & ĐỒNG BỘ MÀU NEON */
     const SEASONS = [
       { key: 'spring', name: 'Xuân', icon: '🌸', neon1: '#25f4ee', neon2: '#ff7eb3', accessoryId: 'cinnaSpringAccessory' },
       { key: 'summer', name: 'Hạ',   icon: '☀️', neon1: '#00ff88', neon2: '#00e5ff', accessoryId: 'cinnaSummerAccessory' },
@@ -1688,7 +1691,7 @@
       showToast(`✨ Đã đổi sang Mùa ${SEASONS[currentSeasonIndex].name} ${SEASONS[currentSeasonIndex].icon}`);
     }
 
-    /* BỘ ĐẾM LƯỢT XEM */
+    /* BỘ ĐẾM LƯỢT XEM VÀ KHỞI ĐỘNG */
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toDateString();
       const savedDate = localStorage.getItem('sagiri_view_date');
@@ -2410,16 +2413,110 @@
        PLAYLIST, NATIVE AUDIO & TOÀN BỘ LOGIC NHẠC CLOUD / YOUTUBE
        ============================================================ */
     const playlist = [
-      { id: "default_1", title: "Styx Helix", artist: "MYTH & ROID", album: "Re:Zero OST", artwork: "avatar.jpg", src: "music1.mp3", lyrics: ["♫ Oh please, don't let me die...", "Waiting for your call...", "♫ Styx Helix - Re:Zero OST"] },
-      { id: "default_2", title: "An Unfinished Song", artist: "Wuthering Waves OST", album: "Resonance Collection", artwork: "ww.png", src: "music2.mp3", lyrics: ["♫ Khúc ca dang dở vang vọng...", "Lưu giữ những ký ức..."] },
-      { id: "default_3", title: "All Silent Souls Can Sing", artist: "Wuthering Waves OST", album: "Resonance Collection", artwork: "ww.png", src: "music3.mp3", lyrics: ["♫ Mọi linh hồn lặng lẽ...", "Tìm lại ánh sáng..."] },
-      { id: "default_4", title: "Dancing Through Fantasies", artist: "Wuthering Waves OST", album: "Resonance Collection", artwork: "ww.png", src: "music4.mp3", lyrics: ["♫ Khiêu vũ giữa mộng ảo...", "Xóa nhòa mọi khoảng cách..."] },
-      { id: "default_5", title: "With Glory I Shall Fall", artist: "Wuthering Waves OST", album: "Resonance Collection", artwork: "ww.png", src: "music5.mp3", lyrics: ["♫ Nguyện ngã xuống trong hào quang...", "Khắc tên mình vào vĩnh hằng..."] },
-      { id: "default_6", title: "Against the Tide", artist: "Wuthering Waves OST", album: "Resonance Collection", artwork: "ww.png", src: "music6.mp3", lyrics: ["♫ Nghịch dòng triều cuộn sóng...", "Vững tay chèo đến tận cùng..."] }
+      { 
+        id: "default_1",
+        title: "Styx Helix", 
+        artist: "MYTH & ROID", 
+        album: "Re:Zero OST",
+        artwork: "avatar.jpg",
+        src: "music1.mp3", 
+        color1: "#bd00ff", 
+        color2: "#fe2c55",
+        lyrics: [
+          "♫ Oh please, don't let me die...",
+          "Waiting for your call...",
+          "Searching for your voice in the dark night...",
+          "Can you hear me calling out your name?",
+          "♫ Styx Helix - Re:Zero OST"
+        ]
+      },
+      { 
+        id: "default_2",
+        title: "An Unfinished Song", 
+        artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
+        src: "music2.mp3", 
+        color1: "#25f4ee", 
+        color2: "#0077ff",
+        lyrics: [
+          "♫ Khúc ca dang dở vang vọng giữa tầng không...",
+          "Lưu giữ những ký ức không bao giờ phai mờ...",
+          "Gió thổi qua những miền đất hoang sơ...",
+          "♫ Hát lên giai điệu của riêng chúng ta..."
+        ]
+      },
+      { 
+        id: "default_3",
+        title: "All Silent Souls Can Sing", 
+        artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
+        src: "music3.mp3", 
+        color1: "#25f4ee", 
+        color2: "#fe2c55",
+        lyrics: [
+          "♫ Mọi linh hồn lặng lẽ đều cất lên tiếng hát...",
+          "Hòa cùng nhịp đập của đất trời bao la...",
+          "Vượt qua muôn trùng bão tố hiểm nguy...",
+          "♫ Tìm lại ánh sáng chốn thẳm sâu..."
+        ]
+      },
+      { 
+        id: "default_4",
+        title: "Dancing Through Fantasies", 
+        artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
+        src: "music4.mp3", 
+        color1: "#ff007f", 
+        color2: "#ffaa00",
+        lyrics: [
+          "♫ Khiêu vũ giữa thế giới mộng ảo dịu kỳ...",
+          "Nơi ánh sáng và bóng tối đan xen vào nhau...",
+          "Bước chân nhẹ nhàng theo nhịp đập con tim...",
+          "♫ Xóa nhòa mọi khoảng cách thực tại..."
+        ]
+      },
+      { 
+        id: "default_5",
+        title: "With Glory I Shall Fall", 
+        artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
+        src: "music5.mp3", 
+        color1: "#00f2fe", 
+        color2: "#9900ef",
+        lyrics: [
+          "♫ Nguyện ngã xuống trong ánh hào quang rực rỡ...",
+          "Khắc tên mình vào cõi vĩnh hằng...",
+          "Danh dự và kiêu hãnh mãi trường tồn...",
+          "♫ Hẹn gặp lại ở kiếp sau..."
+        ]
+      },
+      { 
+        id: "default_6",
+        title: "Against the Tide", 
+        artist: "Wuthering Waves OST", 
+        album: "Resonance Collection",
+        artwork: "ww.png",
+        src: "music6.mp3", 
+        color1: "#25f4ee", 
+        color2: "#ff3366",
+        lyrics: [
+          "♫ Nghịch dòng triều cuộn sóng...",
+          "Tìm về bến bình yên nơi có người đợi chờ...",
+          "Dù chông gai thử thách vẫn không lùi bước...",
+          "♫ Vững tay chèo đến tận cùng..."
+        ]
+      }
     ];
 
     const savedCustomTracks = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
-    savedCustomTracks.forEach(t => { t.isCustom = true; playlist.push(t); });
+    savedCustomTracks.forEach(t => {
+      t.isCustom = true;
+      playlist.push(t);
+    });
 
     let currentTrackIndex = parseInt(localStorage.getItem('sagiri_track_idx'), 10) || 0;
     let isPlaying = false;
@@ -2548,7 +2645,10 @@
           album: track.album || "Sagiri Bio Playlist 💕",
           artwork: [
             { src: artUrl, sizes: '96x96', type: 'image/jpeg' },
+            { src: artUrl, sizes: '128x128', type: 'image/jpeg' },
             { src: artUrl, sizes: '192x192', type: 'image/jpeg' },
+            { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
+            { src: artUrl, sizes: '384x384', type: 'image/jpeg' },
             { src: artUrl, sizes: '512x512', type: 'image/jpeg' }
           ]
         });
@@ -2735,6 +2835,21 @@
       showToast(isRepeatOne ? "🔂 Đã bật lặp lại 1 bài" : "🔁 Đã tắt lặp lại");
     }
 
+    /* KÍCH HOẠT PHÁT NHẠC Ở LẦN CHẠM ĐẦU TIÊN */
+    function triggerPlayOnFirstInteraction() {
+      initAudioGraph();
+      if (ytPlayer && isYTReady && ytPlayer.unMute && !isMuted) {
+        ytPlayer.unMute();
+      }
+    }
+    window.addEventListener('click', triggerPlayOnFirstInteraction, { once: true, passive: true });
+    window.addEventListener('touchstart', triggerPlayOnFirstInteraction, { once: true, passive: true });
+
+    const inlineMuteIcon = document.getElementById('inlineMuteIcon');
+    if (isMuted) {
+      inlineMuteIcon.className = "fa-solid fa-volume-xmark";
+    }
+
     function renderPlaylist() {
       const container = document.getElementById('playlistContainer');
       container.innerHTML = "";
@@ -2781,7 +2896,11 @@
           album: "Sagiri Cloud Music",
           src: publicUrl,
           isCloud: true,
-          lyrics: ["♫ Đang phát bài hát từ đám mây toàn cầu..."]
+          lyrics: [
+            "♫ Bài hát chia sẻ toàn cầu trên đám mây...",
+            "♫ Bất kỳ máy nào mở web cũng nghe được!",
+            "♫ Tắt màn hình vẫn tiếp tục phát mượt mà!"
+          ]
         });
       }
       renderPlaylist();
@@ -2886,7 +3005,11 @@
           ytId: videoId,
           isCustom: true,
           skipAds: skipSegments,
-          lyrics: ["♫ Đang phát từ luồng YouTube Audio (Đã bật lọc QC)...", `Tác giả: ${data.author_name || "YouTube"}`]
+          lyrics: [
+            "♫ Đang phát từ luồng YouTube Audio (Đã bật lọc QC)...",
+            `Tác giả: ${data.author_name || "YouTube"}`,
+            "♫ Thưởng thức âm nhạc trọn vẹn!"
+          ]
         };
         const currentCustom = JSON.parse(localStorage.getItem('sagiri_custom_tracks') || '[]');
         currentCustom.push(newTrack);
@@ -2894,7 +3017,7 @@
         playlist.push(newTrack);
         renderPlaylist();
         input.value = "";
-        showToast("🌸 Đã thêm bài hát thành công!");
+        showToast("🌸 Đã thêm bài hát & bật lọc QC thành công!");
         selectTrack(playlist.length - 1);
       } catch (e) {
         showToast("⚠️ Lỗi tải bài hát YouTube!");
@@ -2913,6 +3036,59 @@
       document.getElementById('collapseChevron').className = container.classList.contains('collapsed') ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
     }
 
+    /* ĐIỀU KHIỂN CẢM ỨNG VUỐT TRÊN MINI PLAYER */
+    const miniContainer = document.getElementById('miniPlayerContainer');
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    miniContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    miniContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleMobileGestures();
+    }, { passive: true });
+
+    function handleMobileGestures() {
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+        if (diffX < 0) {
+          nextTrack();
+        } else {
+          prevTrack();
+        }
+      } else if (diffY < -35 && Math.abs(diffX) < 40) {
+        if (!miniContainer.classList.contains('collapsed')) {
+          toggleMiniPlayerCollapse();
+        }
+      }
+    }
+
+    /* PHÍM TẮT BÀN PHÍM */
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayPause();
+      } else if (e.code === 'ArrowRight') {
+        nextTrack();
+      } else if (e.code === 'ArrowLeft') {
+        prevTrack();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleGlobalMute();
+      }
+    });
+
+    document.getElementById('shuffleBtn').classList.toggle('active', isShuffle);
+    document.getElementById('repeatBtn').classList.toggle('active', isRepeatOne);
+
     function copyDiscordUsername() {
       copyToClipboard("sagirichan_0502", "🌸 Đã chép Discord: sagirichan_0502");
     }
@@ -2923,7 +3099,7 @@
     });
 
     /* ============================================================
-       PHẦN CODE 2: KHÔI PHỤC TOÀN BỘ LOGIC 3D GỐC (HẠT, ĐA CHẠM, NGÂN HÀ)
+       PHẦN CODE 2: TOÀN BỘ LOGIC 3D GỐC (HẠT, ĐA CHẠM, NGÂN HÀ)
        ============================================================ */
     const heartAudio = document.getElementById('heart-bg-music');
     const galaxyAudio = document.getElementById('galaxy-music');
@@ -2958,10 +3134,12 @@
       const topHeader = document.getElementById('topHeaderBar');
       const heartWrap = document.getElementById('heart-wrapper');
 
+      // Bật wrapper trước để canvas có kích thước chính xác
+      heartWrap.style.display = 'block';
+
       // Khởi động Canvas Trái Tim 3D
       initCrispHeartCanvas();
 
-      heartWrap.style.display = 'block';
       requestAnimationFrame(() => {
         bioRoot.classList.add('collapsing');
         topHeader.style.opacity = '0';
@@ -2993,14 +3171,14 @@
       }, 900);
     }
 
-    /* TOÀN BỘ KHUÔN KHỔ THUẬT TOÁN 3D CHUẨN CỦA CODE 2 */
+    /* THUẬT TOÁN 3D CHUẨN NGUYÊN BẢN CỦA CODE 2 */
     function initCrispHeartCanvas() {
       const canvas = document.getElementById('heartCanvas');
       const ctx = canvas.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      let width = 0;
-      let height = 0;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
 
       const cameraZ = 280;
       let time = 0;
@@ -3151,7 +3329,7 @@
         data[idx + 5] = size;
         data[idx + 6] = colorType;
         data[idx + 7] = 0;
-        data[idx + 8] = 0.0016 + Math.random() * 0.0018; // Tốc độ hút hạt tụ lại mượt mà
+        data[idx + 8] = 0.0016 + Math.random() * 0.0018;
         data[idx + 9] = Math.random() * 30;
       }
 
@@ -3194,8 +3372,8 @@
           const z2 = origY * sinX + z1 * cosX;
 
           const perspective = cameraZ / Math.max(40, (cameraZ + z2 * 1.8));
-          const px = curCenterX + x1 * scale * perspective;
-          const py = curCenterY + y2 * scale * perspective;
+          const px = curCenterX + x1 * curScale * perspective;
+          const py = curCenterY + y2 * curScale * perspective;
 
           for (const [id, tObj] of touchesMap.entries()) {
             const dx = px - tObj.x;
@@ -3214,7 +3392,9 @@
         }
       }
 
+      /* KHAI BÁO BIẾN TRƯỚC SỰ KIỆN ĐỂ TRÁNH LỖI PHẠM VI BIẾN */
       let isDragging = false;
+
       canvas.addEventListener('touchstart', (e) => {
         isDragging = true;
         for (let i = 0; i < e.changedTouches.length; i++) {
